@@ -43,6 +43,10 @@ class Settings(BaseSettings):
     OLLAMA_HOST: str = Field(default="http://localhost:11434")
     HF_TOKEN: str = Field(default="")
 
+    COHERE_API_KEY: str = Field(default="")
+    COHERE_MODEL: str = Field(default="embed-multilingual-v3.0")
+    COHERE_DIMENSIONS: int = Field(default=1024)
+
     @model_validator(mode="after")
     def check_api_keys(self) -> "Settings":
         """Validate that at least one API key is provided"""
