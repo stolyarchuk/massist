@@ -1,0 +1,7 @@
+[MESSAGES CONTROL]
+disable=broad-exception-raised,duplicate-code,missing-docstring,too-many-locals,logging-not-lazy,logging-fstring-interpolation,fixme,too-few-public-methods,bare-except,too-many-statements,unused-argument,broad-except,logging-format-interpolation,unnecessary-comprehension,subprocess-run-check,c-extension-no-member,consider-using-sys-exit,consider-using-with,consider-using-f-string,unspecified-encoding,use-dict-literal,no-value-for-parameter,consider-using-dict-items,used-before-assignment,use-list-literal,consider-using-from-import,inconsistent-return-statements,consider-iterating-dictionary,protected-access,trailing-whitespace,use-a-generator,no-name-in-module,invalid-name
+ignore=vmwatch.py, external_libs
+good-names=e,ex,ip,vm,kv,fn,it,vg,lv,id,bl,cs
+
+[DESIGN]
+max-line-length=200
