@@ -12,7 +12,7 @@ class Settings(BaseSettings):
     """
 
     # LLM settings
-    GEMINI_API_KEY: Annotated[SecretStr, Field(default_factory=lambda: SecretStr(""))] = SecretStr("")
+    GOOGLE_API_KEY: Annotated[SecretStr, Field(default_factory=lambda: SecretStr(""))] = SecretStr("")
     GEMINI_MODEL: str = Field(default="gemini-2.0-flash-exp")
     TEMPERATURE: float = Field(default=0.5)
 
@@ -36,7 +36,7 @@ class Settings(BaseSettings):
     # Optional configuration
     AGENT_STREAM: bool = Field(default=True)
     AGENT_MARKDOWN: bool = Field(default=True)
-    AGENT_SHOW_TOOL_CALLS: bool = Field(default=True)
+    AGENT_SHOW_TOOL_CALLS: bool = Field(default=False)
     AGENT_MONITORING: bool = Field(default=True)
 
     DB_URL: str = Field(default="postgresql+psycopg://ai:ai@localhost:5532/ai")
@@ -47,10 +47,13 @@ class Settings(BaseSettings):
     COHERE_MODEL: str = Field(default="embed-multilingual-v3.0")
     COHERE_DIMENSIONS: int = Field(default=1024)
 
+    FIRECRAWL_API_KEY: str = Field(default="")
+    OPENROUTER_API_KEY: str = Field(default="")
+
     @model_validator(mode="after")
     def check_api_keys(self) -> "Settings":
         """Validate that at least one API key is provided"""
-        has_gemini = bool(self.GEMINI_API_KEY.get_secret_value())
+        has_gemini = bool(self.GOOGLE_API_KEY.get_secret_value())
         has_openai = bool(self.OPENAI_API_KEY.get_secret_value())
         has_deepseek = bool(self.DEEPSEEK_API_KEY.get_secret_value())
 
