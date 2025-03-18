@@ -4,13 +4,41 @@
   "version": "2.0.0",
   "tasks": [
     {
-      "label": "echo",
-      "type": "shell",
-      "command": "python ${workspaceFolder}/agentic_rag_agent_ui.py",
+      "label": "Run File",
+      "type": "process",
+      "command": "${command:python.interpreterPath}",
+      "args": [
+        "${file}"
+      ],
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": true
+      },
       "group": {
         "kind": "build",
         "isDefault": true
-      }
+      },
+      "problemMatcher": [
+        {
+          "owner": "python",
+          "fileLocation": [
+            "relative",
+            "${workspaceFolder}"
+          ],
+          "pattern": [
+            {
+              "regexp": "^\\s*File \"([^\"]+)\", line (\\d+)",
+              "file": 1,
+              "line": 2
+            },
+            {
+              "regexp": "^\\s*([^:]+): (.*)$",
+              "message": 2
+            }
+          ]
+        }
+      ]
     }
   ]
 }

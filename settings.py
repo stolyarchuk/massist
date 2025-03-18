@@ -1,7 +1,7 @@
 from typing import Annotated, Optional
 
 # Import dotenv for .env file support
-from pydantic import Field, SecretStr, model_validator
+from pydantic import Field, model_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
@@ -12,17 +12,18 @@ class Settings(BaseSettings):
     """
 
     # LLM settings
-    GOOGLE_API_KEY: Annotated[SecretStr, Field(default_factory=lambda: SecretStr(""))] = SecretStr("")
-    GEMINI_MODEL: str = Field(default="gemini-2.0-flash-exp")
-    TEMPERATURE: float = Field(default=0.5)
+    GOOGLE_API_KEY: str = ""
+    GEMINI_MODEL: str = "gemini-2.0-flash"
+    GEMINI_EMBED_MODEL: str = "gemini-embedding-exp-03-07"
+    TEMPERATURE: float = 0.5
 
     # OpenAI settings (optional)
-    OPENAI_API_KEY: Annotated[SecretStr, Field(default_factory=lambda: SecretStr(""))] = SecretStr("")
-    OPENAI_BASE_URL: Optional[str] = Field(default="")
-    OPENAI_MODEL: str = Field(default="deepseek-chat")
+    OPENAI_API_KEY: str = ""
+    OPENAI_BASE_URL: str = ""
+    OPENAI_MODEL: str = ""
 
     # DeepSeek settings (optional for compatibility with .env.example)
-    DEEPSEEK_API_KEY: Annotated[SecretStr, Field(default_factory=lambda: SecretStr(""))] = SecretStr("")
+    DEEPSEEK_API_KEY: str = Field(default="")
 
     # Scraper settings
     WEBSITE_URL: str = Field(default="")
@@ -39,9 +40,10 @@ class Settings(BaseSettings):
     AGENT_SHOW_TOOL_CALLS: bool = Field(default=False)
     AGENT_MONITORING: bool = Field(default=True)
 
-    DB_URL: str = Field(default="postgresql+psycopg://ai:ai@localhost:5532/ai")
-    OLLAMA_HOST: str = Field(default="http://localhost:11434")
-    HF_TOKEN: str = Field(default="")
+    DB_URL: str = "postgresql+psycopg://ai:ai@localhost:5532/ai"
+    OLLAMA0_HOST: str = "http://localhost:11434"
+    OLLAMA1_HOST: str = "http://localhost:11435"
+    HUGGINGFACE_API_KEY: str = ""
 
     COHERE_API_KEY: str = Field(default="")
     COHERE_MODEL: str = Field(default="embed-multilingual-v3.0")
@@ -53,9 +55,9 @@ class Settings(BaseSettings):
     @model_validator(mode="after")
     def check_api_keys(self) -> "Settings":
         """Validate that at least one API key is provided"""
-        has_gemini = bool(self.GOOGLE_API_KEY.get_secret_value())
-        has_openai = bool(self.OPENAI_API_KEY.get_secret_value())
-        has_deepseek = bool(self.DEEPSEEK_API_KEY.get_secret_value())
+        has_gemini = bool(self.GOOGLE_API_KEY)
+        has_openai = bool(self.OPENAI_API_KEY)
+        has_deepseek = bool(self.DEEPSEEK_API_KEY)
 
         if not (has_gemini or has_openai or has_deepseek):
             raise ValueError(
@@ -69,10 +71,14 @@ class Settings(BaseSettings):
         return self
 
     model_config = SettingsConfigDict(
-        env_file=".env", env_file_encoding="utf-8", case_sensitive=True, env_nested_delimiter="__", extra="ignore"
+        env_file=".env",
+        env_file_encoding="utf-8",
+        case_sensitive=True,
+        env_nested_delimiter="__",
+        extra="ignore"
     )
 
 
 settings = Settings()
 
-__all__ = ["settings", "Settings"]
+__all__ = ["settings"]

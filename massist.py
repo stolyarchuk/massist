@@ -1,13 +1,17 @@
 # Standard library imports
 import logging
+import sys
 
 from agno.agent.agent import Agent
 from agno.document.chunking.agentic import AgenticChunking
 from agno.document.chunking.semantic import SemanticChunking
+# from agno.embedder.fastembed import FastEmbedEmbedder
 # from agno.document.reader.firecrawl_reader import FirecrawlReader  # Unused import
 # from agno.embedder.cohere import CohereEmbedder  # Unused import
 from agno.embedder.google import GeminiEmbedder
-# from agno.embedder.ollama import OllamaEmbedder  # Unused import
+from agno.embedder.huggingface import HuggingfaceCustomEmbedder
+from agno.embedder.ollama import OllamaEmbedder  # Unused import
+from agno.embedder.openai import OpenAIEmbedder
 # from agno.knowledge.document import DocumentKnowledgeBase  # Unused import
 from agno.knowledge.website import WebsiteKnowledgeBase
 from agno.memory.agent import AgentMemory
@@ -17,9 +21,9 @@ from agno.memory.manager import MemoryManager
 from agno.memory.summarizer import MemorySummarizer
 # from agno.models.deepseek.deepseek import DeepSeek  # Unused import
 from agno.models.google.gemini import Gemini
+from agno.models.ollama.chat import Ollama  # Unused import
 # Agno imports
 from agno.models.openai.like import OpenAILike
-# from agno.models.ollama.chat import Ollama  # Unused import
 # from agno.models.ollama.tools import OllamaTools  # Unused import
 # from agno.models.openai.chat import OpenAIChat  # Unused import
 # from agno.models.openrouter.openrouter import OpenRouter  # Unused import
@@ -43,78 +47,100 @@ from ollama import Client as OllamaClient
 from logger import init_module_loggers, update_formatters
 from settings import settings
 
-# load_dotenv()
+load_dotenv()
 # loggers = [logging.getLogger().name]
 # loggers += list(logging.Logger.manager.loggerDict.keys())
 
-loggers = list(logging.Logger.manager.loggerDict.keys())
+loggers = [lgr for lgr in logging.Logger.manager.loggerDict.keys()]
 
 # update_formatters(*loggers)
 init_module_loggers(*loggers)
 
+google_embed = GeminiEmbedder(
+    api_key=settings.GOOGLE_API_KEY,
+    id=settings.GEMINI_EMBED_MODEL,
+    dimensions=768,
+)
+
+# ollama0_model = Ollama(id="gemma3:4b", host=settings.OLLAMA0_HOST)
+# ollama1_model = Ollama(id="gemma3:1b", host=settings.OLLAMA1_HOST)
+
+# ollama_embed = OllamaEmbedder(
+#     id="paraphrase-multilingual", dimensions=768, host=settings.OLLAMA1_HOST
+# )
+
+mlinks = ['https://docs.mitigator.ru/v24.10/',
+          'https://docs.mitigator.ru/v24.10/install/',
+          'https://docs.mitigator.ru/v24.10/maintenance/']
+
+mindex = 1
+
 knowledge_base = WebsiteKnowledgeBase(
-    urls=[settings.WEBSITE_URL],
-    max_links=4000,
-    max_depth=6,
+    urls=[mlinks[mindex]],
+    max_links=500,
+    max_depth=4,
     vector_db=PgVector(
         db_url=settings.DB_URL,
-        table_name="massist_embeddings",
+        table_name=f"massist_embeddings_{mindex}",
         schema="ai",
-        embedder=GeminiEmbedder(
-            api_key=settings.GOOGLE_API_KEY.get_secret_value()
-        ),
+        embedder=google_embed,
         search_type=SearchType.hybrid,
         content_language="russian",
     ),
-    optimize_on=5000,
+    # optimize_on=5000,
     num_documents=5,
     chunking_strategy=AgenticChunking(
-        model=Gemini(api_key=settings.GOOGLE_API_KEY.get_secret_value()), max_chunk_size=5000
+        model=Gemini(api_key=settings.GOOGLE_API_KEY), max_chunk_size=3000
     ),
-    # chunking_strategy=SemanticChunking(
-    #     embedder=GeminiEmbedder(id="text-embedding-3-large",api_key=settings.GOOGLE_API_KEY.get_secret_value())
-    # ),
+    # chunking_strategy=SemanticChunking(OpenAIEmbedder(chunk_size=5000),
 )
+
+massist_memory_model = OpenAILike(
+    id="google/gemini-2.0-flash-lite-preview-02-05:free",
+    base_url="https://openrouter.ai/api/v1",
+    api_key=settings.OPENROUTER_API_KEY,
+)
+
+# massist_memory_model_vllm = OpenAILike(
+#     id="neuralmagic/Qwen2-0.5B-Instruct-quantized.w8a8",
+#     base_url="http://192.168.31.240:8000/v1",
+#     api_key="sk-d00b792327b44da6876a1419e059ee99",
+#     max_tokens=32768
+# )
+
 
 massist_memory = AgentMemory(
     # Persist memory in Postgres
+    user_id="stolyarchuk",
     db=PgMemoryDb(table_name="massist_memory", db_url=settings.DB_URL),
-    create_user_memories=True,  # Store user preferences
-    create_session_summary=True,  # Store conversation summaries
-    summarizer=MemorySummarizer(
-        model=OpenAILike(id="google/gemma-3-27b-it:free",
-                         base_url="https://openrouter.ai/api/v1",
-                         api_key=settings.OPENROUTER_API_KEY,)
-    ),
-    classifier=MemoryClassifier(
-        model=OpenAILike(id="google/gemma-3-27b-it:free",
-                         base_url="https://openrouter.ai/api/v1",
-                         api_key=settings.OPENROUTER_API_KEY,)
-    ),
-    manager=MemoryManager(
-        model=OpenAILike(id="google/gemma-3-27b-it",
-                         base_url="https://openrouter.ai/api/v1",
-                         api_key=settings.OPENROUTER_API_KEY,)
-    ),
+    create_user_memories=True,
+    update_user_memories_after_run=True,
+    create_session_summary=True,
+    update_session_summary_after_run=True,
+    manager=MemoryManager(model=massist_memory_model),
+    classifier=MemoryClassifier(model=massist_memory_model),
+    summarizer=MemorySummarizer(model=massist_memory_model),
 )
 
+massist_storage = PostgresStorage(
+    table_name="massist_sessions", db_url=settings.DB_URL
+)
 
 mitigator_assistant = Agent(
     name="Mitigator Assistant",
     agent_id="mitigator_assistant",
-    # session_id=session_id,  # Track session ID for persistent conversations
+    session_id="e8942e20-4fb9-4d0d-8fce-937f14b681d7",
     user_id="stolyarchuk",
     # model=OpenAIChat(api_key=settings.OPENAI_API_KEY.get_secret_value()),
     # model=OpenRouter(id="deepseek/deepseek-r1:free",api_key=settings.OPENROUTER_API_KEY),
     # model=DeepSeek(id="deepseek-chat", api_key=settings.DEEPSEEK_API_KEY.get_secret_value(), max_tokens=8192),
-    model=Gemini(api_key=settings.GOOGLE_API_KEY.get_secret_value(),
-                 id=settings.GEMINI_MODEL),
-    # model=OllamaTools(id="gemma3:12b", host=settings.OLLAMA_HOST),
+    model=Gemini(
+        api_key=settings.GOOGLE_API_KEY, id=settings.GEMINI_MODEL
+    ),
     knowledge=knowledge_base,
     search_knowledge=True,
-    storage=PostgresStorage(table_name="massist_sessions",
-                            db_url=settings.DB_URL),  # Persist session data
-    memory=massist_memory,  # Add memory to the agent
+    storage=massist_storage,
+    memory=massist_memory,
     description="You are a helpful Agent called 'Mitigator Assistant' or 'MAssist'"
     + "and your goal is to assist the user in the best way possible.",
     instructions=[
@@ -123,6 +149,7 @@ mitigator_assistant = Agent(
         "   - ALWAYS start by searching the knowledge base using search_knowledge_base tool",
         "   - Analyze ALL returned documents thoroughly before responding",
         "   - If multiple documents are returned, synthesize the information coherently",
+        "   - If now information found in your knowledge_base, NEVER complain and sorrow about it!",
         "2. External Search:",
         "   - If knowledge base search yields insufficient results, use duckduckgo_search",
         "   - Focus on reputable sources and recent information",
@@ -133,11 +160,12 @@ mitigator_assistant = Agent(
         "   - Keep track of user preferences and prior clarifications",
         "4. Response Quality:",
         "   - ALWAYS answer in russian language",
+
         "   - Provide specific citations and sources for claims",
         "   - Structure responses with clear sections and bullet points when appropriate",
         "   - Include relevant quotes from source materials",
         "   - Include relevant images from knowledge base",
-        "   - Avoid hedging phrases like 'based on my knowledge' or 'depending on the information'",
+        "   - Never use hedging phrases like 'based on my knowledge' or 'depending on the information'",
         "5. User Interaction:",
         "   - Ask for clarification if the query is ambiguous",
         "   - Break down complex questions into manageable parts",
@@ -157,13 +185,11 @@ mitigator_assistant = Agent(
     add_datetime_to_instructions=True,
     read_tool_call_history=True,
     num_history_responses=3,
-    stream=settings.AGENT_STREAM,
+    # stream=settings.AGENT_STREAM,
     debug_mode=False,
 )
 
-app = Playground(
-    agents=[mitigator_assistant],
-).get_app()
+app = Playground(agents=[mitigator_assistant]).get_app()
 
 if __name__ == "__main__":
 
