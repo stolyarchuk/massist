@@ -1,6 +1,6 @@
 import logging
 
-from settings import settings
+from config import config
 
 
 class Colors:
@@ -60,7 +60,8 @@ class LoggerFormatter(logging.Formatter):
 
 
 # define custom log level names
-log_levels = {"debug": logging.DEBUG, "info": logging.INFO, "warn": logging.WARNING, "error": logging.ERROR}
+log_levels = {"debug": logging.DEBUG, "info": logging.INFO,
+              "warn": logging.WARNING, "error": logging.ERROR}
 
 
 logging.addLevelName(logging.DEBUG, "debug")
@@ -68,7 +69,7 @@ logging.addLevelName(logging.INFO, "info ")
 logging.addLevelName(logging.WARNING, "warn ")
 logging.addLevelName(logging.ERROR, "error")
 
-log_level = log_levels.get(settings.LOG_LEVEL, logging.DEBUG)
+log_level = log_levels.get(config.LOG_LEVEL, logging.DEBUG)
 
 global_formatter = LoggerFormatter()
 global_handler = logging.StreamHandler()
