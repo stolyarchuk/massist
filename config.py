@@ -5,7 +5,7 @@ from pydantic import Field, model_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
-class Settings(BaseSettings):
+class Config(BaseSettings):
     """
     Configuration settings class that reads values from environment variables.
     Environment variables can be loaded from .env files using python-dotenv.
@@ -35,10 +35,10 @@ class Settings(BaseSettings):
     LOG_LEVEL: str = Field(default="debug")
 
     # Optional configuration
-    AGENT_STREAM: bool = Field(default=True)
-    AGENT_MARKDOWN: bool = Field(default=True)
-    AGENT_SHOW_TOOL_CALLS: bool = Field(default=False)
-    AGENT_MONITORING: bool = Field(default=True)
+    AGENT_STREAM: bool = True
+    AGENT_MARKDOWN: bool = True
+    AGENT_SHOW_TOOL_CALLS: bool = False
+    AGENT_MONITORING: bool = True
 
     DB_URL: str = "postgresql+psycopg://ai:ai@localhost:5532/ai"
     OLLAMA0_HOST: str = "http://localhost:11434"
@@ -53,7 +53,7 @@ class Settings(BaseSettings):
     OPENROUTER_API_KEY: str = Field(default="")
 
     @model_validator(mode="after")
-    def check_api_keys(self) -> "Settings":
+    def check_api_keys(self) -> "Config":
         """Validate that at least one API key is provided"""
         has_gemini = bool(self.GOOGLE_API_KEY)
         has_openai = bool(self.OPENAI_API_KEY)
@@ -79,6 +79,6 @@ class Settings(BaseSettings):
     )
 
 
-settings = Settings()
+config = Config()
 
-__all__ = ["settings"]
+__all__ = ["config"]

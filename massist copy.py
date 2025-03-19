@@ -38,9 +38,9 @@ from agno.workflow.workflow import Workflow
 from dotenv import load_dotenv
 from ollama import Client as OllamaClient
 
+from config import config
 # Local imports
 from logger import init_module_loggers, update_formatters
-from settings import settings
 
 
 class MAssist(Workflow):
@@ -57,8 +57,8 @@ loggers = list(logging.Logger.manager.loggerDict.keys())
 init_module_loggers(*loggers)
 
 # Initialize Ollama client
-ollama_embedder = OllamaClient(host=settings.OLLAMA_HOST)
-ollama_chunker = OllamaClient(host=settings.OLLAMA_HOST)
+ollama_embedder = OllamaClient(host=config.OLLAMA_HOST)
+ollama_chunker = OllamaClient(host=config.OLLAMA_HOST)
 
 
 class DecoratedOllamaEmbedder(OllamaEmbedder):
@@ -71,7 +71,8 @@ class DecoratedOllamaEmbedder(OllamaEmbedder):
 
             response_embeddings = response.get("embeddings", [])
             if len(response_embeddings) > 1:
-                raise ValueError("Expected a single embedding, but received multiple embeddings")
+                raise ValueError(
+                    "Expected a single embedding, but received multiple embeddings")
 
             return response_embeddings[0]
         except Exception as e:
@@ -134,15 +135,16 @@ class DecoratedOllamaEmbedder(OllamaEmbedder):
 
 knowledge_base = WebsiteKnowledgeBase(
     # reader=freader,
-    urls=[settings.WEBSITE_URL],
+    urls=[config.WEBSITE_URL],
     # Number of links to follow from the seed URLs
     max_links=80,
     max_depth=6,
     vector_db=PgVector(
-        db_url=settings.DB_URL,
+        db_url=config.DB_URL,
         table_name="massist_embeddings",
         schema="ai",
-        embedder=GeminiEmbedder(api_key=settings.GOOGLE_API_KEY.get_secret_value()),
+        embedder=GeminiEmbedder(
+            api_key=config.GOOGLE_API_KEY.get_secret_value()),
         # embedder=CohereEmbedder(
         #     api_key=settings.COHERE_API_KEY, dimensions=settings.COHERE_DIMENSIONS, id=settings.COHERE_MODEL
         # ),
@@ -166,7 +168,7 @@ knowledge_base = WebsiteKnowledgeBase(
     ),
     num_documents=5,
     chunking_strategy=AgenticChunking(
-        model=Gemini(api_key=settings.GOOGLE_API_KEY.get_secret_value()), max_chunk_size=5000
+        model=Gemini(api_key=config.GOOGLE_API_KEY), max_chunk_size=5000
     ),
     # chunking_strategy=AgenticChunking(
     #     model=DeepSeek(id="deepseek-chat", api_key=settings.DEEPSEEK_API_KEY.get_secret_value(), max_tokens=8192), max_chunk_size=1000
@@ -186,7 +188,8 @@ knowledge_base = WebsiteKnowledgeBase(
 )
 
 massist_memory = AgentMemory(
-    db=PgMemoryDb(table_name="massist_memory", db_url=settings.DB_URL),  # Persist memory in Postgres
+    # Persist memory in Postgres
+    db=PgMemoryDb(table_name="massist_memory", db_url=config.DB_URL),
     create_user_memories=True,  # Store user preferences
     create_session_summary=True,  # Store conversation summaries
     # classifier=MemoryClassifier(
@@ -202,7 +205,8 @@ massist_memory = AgentMemory(
 )
 
 mmanager_memory = AgentMemory(
-    db=PgMemoryDb(table_name="mmanager_memory", db_url=settings.DB_URL),  # Persist memory in Postgres
+    # Persist memory in Postgres
+    db=PgMemoryDb(table_name="mmanager_memory", db_url=config.DB_URL),
     create_user_memories=True,  # Store user preferences
     create_session_summary=True,  # Store conversation summaries
     # classifier=MemoryClassifier(
@@ -225,11 +229,12 @@ mitigator_assistant = Agent(
     # model=OpenAIChat(api_key=settings.OPENAI_API_KEY.get_secret_value()),
     # model=OpenRouter(id="deepseek/deepseek-r1:free",api_key=settings.OPENROUTER_API_KEY),
     # model=DeepSeek(id="deepseek-chat", api_key=settings.DEEPSEEK_API_KEY.get_secret_value(), max_tokens=8192),
-    model=Gemini(api_key=settings.GOOGLE_API_KEY.get_secret_value()),
+    model=Gemini(api_key=config.GOOGLE_API_KEY),
     # model=OllamaTools(id="gemma3:12b", host=settings.OLLAMA_HOST),
     knowledge=knowledge_base,
     search_knowledge=True,
-    storage=PostgresStorage(table_name="massist_sessions", db_url=settings.DB_URL),  # Persist session data
+    storage=PostgresStorage(table_name="massist_sessions",
+                            db_url=config.DB_URL),  # Persist session data
     memory=massist_memory,  # Add memory to the agent
     description="You are a helpful Agent called 'Mitigator Assistant' or 'MAssist'"
     + "and your goal is to assist the user in the best way possible.",
@@ -265,7 +270,8 @@ mitigator_assistant = Agent(
     ],
     read_chat_history=True,  # This setting gives the model a tool to get chat history
     tools=[DuckDuckGoTools()],
-    markdown=settings.AGENT_MARKDOWN,  # This setting tellss the model to format messages in markdown
+    # This setting tellss the model to format messages in markdown
+    markdown=config.AGENT_MARKDOWN,
     # add_chat_history_to_messages=True,
     add_references=True,
     show_tool_calls=False,
@@ -273,7 +279,7 @@ mitigator_assistant = Agent(
     add_datetime_to_instructions=True,
     read_tool_call_history=True,
     num_history_responses=3,
-    stream=settings.AGENT_STREAM,
+    stream=config.AGENT_STREAM,
     debug_mode=False,
 )
 
@@ -291,17 +297,18 @@ mitigator_manager = Agent(
     ],
     # reasoning=True,
     memory=mmanager_memory,
-    model=Gemini(api_key=settings.GOOGLE_API_KEY.get_secret_value()),
+    model=Gemini(api_key=config.GOOGLE_API_KEY.get_secret_value()),
     # model=OpenAIChat(api_key=settings.OPENAI_API_KEY.get_secret_value()),
     # model=DeepSeek(id="deepseek-chat", api_key=settings.DEEPSEEK_API_KEY.get_secret_value(), max_tokens=8192),
     # model=OllamaTools(id="deepseek-r1:14b", host=settings.OLLAMA_HOST),
     show_tool_calls=False,
-    storage=PostgresStorage(table_name="mitigator_manager_sessions", db_url=settings.DB_URL),  # Persist session data
+    storage=PostgresStorage(table_name="mitigator_manager_sessions",
+                            db_url=config.DB_URL),  # Persist session data
     add_history_to_messages=True,  # Adds chat history to messages
     add_datetime_to_instructions=True,
     # read_tool_call_history=True,
-    markdown=settings.AGENT_MARKDOWN,
-    stream=settings.AGENT_STREAM,
+    markdown=config.AGENT_MARKDOWN,
+    stream=config.AGENT_STREAM,
     # reasoning_max_steps=2
     # debug_mode=True,
 )
