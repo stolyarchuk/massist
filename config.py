@@ -23,16 +23,16 @@ class Config(BaseSettings):
     OPENAI_MODEL: str = ""
 
     # DeepSeek settings (optional for compatibility with .env.example)
-    DEEPSEEK_API_KEY: str = Field(default="")
+    DEEPSEEK_API_KEY: str = ""
 
     # Scraper settings
-    WEBSITE_URL: str = Field(default="")
-    OUTPUT_FILE: str = Field(default="data.txt")
-    RESULTS_FILE: str = Field(default="results.txt")
+    WEBSITE_URL: str = ""
+    OUTPUT_FILE: str = "data.txt"
+    RESULTS_FILE: str = "results.txt"
 
     # Crew settings
-    VERBOSE: bool = Field(default=True)
-    LOG_LEVEL: str = Field(default="debug")
+    VERBOSE: bool = True
+    LOG_LEVEL: str = "debug"
 
     # Optional configuration
     AGENT_STREAM: bool = True
@@ -47,12 +47,12 @@ class Config(BaseSettings):
     OLLAMA1_HOST: str = "http://localhost:11435"
     HUGGINGFACE_API_KEY: str = ""
 
-    COHERE_API_KEY: str = Field(default="")
-    COHERE_MODEL: str = Field(default="embed-multilingual-v3.0")
-    COHERE_DIMENSIONS: int = Field(default=1024)
+    COHERE_API_KEY: str = ""
+    COHERE_MODEL: str = "embed-multilingual-v3.0"
+    COHERE_DIMENSIONS: int = 1024
 
-    FIRECRAWL_API_KEY: str = Field(default="")
-    OPENROUTER_API_KEY: str = Field(default="")
+    FIRECRAWL_API_KEY: str = ""
+    OPENROUTER_API_KEY: str = ""
 
     @model_validator(mode="after")
     def check_api_keys(self) -> "Config":
