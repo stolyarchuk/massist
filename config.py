@@ -41,6 +41,8 @@ class Config(BaseSettings):
     AGENT_MONITORING: bool = True
 
     DB_URL: str = "postgresql+psycopg://ai:ai@localhost:5532/ai"
+    MONGO_URL: str = "mongodb://192.168.31.240:27017"
+
     OLLAMA0_HOST: str = "http://localhost:11434"
     OLLAMA1_HOST: str = "http://localhost:11435"
     HUGGINGFACE_API_KEY: str = ""
