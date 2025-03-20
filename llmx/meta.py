@@ -42,3 +42,6 @@ class Meta(BaseModel):
         "   - If no relevant information is found, clearly state this",
         "   - Transparent about limitations in available information",
     ])
+
+
+meta = Meta()

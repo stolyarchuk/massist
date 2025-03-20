@@ -1,0 +1,15 @@
+from agno.knowledge.website import WebsiteKnowledgeBase
+
+from config import config
+from llmx.chunking import agent_chunking, semantic_chunking
+from llmx.vectordb import pgvector
+
+knowledge_base = WebsiteKnowledgeBase(
+    urls=[config.WEBSITE_URL],
+    max_links=500,
+    max_depth=6,
+    vector_db=pgvector,
+    optimize_on=5000,
+    num_documents=4,
+    chunking_strategy=semantic_chunking
+)
