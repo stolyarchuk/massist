@@ -1,3 +1,4 @@
+from agno.document.chunking.agentic import AgenticChunking
 from agno.knowledge.website import WebsiteKnowledgeBase
 
 from config import config

@@ -10,6 +10,10 @@ hf_model = HuggingFace(
     id="mistralai/Mistral-Small-3.1-24B-Instruct-2503", max_tokens=65536, api_key=config.HUGGINGFACE_API_KEY
 )
 
+ds_model = HuggingFace(
+    id="deepseek-ai/DeepSeek-R1", max_tokens=65536, api_key=config.HUGGINGFACE_API_KEY
+)
+
 google_model = Gemini(api_key=config.GOOGLE_API_KEY)
 
 
@@ -19,10 +23,23 @@ massist_memory_model = OpenAILike(
     api_key=config.OPENROUTER_API_KEY,
 )
 
+hf_model_or = OpenAILike(
+    id="mistralai/mistral-small-3.1-24b-instruct:free",
+    base_url="https://openrouter.ai/api/v1",
+    api_key=config.OPENROUTER_API_KEY,
+)
+
+
+deepseek_model = OpenAILike(
+    id="deepseek/deepseek-r1:free",
+    base_url="https://openrouter.ai/api/v1",
+    api_key=config.OPENROUTER_API_KEY,
+)
+
 
 google_embedder = GeminiEmbedder(
     api_key=config.GOOGLE_API_KEY,
-    # id=config.GEMINI_EMBED_MODEL,
+    id="text-multilingual-embedding-002",
     # dimensions=1536,
 )
 
