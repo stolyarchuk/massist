@@ -123,8 +123,8 @@ logger.debug(loggers)
 
 
 def init_logging():
-    # update_formatters(*loggers)
-    init_module_loggers('root', 'agno', 'fastapi', 'uvicorn')
+    update_formatters(*loggers)
+    # init_module_loggers('root', 'agno', 'fastapi', 'uvicorn')
 
 
 __all__ = ["init_module_loggers", "update_formatters", "logger"]

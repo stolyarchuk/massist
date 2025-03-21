@@ -3,10 +3,9 @@ from agno.tools.duckduckgo import DuckDuckGoTools
 
 from config import config
 from llmx.knowledge import knowledge_base
-from llmx.memory import massist_memory
 from llmx.meta import meta
 from llmx.models import google_model
-from llmx.storage import mongo_storage, pg_storage
+from llmx.storage import pg_storage
 
 mitigator_assistant = Agent(
     name="Mitigator Assistant",
@@ -17,20 +16,18 @@ mitigator_assistant = Agent(
     model=google_model,
     knowledge=knowledge_base,
     search_knowledge=True,
-    storage=mongo_storage,
-    memory=massist_memory,
+    storage=pg_storage,
     description=meta.description,
     instructions=meta.instructions,
     read_chat_history=True,  # This setting gives the model a tool to get chat history
     tools=[DuckDuckGoTools()],
     # This setting tellss the model to format messages in markdown
     markdown=config.AGENT_MARKDOWN,
-    # add_references=True,
     show_tool_calls=config.AGENT_SHOW_TOOL_CALLS,
     add_history_to_messages=True,
     add_datetime_to_instructions=True,
     read_tool_call_history=True,
     num_history_responses=3,
     stream=config.AGENT_STREAM,
-    debug_mode=True,
+    debug_mode=False,
 )
