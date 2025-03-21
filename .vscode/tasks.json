@@ -17,6 +17,43 @@
       },
       "group": {
         "kind": "build",
+        "isDefault": false
+      },
+      "problemMatcher": [
+        {
+          "owner": "python",
+          "fileLocation": [
+            "relative",
+            "${workspaceFolder}"
+          ],
+          "pattern": [
+            {
+              "regexp": "^\\s*File \"([^\"]+)\", line (\\d+)",
+              "file": 1,
+              "line": 2
+            },
+            {
+              "regexp": "^\\s*([^:]+): (.*)$",
+              "message": 2
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "label": "Run Main",
+      "type": "process",
+      "command": "${command:python.interpreterPath}",
+      "args": [
+        "${workspaceFolder}/main.py"
+      ],
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": true
+      },
+      "group": {
+        "kind": "build",
         "isDefault": true
       },
       "problemMatcher": [
