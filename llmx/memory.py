@@ -23,7 +23,7 @@ mongo_memory = MongoMemoryDb(
 
 massist_memory = AgentMemory(
     user_id="stolyarchuk",
-    db=pg_memory,
+    db=mongo_memory,
     create_user_memories=True,
     create_session_summary=True,
     manager=MemoryManager(model=massist_memory_model),

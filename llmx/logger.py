@@ -114,4 +114,17 @@ logger = logging.getLogger(__name__)
 logger.setLevel(log_level)
 logger.addHandler(global_handler)
 
+loggers = [logging.getLogger().name] + [
+    lg for lg in logging.Logger.manager.loggerDict.keys()
+]
+
+
+logger.debug(loggers)
+
+
+def init_logging():
+    update_formatters(*loggers)
+    # init_module_loggers('root', 'agno', 'fastapi', 'uvicorn')
+
+
 __all__ = ["init_module_loggers", "update_formatters", "logger"]

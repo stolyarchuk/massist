@@ -1,7 +1,4 @@
-from typing import Annotated, Optional
-
-# Import dotenv for .env file support
-from pydantic import Field, model_validator
+from pydantic import model_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
@@ -10,6 +7,8 @@ class Config(BaseSettings):
     Configuration settings class that reads values from environment variables.
     Environment variables can be loaded from .env files using python-dotenv.
     """
+
+    MAX_LINKS: int = 1000
 
     # LLM settings
     GOOGLE_API_KEY: str = ""
