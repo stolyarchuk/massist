@@ -49,7 +49,7 @@ google_embedder = GeminiEmbedder(
 )
 
 vllm_model = OpenAILike(
-    id="TheBloke/Mistral-7B-Instruct-v0.2-GPTQ",
+    id="neuralmagic/DeepSeek-R1-Distill-Qwen-7B-quantized.w4a16",
     base_url="http://192.168.31.240:8000/v1",
     api_key="sk-d00b792327b44da6876a1419e059ee99"
 )
@@ -59,10 +59,4 @@ vllm_embedder = OpenAIEmbedder(
     dimensions=1024,
     base_url="http://192.168.31.240:8001/v1",
     api_key="sk-d00b792327b44da6876a1419e059ee99"
-)
-
-openai_embedder = OpenAIEmbedder(
-    id="text-embedding-3-small",
-    dimensions=1536,
-    api_key=config.OPENAI_API_KEY,
 )
