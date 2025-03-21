@@ -7,9 +7,9 @@ from llmx.models import google_embedder, openai_embedder, vllm_embedder
 
 pgvector = PgVector(
     db_url=config.DB_URL,
-    table_name="massist_embeddings_0",
+    table_name="massist_embeddings_1",
     # schema="ai",
     embedder=vllm_embedder,
-    search_type=SearchType.vector,
+    search_type=SearchType.hybrid,
     content_language="russian",
 )

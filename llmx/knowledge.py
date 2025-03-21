@@ -1,8 +1,7 @@
-from agno.document.chunking.agentic import AgenticChunking
 from agno.knowledge.website import WebsiteKnowledgeBase
 
 from config import config
-from llmx.chunking import agent_chunking, semantic_chunking
+from llmx.chunking import agent_chunking
 from llmx.vectordb import pgvector
 
 knowledge_base = WebsiteKnowledgeBase(
@@ -12,6 +11,5 @@ knowledge_base = WebsiteKnowledgeBase(
     vector_db=pgvector,
     # optimize_on=5000,
     num_documents=3,
-    # chunking_strategy=semantic_chunking
     chunking_strategy=agent_chunking
 )
