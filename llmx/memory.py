@@ -6,7 +6,8 @@ from agno.memory.manager import MemoryManager
 from agno.memory.summarizer import MemorySummarizer
 
 from config import config
-from llmx.models import massist_memory_model
+from llmx.models import (google_model, hf_model, massist_memory_model,
+                         vllm_model)
 
 pg_memory = PgMemoryDb(
     table_name="massist_memory",
@@ -26,7 +27,7 @@ massist_memory = AgentMemory(
     db=mongo_memory,
     create_user_memories=True,
     create_session_summary=True,
-    # manager=MemoryManager(model=massist_memory_model),
-    # classifier=MemoryClassifier(model=massist_memory_model),
-    # summarizer=MemorySummarizer(model=massist_memory_model),
+    manager=MemoryManager(model=vllm_model),
+    classifier=MemoryClassifier(model=google_model),
+    summarizer=MemorySummarizer(model=google_model),
 )
