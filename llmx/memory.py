@@ -26,7 +26,7 @@ massist_memory = AgentMemory(
     db=mongo_memory,
     create_user_memories=True,
     create_session_summary=True,
-    manager=MemoryManager(model=massist_memory_model),
-    classifier=MemoryClassifier(model=massist_memory_model),
-    summarizer=MemorySummarizer(model=massist_memory_model),
+    # manager=MemoryManager(model=massist_memory_model),
+    # classifier=MemoryClassifier(model=massist_memory_model),
+    # summarizer=MemorySummarizer(model=massist_memory_model),
 )
