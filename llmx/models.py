@@ -3,9 +3,12 @@ from agno.embedder.openai import OpenAIEmbedder
 from agno.models.deepseek.deepseek import DeepSeek
 from agno.models.google.gemini import Gemini
 from agno.models.huggingface.huggingface import HuggingFace
+from agno.models.openai.chat import OpenAIChat
 from agno.models.openai.like import OpenAILike
 
 from config import config  # Local import
+
+openai_model = OpenAIChat(api_key=config.OPENAI_API_KEY)
 
 hf_model = HuggingFace(
     id="mistralai/Mistral-Small-3.1-24B-Instruct-2503", max_tokens=65536, api_key=config.HUGGINGFACE_API_KEY
@@ -19,7 +22,7 @@ ds_model = HuggingFace(
     id="deepseek-ai/DeepSeek-R1", max_tokens=65536, api_key=config.HUGGINGFACE_API_KEY
 )
 
-google_model = Gemini(api_key=config.GOOGLE_API_KEY)
+google_model = Gemini(api_key=config.GOOGLE_API_KEY,)
 
 
 massist_memory_model = OpenAILike(
@@ -28,7 +31,7 @@ massist_memory_model = OpenAILike(
     api_key=config.OPENROUTER_API_KEY,
 )
 
-hf_model_or = OpenAILike(
+mistral_model = OpenAILike(
     id="mistralai/mistral-small-3.1-24b-instruct:free",
     base_url="https://openrouter.ai/api/v1",
     api_key=config.OPENROUTER_API_KEY,
@@ -44,8 +47,8 @@ deepseek_model = OpenAILike(
 
 google_embedder = GeminiEmbedder(
     api_key=config.GOOGLE_API_KEY,
-    id="text-multilingual-embedding-002",
-    # dimensions=1536,
+    id="gemini-embedding-exp-03-07",
+    dimensions=3072,
 )
 
 vllm_model = OpenAILike(
