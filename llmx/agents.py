@@ -15,9 +15,9 @@ def get_agent(num: int):
         agent_id=f"mitigator_assistant_{num}",
         user_id="stolyarchuk",
         model=google_model,
-        knowledge=get_kb(num),
+        knowledge=get_kb(config.VECTORDB_TYPE, num),
         search_knowledge=True,
-        storage=get_storage(num),
+        storage=get_storage(config.STORAGEDB_TYPE, num),
         description=meta.description,
         instructions=meta.instructions,
         read_chat_history=True,
@@ -53,5 +53,30 @@ mitigator_team = Team(
     # send_team_context_to_members=True,
     show_tool_calls=True,
     markdown=True,
+    show_members_responses=True,
+)
+
+
+multi_language_team = Team(
+    name="Multi Language Team",
+    mode="route",
+    model=google_model,
+    members=[
+        # english_agent,
+        # spanish_agent,
+        # japanese_agent,
+        # french_agent,
+        # german_agent,
+        # chinese_agent,
+    ],
+    show_tool_calls=True,
+    markdown=True,
+    instructions=[
+        "You are a language router that directs questions to the appropriate language agent.",
+        "If the user asks in a language whose agent is not a team member, respond in English with:",
+        "'I can only answer in the following languages: English, Spanish, Japanese, French and German. Please ask your question in one of these languages.'",
+        "Always check the language of the user's input before routing to an agent.",
+        "For unsupported languages like Italian, respond in English with the above message.",
+    ],
     show_members_responses=True,
 )
