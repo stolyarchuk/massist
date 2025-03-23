@@ -77,6 +77,11 @@ global_handler.setLevel(log_level)
 global_handler.setFormatter(global_formatter)
 
 
+logger = logging.getLogger(__name__)
+logger.setLevel(log_level)
+logger.addHandler(global_handler)
+
+
 def logger_factory(name: str):
     name_logger = logging.getLogger(name)
 
@@ -110,10 +115,6 @@ def update_formatters(*args: str):
         module_logger.addHandler(global_handler)
 
 
-logger = logging.getLogger(__name__)
-logger.setLevel(log_level)
-logger.addHandler(global_handler)
-
 loggers = [logging.getLogger().name] + [
     lg for lg in logging.Logger.manager.loggerDict.keys()
 ]
@@ -123,13 +124,5 @@ logger.debug(loggers)
 
 
 def init_logging():
-    update_formatters(*loggers)
-    # init_module_loggers('root', 'agno', 'fastapi', 'uvicorn', 'pylance')
-
-
-__all__ = ["init_module_loggers", "update_formatters", "logger"]
-
-
-
-
-
+    # update_formatters(*loggers)
+    init_module_loggers(*loggers)
