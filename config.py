@@ -9,6 +9,9 @@ class Config(BaseSettings):
     """
 
     MAX_LINKS: int = 1000
+    DIMENSIONS: int = 1024
+    VECTORDB_TYPE: str = "pg"
+    STORAGEDB_TYPE: str = "pg"
 
     # LLM settings
     GOOGLE_API_KEY: str = ""
