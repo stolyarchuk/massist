@@ -9,15 +9,15 @@ from llmx.models import google_model
 from llmx.storage import get_storage
 
 
-def get_agent(num: int):
+def get_agent(name: str):
     return Agent(
-        name=f"Mitigator Assistant {num}",
-        agent_id=f"mitigator_assistant_{num}",
+        name=f"Mitigator Assistant {name}",
+        agent_id=f"mitigator_assistant_{name}",
         user_id="stolyarchuk",
         model=google_model,
-        knowledge=get_kb(config.VECTORDB_TYPE, num),
+        knowledge=get_kb(name),
         search_knowledge=True,
-        storage=get_storage(config.STORAGEDB_TYPE, num),
+        storage=get_storage(name),
         description=meta.description,
         instructions=meta.instructions,
         read_chat_history=True,
@@ -40,9 +40,9 @@ mitigator_team = Team(
     mode="collaborate",
     model=google_model,
     members=[
-        get_agent(1024),
-        get_agent(768),
-        get_agent(896),
+        get_agent("integrate"),
+        # get_agent(768),
+        # get_agent(896),
     ],
     instructions=[
         "You are a discussion master.",
