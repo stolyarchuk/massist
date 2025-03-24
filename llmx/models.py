@@ -52,9 +52,10 @@ google_embedder = GeminiEmbedder(
 )
 
 vllm_model = OpenAILike(
-    id="neuralmagic/DeepSeek-R1-Distill-Qwen-7B-quantized.w4a16",
+    id=config.VLLM_MODEL,
     base_url="http://192.168.31.240:8000/v1",
-    api_key="sk-d00b792327b44da6876a1419e059ee99"
+    api_key="sk-d00b792327b44da6876a1419e059ee99",
+    max_tokens=32768,
 )
 
 vllm_embedder = OpenAIEmbedder(

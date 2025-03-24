@@ -12,7 +12,7 @@ def get_kb(topic: str, model: Model = mistral_model):
     logger.info("Using topic: %s", topic)
 
     return WebsiteKnowledgeBase(
-        urls=[f"{config.WEBSITE_URL}/{topic}/"],
+        urls=[f"{config.WEBSITE_URL}{topic}/"],
         max_links=config.MAX_LINKS,
         max_depth=6,
         vector_db=get_vectordb(topic),
