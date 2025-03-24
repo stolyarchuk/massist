@@ -8,8 +8,9 @@ class Config(BaseSettings):
     Environment variables can be loaded from .env files using python-dotenv.
     """
 
+    MAX_TOKENS: int = 32768
     MAX_LINKS: int = 1000
-    DIMENSIONS: int = 1024
+    DIMS: int = 1024
     VECTORDB_TYPE: str = "pg"
     STORAGEDB_TYPE: str = "pg"
 
@@ -17,6 +18,7 @@ class Config(BaseSettings):
     GOOGLE_API_KEY: str = ""
     GEMINI_MODEL: str = "gemini-2.0-flash"
     GEMINI_EMBED_MODEL: str = "gemini-embedding-exp-03-07"
+    VLLM_MODEL: str = 'neuralmagic/Qwen2-1.5B-Instruct-quantized.w8a16'
     TEMPERATURE: float = 0.5
 
     # OpenAI settings (optional)
