@@ -6,7 +6,7 @@ from config import config
 from llmx.agent_memory import get_agent_memory
 from llmx.knowledge import get_kb
 from llmx.meta import Meta
-from llmx.models import gemini_model
+from llmx.models import gemini2_model, gemini_model
 from llmx.storage_db import get_storage
 
 
@@ -22,7 +22,7 @@ def get_agent(agent_id: str, topic: str, model: Model = gemini_model):
         knowledge=get_kb(agent_id),
         search_knowledge=True,
         storage=get_storage(agent_id),
-        memory=get_agent_memory(agent_id),
+        memory=get_agent_memory(agent_id, model=gemini2_model),
         description=meta.description,
         instructions=meta.instructions,
         read_chat_history=True,
