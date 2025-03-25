@@ -1,0 +1,5 @@
+@hostname = http://192.168.31.240:8000
+
+###
+GET {{hostname}}/openapi.json
+Authorization: Bearer {{$processEnv VLMM_API_KEY}}
