@@ -8,17 +8,22 @@ class Config(BaseSettings):
     Environment variables can be loaded from .env files using python-dotenv.
     """
 
-    MAX_TOKENS: int = 32768
-    MAX_LINKS: int = 1000
+    MAX_TOKENS: int = 5000
+    MAX_LINKS: int = 10
     DIMS: int = 1024
-    VECTOR_DB: str = "pg"
-    STORAGE_DB: str = "pg"
+    VECTOR_DB: str = ""
+    STORAGE_DB: str = ""
+    MEMORY_DB: str = ""
 
     # LLM settings
+    DEEPSEEK_API_KEY: str = ""
+    OPENROUTER_API_KEY: str = ""
+    HUGGINGFACE_API_KEY: str = ""
     GOOGLE_API_KEY: str = ""
-    GEMINI_MODEL: str = "gemini-2.0-flash"
-    GEMINI_EMBED_MODEL: str = "gemini-embedding-exp-03-07"
-    VLLM_MODEL: str = 'neuralmagic/Qwen2-1.5B-Instruct-quantized.w8a16'
+    GEMINI_MODEL: str = ""
+    GEMINI_EMBED_MODEL: str = ""
+    VLLM_MODEL: str = ''
+
     TEMPERATURE: float = 0.5
 
     # OpenAI settings (optional)
@@ -26,16 +31,10 @@ class Config(BaseSettings):
     OPENAI_BASE_URL: str = ""
     OPENAI_MODEL: str = ""
 
-    # DeepSeek settings (optional for compatibility with .env.example)
-    DEEPSEEK_API_KEY: str = ""
-
     # Scraper settings
     WEBSITE_URL: str = ""
-    OUTPUT_FILE: str = "data.txt"
-    RESULTS_FILE: str = "results.txt"
 
     # Crew settings
-    VERBOSE: bool = True
     LOG_LEVEL: str = "debug"
 
     # Optional configuration
@@ -44,19 +43,11 @@ class Config(BaseSettings):
     AGENT_SHOW_TOOL_CALLS: bool = False
     AGENT_MONITORING: bool = True
 
-    DB_URL: str = "postgresql+psycopg://ai:ai@localhost:5532/ai"
+    POSTGRES_URL: str = "postgresql+psycopg://ai:ai@localhost:5532/ai"
     MONGO_URL: str = "mongodb://192.168.31.240:27017"
 
     OLLAMA0_HOST: str = "http://localhost:11434"
     OLLAMA1_HOST: str = "http://localhost:11435"
-    HUGGINGFACE_API_KEY: str = ""
-
-    COHERE_API_KEY: str = ""
-    COHERE_MODEL: str = "embed-multilingual-v3.0"
-    COHERE_DIMENSIONS: int = 1024
-
-    FIRECRAWL_API_KEY: str = ""
-    OPENROUTER_API_KEY: str = ""
 
     @model_validator(mode="after")
     def check_api_keys(self) -> "Config":
