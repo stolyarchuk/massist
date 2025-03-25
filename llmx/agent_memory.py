@@ -9,7 +9,7 @@ from llmx.memory_db import get_memory_db
 from llmx.models import or_gemini2_flash
 
 
-def get_memory(agent_id: str, model: Model = or_gemini2_flash) -> AgentMemory:
+def get_agent_memory(agent_id: str, model: Model = or_gemini2_flash) -> AgentMemory:
     return AgentMemory(
         user_id="stolyarchuk",
         db=get_memory_db(agent_id),
