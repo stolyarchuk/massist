@@ -11,8 +11,8 @@ class Config(BaseSettings):
     MAX_TOKENS: int = 32768
     MAX_LINKS: int = 1000
     DIMS: int = 1024
-    VECTORDB_TYPE: str = "pg"
-    STORAGEDB_TYPE: str = "pg"
+    VECTOR_DB: str = "pg"
+    STORAGE_DB: str = "pg"
 
     # LLM settings
     GOOGLE_API_KEY: str = ""

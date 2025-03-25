@@ -6,13 +6,13 @@ from config import config
 
 
 def get_storage(topic: str) -> Storage:
-    if config.STORAGEDB_TYPE == "pg":
+    if config.STORAGE_DB == "pg":
         return PostgresStorage(
             table_name=f"massist_sessions_{topic}",
             db_url=config.DB_URL
         )
 
-    if config.STORAGEDB_TYPE == "sqlite":
+    if config.STORAGE_DB == "sqlite":
         return SqliteStorage(
             table_name=f"massist_sessions_{topic}",
             db_file="tmp/data.db",
