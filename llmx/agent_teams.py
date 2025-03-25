@@ -1,7 +1,8 @@
 import asyncio
 import json
-from typing import Any, AsyncGenerator, Dict, Optional
+from typing import Any, AsyncGenerator, AsyncIterator, Dict, Union
 
+from agno.run.team import TeamRunResponse
 from agno.team.team import Team
 from agno.utils.log import logger
 from pydantic import BaseModel
@@ -37,6 +38,7 @@ mitigator_team = Team(
         # "Carefully analyze each user message, review main topics and it then route them to appropriate agents.",
         "Route customer question to appropriate agents. If no appropriate agent found think again.",
         "Release notes questions route to versions agent.",
+        "For version informationm updates and changelogs route query to versions agent.",
         "Tech support questions decompose first and the route to appropriate agents. Always route to install agent.",
         "Setup and configure related questions route to knowledge base agent primary.",
         "After receiving responses from agents, combine and summarize them into a single, compehensive response.",
@@ -84,25 +86,27 @@ class Lead:
         yield json.dumps({"event": "start", "data": ""})
 
         # Ensure stream is set to True regardless of what's in kwargs
-        kwargs['stream'] = True
+        # kwargs['stream'] = True
+        # stream_intermediate_steps
 
         try:
-            # Get the response stream from the team
-            response_stream = await self.mitigator_team.arun(user_input, **kwargs)
+            response_stream: AsyncIterator[TeamRunResponse] = await self.mitigator_team.arun(  # type: ignore
+                message=user_input, stream_intermediate_steps=True, stream=True
+            )
 
-            async for chunk in response_stream:
+            async for chunk in response_stream:  # type: ignore
                 if not chunk:  # Skip empty chunks
                     continue
 
                 if isinstance(chunk, dict):
                     # For structured data responses
-                    yield json.dumps({"event": "message", "data": chunk})
+                    yield json.dumps({"event": "message", "data": chunk.to_dict()})
                 elif isinstance(chunk, str):
                     # For text chunks, ensure they're properly formatted
-                    yield json.dumps({"event": "message", "data": {"content": chunk}})
+                    yield json.dumps({"event": "message", "data": chunk.to_dict()})
                 else:
                     # Convert any other type to string representation
-                    yield json.dumps({"event": "message", "data": {"content": str(chunk)}})
+                    yield json.dumps({"event": "message", "data": chunk.to_dict()})
 
         except asyncio.CancelledError:
             # Handle client disconnection gracefully

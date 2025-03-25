@@ -1,6 +1,7 @@
 from time import time
 from uuid import uuid4
 
+from agno.utils.pprint import pprint_run_response
 # from app.db import chat_exists, create_chat, get_redis
 from fastapi import APIRouter, Depends, HTTPException
 from pydantic import BaseModel
@@ -18,12 +19,12 @@ class ChatIn(BaseModel):
 router = APIRouter()
 
 
-# @router.post('/chat')
-# async def single_chat():
-#     chat_id = str(uuid4())[:8]
-#     created = int(time())
-#     await create_chat(rdb, chat_id, created)
-#     return {'id': chat_id}
+@router.post('/chat/new')
+async def single_chat():
+    chat_id = str(uuid4())[:8]
+    created = int(time())
+    # await create_chat(rdb, chat_id, created)
+    return {'chat_id': chat_id}
 
 
 # @router.post('/chats/{chat_id}')
