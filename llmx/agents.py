@@ -3,21 +3,23 @@ from agno.team.team import Team
 from agno.tools.duckduckgo import DuckDuckGoTools
 
 from config import config
+from llmx.agent_memory import get_memory
 from llmx.knowledge import get_kb
 from llmx.meta import meta
 from llmx.models import gemini_model
-from llmx.storage import get_storage
+from llmx.storage_db import get_storage
 
 
-def get_agent(name: str):
+def get_agent(agent_id: str):
     return Agent(
-        name=f"Mitigator Assistant {name}",
-        agent_id=f"mitigator_assistant_{name}",
+        name=f"Mitigator Assistant in {agent_id}",
+        agent_id=f"mitigator_assistant_{agent_id}",
         user_id="stolyarchuk",
         model=gemini_model,
-        knowledge=get_kb(name),
+        knowledge=get_kb(agent_id),
         search_knowledge=True,
-        storage=get_storage(name),
+        storage=get_storage(agent_id),
+        memory=get_memory(agent_id),
         description=meta.description,
         instructions=meta.instructions,
         read_chat_history=True,
@@ -40,10 +42,15 @@ mitigator_team = Team(
     mode="collaborate",
     model=gemini_model,
     members=[
+        get_agent("install"),
         get_agent("integrate"),
+        get_agent("versions"),
+        get_agent("maintence"),
         # get_agent(768),
         # get_agent(896),
     ],
+    storage=get_storage('ceo'),
+    memory=get_memory('ceo'),
     instructions=[
         "You are a discussion master.",
         "You have to stop the discussion when you think the team has reached a consensus.",

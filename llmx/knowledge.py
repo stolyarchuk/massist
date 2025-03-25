@@ -5,7 +5,7 @@ from config import config
 from llmx.chunking import get_chunking_strategy
 from llmx.logger import logger
 from llmx.models import or_mistral_small
-from llmx.vectordb import get_vector_db
+from llmx.vector_db import get_vector_db
 
 
 def get_kb(topic: str, model: Model = or_mistral_small):
