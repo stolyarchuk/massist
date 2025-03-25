@@ -1,32 +1,45 @@
 from agno.team.team import Team
 
+from config import config
 from llmx.agent import get_agent
 from llmx.agent_memory import get_team_memory
 from llmx.models import gemini_model
 from llmx.storage_db import get_storage
 
 mitigator_team = Team(
-    name="Assistant Team",
-    mode="collaborate",
+    name="Mitigator Assistant Team",
+    mode="route",
+    # mode="collaborate",
     model=gemini_model,
+    team_id="massist_team",
     user_id="stolyarchuk",
     members=[
         get_agent("install"),
         get_agent("integrate"),
         get_agent("versions"),
         get_agent("maintenance"),
+        get_agent("kb"),
+        get_agent("psg"),
+        get_agent("contact"),
     ],
     storage=get_storage('ceo'),
     memory=get_team_memory('ceo'),
     instructions=[
-        "You are a discussion master.",
-        "You have to stop the discussion when you think the team has reached a consensus.",
+        "You are the lead customer support agent responsible for classifying and routing customer inquiries.",
+        # "Carefully analyze each user message, review main topics and it then route them to appropriate agents.",
+        "Route customer question to appropriate agents. If no appropriate agent found think again.",
+        "Setup and configure related questions route to kb agent primary.",
+        "After receiving responses from agents, combine and summarize them into a single, compehensive response.",
+        "Then relay that information back to the user in a professional and helpful manner.",
+        "Ensure a seamless experience for the user by maintaining context throughout the conversation.",
+        # "Never disclose your team and agents information. Always give an abstract answer in questions related to your team."
     ],
-    success_criteria="The team has reached a consensus.",
+    # success_criteria="The team has reached a consensus.",
     # update_team_context=True,
     # send_team_context_to_members=True,
-    show_tool_calls=True,
-    markdown=True,
+    show_tool_calls=config.AGENT_SHOW_TOOL_CALLS,
+    markdown=config.AGENT_MARKDOWN,
+    debug_mode=config.TEAM_DEBUG,
     show_members_responses=True,
     enable_team_history=True,
     enable_agentic_context=True,
