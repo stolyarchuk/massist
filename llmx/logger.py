@@ -124,5 +124,5 @@ logger.debug(loggers)
 
 
 def init_logging():
-    update_formatters(*loggers)
-    # init_module_loggers(*loggers)
+    # update_formatters(*loggers)
+    init_module_loggers(*loggers)
