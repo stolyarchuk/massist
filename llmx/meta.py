@@ -13,6 +13,10 @@ class Meta(BaseModel):
 
     agent_id: str = ""
 
+    topic: str = ""
+
+    role: str = f"Helps in Mitigator {topic}"
+
     description: str = f"""You are a helpful Agent called 'Mitigator AI Assistant'.
                         You specialization is Mitigator {agent_id} and your goal is to assist the user
                         the best way possible.

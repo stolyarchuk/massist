@@ -1,26 +1,34 @@
+import asyncio
+import json
+from typing import Any, AsyncGenerator, Dict, Optional
+
 from agno.team.team import Team
+from agno.utils.log import logger
+from pydantic import BaseModel
 
 from config import config
 from llmx.agent import get_agent
 from llmx.agent_memory import get_team_memory
-from llmx.models import gemini_model
+from llmx.models import gemini_model, or_gemini2_flash
 from llmx.storage_db import get_storage
 
 mitigator_team = Team(
-    name="Mitigator Assistant Team",
+    name="Mitigator Assistant Team Lead",
     mode="route",
     # mode="collaborate",
-    model=gemini_model,
     team_id="massist_team",
     user_id="stolyarchuk",
+    # reasoning=True,
+    model=gemini_model,
     members=[
-        get_agent("install"),
-        get_agent("integrate"),
-        get_agent("versions"),
-        get_agent("maintenance"),
-        get_agent("kb"),
-        get_agent("psg"),
-        get_agent("contact"),
+        get_agent("install", "Installation"),
+        get_agent("integrate", "Integration"),
+        get_agent("versions", "Versions"),
+        get_agent("maintenance", "Maintenance"),
+        get_agent("kb", "Knowledge Base"),
+        get_agent("psg", "PCAP Signature Generator"),
+        get_agent("contact", "Support"),
+        get_agent("price", "Price"),
     ],
     storage=get_storage('ceo'),
     memory=get_team_memory('ceo'),
@@ -28,7 +36,9 @@ mitigator_team = Team(
         "You are the lead customer support agent responsible for classifying and routing customer inquiries.",
         # "Carefully analyze each user message, review main topics and it then route them to appropriate agents.",
         "Route customer question to appropriate agents. If no appropriate agent found think again.",
-        "Setup and configure related questions route to kb agent primary.",
+        "Release notes questions route to versions agent.",
+        "Tech support questions decompose first and the route to appropriate agents. Always route to install agent.",
+        "Setup and configure related questions route to knowledge base agent primary.",
         "After receiving responses from agents, combine and summarize them into a single, compehensive response.",
         "Then relay that information back to the user in a professional and helpful manner.",
         "Ensure a seamless experience for the user by maintaining context throughout the conversation.",
@@ -44,6 +54,100 @@ mitigator_team = Team(
     enable_team_history=True,
     enable_agentic_context=True,
 )
+
+
+class Lead:
+    """
+    Lead class that holds and manages access to the Mitigator team.
+
+    This class provides a wrapper around team operations and ensures
+    responses are properly formatted for streaming.
+    """
+    mitigator_team: Team = mitigator_team
+
+    async def run_stream(self, user_input: str, **kwargs) -> AsyncGenerator[str, None]:
+        """
+        Wrapper for mitigator_team.run that returns a valid StreamSSE format.
+
+        Args:
+            user_input: The user's query or input message
+            **kwargs: Additional arguments to pass to the team's run method
+
+        Yields:
+            JSON formatted strings compatible with StreamSSE
+        """
+        if not user_input or not isinstance(user_input, str):
+            yield json.dumps({"event": "error", "data": {"error": "Invalid input: user_input must be a non-empty string"}})
+            return
+
+        # Initial event indicating stream start
+        yield json.dumps({"event": "start", "data": ""})
+
+        # Ensure stream is set to True regardless of what's in kwargs
+        kwargs['stream'] = True
+
+        try:
+            # Get the response stream from the team
+            response_stream = await self.mitigator_team.arun(user_input, **kwargs)
+
+            async for chunk in response_stream:
+                if not chunk:  # Skip empty chunks
+                    continue
+
+                if isinstance(chunk, dict):
+                    # For structured data responses
+                    yield json.dumps({"event": "message", "data": chunk})
+                elif isinstance(chunk, str):
+                    # For text chunks, ensure they're properly formatted
+                    yield json.dumps({"event": "message", "data": {"content": chunk}})
+                else:
+                    # Convert any other type to string representation
+                    yield json.dumps({"event": "message", "data": {"content": str(chunk)}})
+
+        except asyncio.CancelledError:
+            # Handle client disconnection gracefully
+            yield json.dumps({"event": "cancelled", "data": {"message": "Stream cancelled"}})
+            return
+
+        except Exception as e:
+            # More detailed error information
+            error_details = {
+                "error": str(e),
+                "type": type(e).__name__
+            }
+            yield json.dumps({"event": "error", "data": error_details})
+
+        finally:
+            # Final event indicating stream completion
+            yield json.dumps({"event": "end", "data": ""})
+
+    async def run(self, user_input: str, **kwargs) -> Dict[str, Any]:
+        """
+        Non-streaming wrapper for mitigator_team.run
+
+        Args:
+            user_input: The user's query or input message
+            **kwargs: Additional arguments to pass to the team's run method
+
+        Returns:
+            Complete response from the team
+
+        Raises:
+            ValueError: If user_input is empty or not a string
+            Exception: Any exception that might occur during team execution
+        """
+        if not user_input or not isinstance(user_input, str):
+            raise ValueError(
+                "Invalid input: user_input must be a non-empty string")
+
+        # Ensure stream is set to False
+        kwargs['stream'] = False
+
+        try:
+            return await self.mitigator_team.arun(user_input, **kwargs)
+        except Exception as e:
+            logger.error(e)
+            raise
 
 
 multi_language_team = Team(
@@ -74,3 +178,6 @@ multi_language_team = Team(
     show_members_responses=True,
     enable_team_history=True,
 )
+
+# Create a default lead instance for easy import
+lead = Lead()

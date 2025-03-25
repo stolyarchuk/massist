@@ -1,35 +1,30 @@
-import asyncio
-
 import uvicorn
-from agno.playground.playground import Playground
-from agno.playground.serve import serve_playground_app
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 
-from llmx.agent_teams import mitigator_team
+from config import config
+from llmx.api import router
 from llmx.logger import init_logging
-
-app = FastAPI()
 
 init_logging()
 
+app = FastAPI()
 
-@app.get("/ask")
-async def ask(query: str):
-    response = await mitigator_team.arun(query, stream=False)
-    return {"response": response.content}
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=config.ALLOW_ORIGINS,
+    allow_credentials=True,
+    allow_methods=['*'],
+    allow_headers=['*'],
+)
+
+app.include_router(router)
 
 
-# app = Playground(agents=mitigator_team).get_app()  # type: ignore
-# app = Playground(agents=[agent_id(1024)]).get_app()  # type: ignore
+@app.head('/health')
+@app.get('/health')
+def health_check():
+    return 'ok'
 
-if __name__ == "__main__":
-    uvicorn.run(app=app)
-    # serve_playground_app("main:app", reload=True)
 
-    # asyncio.run(
-    #     mitigator_team.print_response(
-    #         message="Начните рассуждения на тему интеграция митигатора с внешними системами'",
-    #         stream=True,
-    #         stream_intermediate_steps=True,
-    #     )
-    # )
+uvicorn.run(app=app, reload=False)
