@@ -9,7 +9,7 @@ from llmx.models import vllm_embedder
 
 
 def get_vectordb(topic: str = "index", embedder: Embedder = vllm_embedder) -> VectorDb:
-    if config.VECTORDB_TYPE == "pg":
+    if config.VECTOR_DB == "pg":
         return PgVector(
             db_url=config.DB_URL,
             table_name=f"massist_embeddings_{topic}",
@@ -18,7 +18,7 @@ def get_vectordb(topic: str = "index", embedder: Embedder = vllm_embedder) -> Ve
             content_language="russian",
         )
 
-    if config.VECTORDB_TYPE == "lance":
+    if config.VECTOR_DB == "lance":
         return LanceDb(
             table_name=f"massist_embeddings_{topic}",
             uri="tmp/lancedb",
