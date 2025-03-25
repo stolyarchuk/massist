@@ -6,16 +6,15 @@ from llmx.models import gemini_model
 from llmx.storage_db import get_storage
 
 mitigator_team = Team(
-    name="Discussion Team",
+    name="Assistant Team",
     mode="collaborate",
     model=gemini_model,
+    user_id="stolyarchuk",
     members=[
         get_agent("install"),
         get_agent("integrate"),
         get_agent("versions"),
         get_agent("maintenance"),
-        # get_agent(768),
-        # get_agent(896),
     ],
     storage=get_storage('ceo'),
     memory=get_team_memory('ceo'),
@@ -29,12 +28,15 @@ mitigator_team = Team(
     show_tool_calls=True,
     markdown=True,
     show_members_responses=True,
+    enable_team_history=True,
+    enable_agentic_context=True,
 )
 
 
 multi_language_team = Team(
     name="Multi Language Team",
     mode="route",
+    user_id="stolyarchuk",
     model=gemini_model,
     members=[
         # english_agent,
@@ -45,6 +47,8 @@ multi_language_team = Team(
         # chinese_agent,
     ],
     show_tool_calls=True,
+    storage=get_storage('ceo'),
+    memory=get_team_memory('ceo'),
     markdown=True,
     instructions=[
         "You are a language router that directs questions to the appropriate language agent.",
@@ -55,4 +59,5 @@ multi_language_team = Team(
         "For unsupported languages like Italian, respond in English with the above message.",
     ],
     show_members_responses=True,
+    enable_team_history=True,
 )
