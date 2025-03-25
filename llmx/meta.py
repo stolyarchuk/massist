@@ -11,8 +11,11 @@ class Meta(BaseModel):
     the agent's behavior and capabilities when interacting with users.
     """
 
-    description: str = ("You are a helpful Agent called 'Mitigator AI Assistant'"
-                        "and your goal is to assist the user in the best way possible.")
+    agent_id: str = ""
+
+    description: str = f"""You are a helpful Agent called 'Mitigator AI Assistant'.
+                        You specialize in Mitigator {agent_id} and your goal is to assist the user
+                        in the best way possible."""
 
     instructions: List[str] = Field(default_factory=lambda: [
         "0. You must only respond in Russian",
@@ -53,6 +56,3 @@ class Meta(BaseModel):
         "   - If no relevant information is found, clearly state this",
         "   - Transparent about limitations in available information",
     ])
-
-
-meta = Meta()

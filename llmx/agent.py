@@ -5,15 +5,18 @@ from agno.tools.duckduckgo import DuckDuckGoTools
 from config import config
 from llmx.agent_memory import get_agent_memory
 from llmx.knowledge import get_kb
-from llmx.meta import meta
+from llmx.meta import Meta
 from llmx.models import gemini_model
 from llmx.storage_db import get_storage
 
 
 def get_agent(agent_id: str, model: Model = gemini_model):
+    meta = Meta(agent_id=agent_id)
+
     return Agent(
         name=f"Mitigator Assistant in {agent_id}",
         agent_id=f"mitigator_assistant_{agent_id}",
+        role=f"Helps in Mitigator {agent_id}.",
         user_id="stolyarchuk",
         model=model,
         knowledge=get_kb(agent_id),
