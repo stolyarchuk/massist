@@ -5,7 +5,7 @@ from agno.tools.duckduckgo import DuckDuckGoTools
 from config import config
 from llmx.knowledge import get_kb
 from llmx.meta import meta
-from llmx.models import google_model
+from llmx.models import gemini_model
 from llmx.storage import get_storage
 
 
@@ -14,7 +14,7 @@ def get_agent(name: str):
         name=f"Mitigator Assistant {name}",
         agent_id=f"mitigator_assistant_{name}",
         user_id="stolyarchuk",
-        model=google_model,
+        model=gemini_model,
         knowledge=get_kb(name),
         search_knowledge=True,
         storage=get_storage(name),
@@ -38,7 +38,7 @@ def get_agent(name: str):
 mitigator_team = Team(
     name="Discussion Team",
     mode="collaborate",
-    model=google_model,
+    model=gemini_model,
     members=[
         get_agent("integrate"),
         # get_agent(768),
@@ -60,7 +60,7 @@ mitigator_team = Team(
 multi_language_team = Team(
     name="Multi Language Team",
     mode="route",
-    model=google_model,
+    model=gemini_model,
     members=[
         # english_agent,
         # spanish_agent,

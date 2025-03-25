@@ -14,40 +14,40 @@ hf_model = HuggingFace(
     id="mistralai/Mistral-Small-3.1-24B-Instruct-2503", max_tokens=65536, api_key=config.HUGGINGFACE_API_KEY
 )
 
-ds_native = DeepSeek(
+ds_deepseek_r1 = DeepSeek(
     id="deepseek-chat", max_tokens=65536, api_key=config.DEEPSEEK_API_KEY
 )
 
-ds_model = HuggingFace(
+hf_deepseek_r1 = HuggingFace(
     id="deepseek-ai/DeepSeek-R1", max_tokens=65536, api_key=config.HUGGINGFACE_API_KEY
 )
 
-google_model = Gemini(api_key=config.GOOGLE_API_KEY,)
+gemini_model = Gemini(
+    id=config.GEMINI_MODEL,
+    api_key=config.GOOGLE_API_KEY,
+)
 
-
-massist_memory_model = OpenAILike(
+or_gemini2_flash = OpenAILike(
     id="google/gemini-2.0-flash-lite-preview-02-05:free",
     base_url="https://openrouter.ai/api/v1",
     api_key=config.OPENROUTER_API_KEY,
 )
 
-mistral_model = OpenAILike(
+or_mistral_small = OpenAILike(
     id="mistralai/mistral-small-3.1-24b-instruct:free",
     base_url="https://openrouter.ai/api/v1",
     api_key=config.OPENROUTER_API_KEY,
 )
 
-
-deepseek_model = OpenAILike(
+or_deepseek_r1 = OpenAILike(
     id="deepseek/deepseek-r1:free",
     base_url="https://openrouter.ai/api/v1",
     api_key=config.OPENROUTER_API_KEY,
 )
 
-
 google_embedder = GeminiEmbedder(
     api_key=config.GOOGLE_API_KEY,
-    id="gemini-embedding-exp-03-07",
+    id=config.GEMINI_EMBED_MODEL,
     dimensions=3072,
 )
 
@@ -55,7 +55,7 @@ vllm_model = OpenAILike(
     id=config.VLLM_MODEL,
     base_url="http://192.168.31.240:8000/v1",
     api_key="sk-d00b792327b44da6876a1419e059ee99",
-    max_tokens=32768,
+    # max_tokens=32768,
 )
 
 vllm_embedder = OpenAIEmbedder(

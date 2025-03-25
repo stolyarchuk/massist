@@ -5,5 +5,5 @@ from agno.models.base import Model
 from config import config
 
 
-def get_agent_chanking(model: Model) -> ChunkingStrategy:
+def get_chunking_strategy(model: Model) -> ChunkingStrategy:
     return AgenticChunking(model=model, max_chunk_size=config.MAX_TOKENS)
