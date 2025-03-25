@@ -33,6 +33,7 @@ class Config(BaseSettings):
 
     # Scraper settings
     WEBSITE_URL: str = ""
+    ALLOW_ORIGINS: str = '*'
 
     # Crew settings
     LOG_LEVEL: str = "debug"
