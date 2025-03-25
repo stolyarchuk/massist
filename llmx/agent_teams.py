@@ -10,16 +10,14 @@ from pydantic import BaseModel
 from config import config
 from llmx.agent import get_agent
 from llmx.agent_memory import get_team_memory
-from llmx.models import gemini_model, or_gemini2_flash
+from llmx.models import gemini2_model, gemini_model, or_gemini2_flash
 from llmx.storage_db import get_storage
 
 mitigator_team = Team(
     name="Mitigator Assistant Team Lead",
     mode="route",
-    # mode="collaborate",
     team_id="massist_team",
     user_id="stolyarchuk",
-    # reasoning=True,
     model=gemini_model,
     members=[
         get_agent("install", "Installation"),
@@ -32,7 +30,7 @@ mitigator_team = Team(
         get_agent("price", "Price"),
     ],
     storage=get_storage('ceo'),
-    memory=get_team_memory('ceo'),
+    memory=get_team_memory(agent_id='ceo', model=gemini2_model),
     instructions=[
         "You are the lead customer support agent responsible for classifying and routing customer inquiries.",
         # "Carefully analyze each user message, review main topics and it then route them to appropriate agents.",
@@ -44,7 +42,8 @@ mitigator_team = Team(
         "After receiving responses from agents, combine and summarize them into a single, compehensive response.",
         "Then relay that information back to the user in a professional and helpful manner.",
         "Ensure a seamless experience for the user by maintaining context throughout the conversation.",
-        # "Never disclose your team and agents information. Always give an abstract answer in questions related to your team."
+        "Never disclose your team and agents information. Always give an abstract answer in questions " +
+        "related to your team."
     ],
     # success_criteria="The team has reached a consensus.",
     # update_team_context=True,

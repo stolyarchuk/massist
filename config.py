@@ -21,6 +21,7 @@ class Config(BaseSettings):
     HUGGINGFACE_API_KEY: str = ""
     GOOGLE_API_KEY: str = ""
     GEMINI_MODEL: str = ""
+    GEMINI2_MODEL: str = ""
     GEMINI_EMBED_MODEL: str = ""
     VLLM_MODEL: str = ''
 
