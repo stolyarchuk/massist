@@ -10,13 +10,13 @@ from llmx.models import gemini_model
 from llmx.storage_db import get_storage
 
 
-def get_agent(agent_id: str, model: Model = gemini_model):
-    meta = Meta(agent_id=agent_id)
+def get_agent(agent_id: str, topic: str, model: Model = gemini_model):
+    meta = Meta(agent_id=agent_id, topic=topic)
 
     return Agent(
-        name=f"Mitigator Assistant in {agent_id}",
+        name=f"Mitigator Assistant in {topic}",
         agent_id=f"mitigator_assistant_{agent_id}",
-        role=f"Helps in Mitigator {agent_id}.",
+        role=meta.role,
         user_id="stolyarchuk",
         model=model,
         knowledge=get_kb(agent_id),

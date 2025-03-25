@@ -2,3 +2,11 @@
 
 ###
 GET {{hostname}}/ask?query="привет"
+
+
+###
+POST {{hostname}}/chat/1
+
+{
+  "message": "Расскажи про себя и свою команду."
+}
