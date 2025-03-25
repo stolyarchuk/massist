@@ -42,6 +42,9 @@ class Config(BaseSettings):
     AGENT_MARKDOWN: bool = True
     AGENT_SHOW_TOOL_CALLS: bool = False
     AGENT_MONITORING: bool = True
+    AGENT_DEBUG: bool = False
+
+    TEAM_DEBUG: bool = True
 
     POSTGRES_URL: str = "postgresql+psycopg://ai:ai@localhost:5532/ai"
     MONGO_URL: str = "mongodb://192.168.31.240:27017"
