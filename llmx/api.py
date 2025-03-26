@@ -21,7 +21,7 @@ router = APIRouter()
 
 @router.post('/chat/new')
 async def single_chat():
-    chat_id = str(uuid4())[:8]
+    chat_id = str(uuid4())
     created = int(time())
     # await create_chat(rdb, chat_id, created)
     return {'chat_id': chat_id}

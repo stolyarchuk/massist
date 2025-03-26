@@ -25,11 +25,13 @@ hf_deepseek_r1 = HuggingFace(
 gemini_model = Gemini(
     id=config.GEMINI_MODEL,
     api_key=config.GOOGLE_API_KEY,
+    temperature=config.TEMPERATURE
 )
 
 gemini2_model = Gemini(
     id=config.GEMINI2_MODEL,
     api_key=config.GOOGLE_API_KEY,
+    temperature=config.TEMPERATURE
 )
 
 
@@ -37,6 +39,7 @@ or_gemini2_flash = OpenAILike(
     id="google/gemini-2.0-flash-lite-preview-02-05:free",
     base_url="https://openrouter.ai/api/v1",
     api_key=config.OPENROUTER_API_KEY,
+    temperature=config.TEMPERATURE
 )
 
 or_mistral_small = OpenAILike(
