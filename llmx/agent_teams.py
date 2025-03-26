@@ -20,30 +20,32 @@ mitigator_team = Team(
     user_id="stolyarchuk",
     model=gemini_model,
     members=[
-        get_agent("install", "Installation"),
-        get_agent("integrate", "Integration"),
-        get_agent("versions", "Versions"),
-        get_agent("maintenance", "Maintenance"),
-        get_agent("kb", "Knowledge Base"),
-        get_agent("psg", "PCAP Signature Generator"),
-        get_agent("contact", "Support"),
-        get_agent("price", "Price"),
+        get_agent("install", "Installation", model=gemini_model),
+        get_agent("integrate", "Integration", model=gemini_model),
+        get_agent("versions", "Versions", model=gemini_model),
+        get_agent("maintenance", "Maintenance", model=gemini_model),
+        get_agent("kb", "Knowledge Base", model=gemini_model),
+        # get_agent("psg", "PCAP Signature Generator", model=gemini_model),
+        get_agent("contact", "Support", model=gemini_model),
+        get_agent("price", "Price", model=gemini_model),
     ],
     storage=get_storage('ceo'),
-    memory=get_team_memory(agent_id='ceo', model=gemini2_model),
+    memory=get_team_memory(agent_id='ceo', model=or_gemini2_flash),
+    description="You are the lead customer support agent responsible for classifying and routing customer inquiries.",
     instructions=[
-        "You are the lead customer support agent responsible for classifying and routing customer inquiries.",
-        # "Carefully analyze each user message, review main topics and it then route them to appropriate agents.",
-        "Route customer question to appropriate agents. If no appropriate agent found think again.",
-        "Release notes questions route to versions agent.",
-        "For version informationm updates and changelogs route query to versions agent.",
-        "Tech support questions decompose first and the route to appropriate agents. Always route to install agent.",
+        "Carefully analyze each customer message and then route it to appropriate agents.",
+        # "Route customer question to appropriate agents. If no appropriate agenuser queryund think again.",
+        # "Rewrite customer query and route to apropriate agents again.",
+        "Release notes questions, version informationm updates and changelogs route to versions agent.",
+        "Tech support questions decompose first and the route to appropriate agents.",
         "Setup and configure related questions route to knowledge base agent primary.",
+        "Route query to all other agents at last.",
         "After receiving responses from agents, combine and summarize them into a single, compehensive response.",
         "Then relay that information back to the user in a professional and helpful manner.",
-        "Ensure a seamless experience for the user by maintaining context throughout the conversation.",
-        "Never disclose your team and agents information. Always give an abstract answer in questions " +
-        "related to your team."
+        # "Ensure a seamless experience for the user by maintaining context throughout the conversation.",
+        "Always reply in russian language."
+        # "Never disclose your team and agents information. Always give an abstract answer in questions " +
+        # "related to your team."
     ],
     # success_criteria="The team has reached a consensus.",
     # update_team_context=True,
@@ -99,13 +101,13 @@ class Lead:
 
                 if isinstance(chunk, dict):
                     # For structured data responses
-                    yield json.dumps({"event": "message", "data": chunk.to_dict()})
-                elif isinstance(chunk, str):
+                    yield json.dumps({"event": "message", "data": chunk})
+                elif isinstance(chunk, TeamRunResponse):
                     # For text chunks, ensure they're properly formatted
                     yield json.dumps({"event": "message", "data": chunk.to_dict()})
                 else:
                     # Convert any other type to string representation
-                    yield json.dumps({"event": "message", "data": chunk.to_dict()})
+                    yield json.dumps({"event": "message", "data": chunk})
 
         except asyncio.CancelledError:
             # Handle client disconnection gracefully
@@ -168,7 +170,7 @@ multi_language_team = Team(
     ],
     show_tool_calls=True,
     storage=get_storage('ceo'),
-    memory=get_team_memory('ceo'),
+    memory=get_team_memory('ceo', or_gemini2_flash),
     markdown=True,
     instructions=[
         "You are a language router that directs questions to the appropriate language agent.",
