@@ -8,6 +8,7 @@ class Config(BaseSettings):
     Environment variables can be loaded from .env files using python-dotenv.
     """
 
+    TEMPERATURE: float = 0.5
     MAX_TOKENS: int = 5000
     MAX_LINKS: int = 10
     DIMS: int = 1024
@@ -24,8 +25,6 @@ class Config(BaseSettings):
     GEMINI2_MODEL: str = ""
     GEMINI_EMBED_MODEL: str = ""
     VLLM_MODEL: str = ''
-
-    TEMPERATURE: float = 0.5
 
     # OpenAI settings (optional)
     OPENAI_API_KEY: str = ""

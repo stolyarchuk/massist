@@ -6,10 +6,9 @@ from agno.memory.team import TeamMemory
 from agno.models.base import Model
 
 from llmx.memory_db import get_memory_db
-from llmx.models import or_gemini2_flash
 
 
-def get_agent_memory(agent_id: str, model: Model = or_gemini2_flash) -> AgentMemory:
+def get_agent_memory(agent_id: str, model: Model) -> AgentMemory:
     return AgentMemory(
         user_id="stolyarchuk",
         db=get_memory_db(agent_id),
@@ -21,7 +20,7 @@ def get_agent_memory(agent_id: str, model: Model = or_gemini2_flash) -> AgentMem
     )
 
 
-def get_team_memory(agent_id: str, model: Model = or_gemini2_flash) -> TeamMemory:
+def get_team_memory(agent_id: str, model: Model) -> TeamMemory:
     return TeamMemory(
         user_id="stolyarchuk",
         db=get_memory_db(agent_id),
