@@ -7,7 +7,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from pydantic import BaseModel
 from sse_starlette.sse import EventSourceResponse
 
-from llmx.agent_teams import lead, mitigator_team
+from llmx.team import lead, mitigator_team
 
 
 class ChatIn(BaseModel):

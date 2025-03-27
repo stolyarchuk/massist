@@ -1,7 +1,7 @@
 from agno.playground.playground import Playground
 from agno.playground.serve import serve_playground_app  # type: ignore
 
-from llmx.agent_teams import mitigator_team
+from llmx.team import mitigator_team
 from llmx.logger import init_logging
 
 init_logging()
