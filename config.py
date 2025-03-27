@@ -24,7 +24,7 @@ class Config(BaseSettings):
     GEMINI_MODEL: str = ""
     GEMINI2_MODEL: str = ""
     GEMINI_EMBED_MODEL: str = ""
-    VLLM_MODEL: str = ''
+    VLLM_MODEL: str = ""
 
     # OpenAI settings (optional)
     OPENAI_API_KEY: str = ""
@@ -41,8 +41,8 @@ class Config(BaseSettings):
     # Optional configuration
     AGENT_STREAM: bool = True
     AGENT_MARKDOWN: bool = True
-    AGENT_SHOW_TOOL_CALLS: bool = False
-    AGENT_MONITORING: bool = True
+    AGENT_SHOW_TOOL_CALLS: bool = True
+    AGENT_MONITORING: bool = False
     AGENT_DEBUG: bool = False
 
     TEAM_DEBUG: bool = True
@@ -50,8 +50,8 @@ class Config(BaseSettings):
     POSTGRES_URL: str = "postgresql+psycopg://ai:ai@localhost:5532/ai"
     MONGO_URL: str = "mongodb://192.168.31.240:27017"
 
-    OLLAMA0_HOST: str = "http://localhost:11434"
-    OLLAMA1_HOST: str = "http://localhost:11435"
+    # OLLAMA0_HOST: str = "http://localhost:11434"
+    # OLLAMA1_HOST: str = "http://localhost:11435"
 
     @model_validator(mode="after")
     def check_api_keys(self) -> "Config":
