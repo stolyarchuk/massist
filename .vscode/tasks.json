@@ -41,11 +41,11 @@
       ]
     },
     {
-      "label": "Run Main",
+      "label": "Run Playground",
       "type": "process",
       "command": "${command:python.interpreterPath}",
       "args": [
-        "${workspaceFolder}/main.py"
+        "${workspaceFolder}/playground.py"
       ],
       "presentation": {
         "echo": true,
@@ -78,11 +78,11 @@
       ]
     },
     {
-      "label": "Run Serve",
+      "label": "Run Main",
       "type": "process",
       "command": "${command:python.interpreterPath}",
       "args": [
-        "${workspaceFolder}/serve.py"
+        "${workspaceFolder}/main.py"
       ],
       "presentation": {
         "echo": true,
