@@ -1,3 +1,5 @@
+from textwrap import dedent
+
 from agno.models.base import Model
 from agno.team.team import Team
 
@@ -15,11 +17,10 @@ def get_mitigator_team(
     memory_model: Model = gemini2_model
 ) -> Team:
 
-    agent_params: AgentParams = {
-        'user_id': user_id,
-        'session_id': session_id,
-        'model': model
-    }
+    agent_params = AgentParams(
+        user_id=user_id,
+        session_id=session_id,
+        model=model)
 
     return Team(
         name="Mitigator Assistant Team Lead",
@@ -29,20 +30,21 @@ def get_mitigator_team(
         session_id=session_id,
         model=model,
         members=[
-            get_agent("install", "Installation", **agent_params),
-            get_agent("integrate", "Integration", **agent_params),
-            get_agent("versions", "Versions", **agent_params),
-            get_agent("maintenance", "Maintenance", **agent_params),
-            get_agent("kb", "Knowledge Base", **agent_params),
-            get_agent("psg", "PCAP Signature Generator", **agent_params),
-            get_agent("contact", "Support", **agent_params),
-            get_agent("price", "Price", **agent_params),
+            get_agent("install", "Installation", agent_params),
+            get_agent("integrate", "Integration", agent_params),
+            get_agent("versions", "Versions", agent_params),
+            get_agent("maintenance", "Maintenance", agent_params),
+            get_agent("kb", "Knowledge Base", agent_params),
+            get_agent("psg", "PCAP Signature Generator", agent_params),
+            get_agent("contact", "Support", agent_params),
+            get_agent("price", "Price", agent_params),
         ],
         storage=get_storage('ceo'),
         memory=get_team_memory(
             agent_id='ceo', user_id=user_id, model=memory_model),
-        description="You are the lead customer support team agent responsible" +
-        "for classifying and routing customer inquiries.",
+        description=dedent("""
+            You are the lead customer support team agent responsible for classifying and
+            routing customer inquiries."""),
         instructions=[
             "Carefully analyze each customer message and then route it to appropriate agents.",
             # "Route customer question to appropriate agents. If no appropriate agenuser queryund think again.",
