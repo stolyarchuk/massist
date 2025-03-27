@@ -1,11 +1,12 @@
 @hostname = http://127.0.0.1:8000
+@session_id = c58dcf27-faa9-43cf-b007-f752f4c4e001
 
 ###
-GET {{hostname}}/ask?query="привет"
+GET {{hostname}}/health
 
 
 ###
-POST {{hostname}}/chat/1
+POST {{hostname}}/chat/{{session_id}}
 
 {
   "message": "Расскажи про себя и свою команду."
