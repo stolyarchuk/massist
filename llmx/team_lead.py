@@ -19,9 +19,11 @@ class TeamLead(BaseModel):
     responses are properly formatted for streaming.
     """
     user_id: str = ""
+    session_id: str = ""
 
     mitigator_team: Team = get_mitigator_team(
         user_id=user_id,
+        session_id=session_id,
         model=gemini_model,
         memory_model=gemini2_model
     )

@@ -7,9 +7,9 @@ from agno.models.base import Model
 from llmx.memory_db import get_memory_db
 
 
-def get_agent_memory(agent_id: str, model: Model) -> AgentMemory:
+def get_agent_memory(agent_id: str, user_id: str, model: Model) -> AgentMemory:
     return AgentMemory(
-        user_id="stolyarchuk",
+        user_id=user_id,
         db=get_memory_db(agent_id),
         create_user_memories=True,
         create_session_summary=True,

@@ -2,28 +2,41 @@ from agno.models.base import Model
 from agno.team.team import Team
 
 from config import config
-from llmx.agent import get_agent
+from llmx.agent import AgentParams, get_agent
 from llmx.models import gemini2_model, gemini_model, or_gemini2_flash
 from llmx.storage_db import get_storage
 from llmx.team_memory import get_team_memory
 
 
-def get_mitigator_team(user_id: str, model: Model = gemini_model, memory_model: Model = gemini2_model):
+def get_mitigator_team(
+    user_id: str,
+    session_id: str,
+    model: Model = gemini_model,
+    memory_model: Model = gemini2_model
+) -> Team:
+
+    agent_params: AgentParams = {
+        'user_id': user_id,
+        'session_id': session_id,
+        'model': model
+    }
+
     return Team(
         name="Mitigator Assistant Team Lead",
         mode="route",
         team_id="massist_team",
         user_id=user_id,
+        session_id=session_id,
         model=model,
         members=[
-            get_agent("install", "Installation", model=model),
-            get_agent("integrate", "Integration", model=model),
-            get_agent("versions", "Versions", model=model),
-            get_agent("maintenance", "Maintenance", model=model),
-            get_agent("kb", "Knowledge Base", model=model),
-            # get_agent("psg", "PCAP Signature Generator", model=model),
-            get_agent("contact", "Support", model=model),
-            get_agent("price", "Price", model=model),
+            get_agent("install", "Installation", **agent_params),
+            get_agent("integrate", "Integration", **agent_params),
+            get_agent("versions", "Versions", **agent_params),
+            get_agent("maintenance", "Maintenance", **agent_params),
+            get_agent("kb", "Knowledge Base", **agent_params),
+            get_agent("psg", "PCAP Signature Generator", **agent_params),
+            get_agent("contact", "Support", **agent_params),
+            get_agent("price", "Price", **agent_params),
         ],
         storage=get_storage('ceo'),
         memory=get_team_memory(
@@ -57,7 +70,7 @@ def get_mitigator_team(user_id: str, model: Model = gemini_model, memory_model: 
     )
 
 
-def get_ml_team(user_id: str = "stolyarchuk", model: Model = gemini_model):
+def get_ml_team(user_id: str = "stolyarchuk", model: Model = gemini_model) -> Team:
     return Team(
         name="Multi Language Team",
         mode="route",
