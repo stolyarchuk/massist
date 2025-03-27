@@ -3,7 +3,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from config import config
-from llmx.api import router
+from llmx.routes import router
 from llmx.logger import init_logging
 
 init_logging()
