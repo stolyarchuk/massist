@@ -1,12 +1,24 @@
-from agno.playground.playground import Playground
-from agno.playground.serve import serve_playground_app  # type: ignore
+import uvicorn
+from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 
-from llmx.team import mitigator_team
+from config import config
 from llmx.logger import init_logging
+from llmx.routes import router
 
 init_logging()
 
-app = Playground(agents=mitigator_team.members).get_app()  # type: ignore
+app = FastAPI()
 
-if __name__ == "__main__":
-    serve_playground_app("main:app", reload=False)
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=config.ALLOW_ORIGINS,
+    allow_credentials=True,
+    allow_methods=['*'],
+    allow_headers=['*'],
+)
+
+app.include_router(router)
+
+
+uvicorn.run(app=app, reload=False)

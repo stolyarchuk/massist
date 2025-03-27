@@ -26,7 +26,7 @@ class TeamLead(BaseModel):
         memory_model=gemini2_model
     )
 
-    async def arun_stream(self, message: str) -> AsyncGenerator[str, None]:
+    async def arun_stream(self, message: str) -> AsyncIterator[str] | None:
         error_data = {
             "error": "Invalid input: message must be a non-empty string"}
 
@@ -42,6 +42,8 @@ class TeamLead(BaseModel):
             response_stream: AsyncIterator[TeamRunResponse] = await self.mitigator_team.arun(  # type: ignore
                 message=message, stream_intermediate_steps=True, stream=True
             )
+
+            # return response_stream
 
             async for chunk in response_stream:  # type: ignore
                 if not chunk:  # Skip empty chunks
@@ -74,13 +76,13 @@ class TeamLead(BaseModel):
             # Final event indicating stream completion
             yield json.dumps({"event": "end", "data": ""})
 
-    async def arun(self, prompt: str) -> TeamRunResponse | AsyncIterator[TeamRunResponse]:
-        if not prompt or not isinstance(prompt, str):
+    async def arun(self, message: str) -> TeamRunResponse:
+        if not message or not isinstance(message, str):
             raise ValueError(
                 "Invalid input: user_input must be a non-empty string")
 
         try:
-            return await self.mitigator_team.arun(message=prompt, stream=False, stream_intermediate_steps=False)
+            return await self.mitigator_team.arun(message=message, stream=False, stream_intermediate_steps=False)
         except Exception as e:
             logger.error(e)
             raise
