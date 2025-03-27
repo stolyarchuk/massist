@@ -6,7 +6,6 @@ from agno.memory.db.sqlite import SqliteMemoryDb
 from config import config
 
 
-
 def get_memory_db(agent_id: str) -> MemoryDb:
     if config.MEMORY_DB == "pg":
         return PgMemoryDb(
