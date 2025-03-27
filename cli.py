@@ -1,6 +1,6 @@
 import asyncio
 
-from llmx.agent_teams import mitigator_team
+from llmx.team import mitigator_team
 from llmx.logger import init_logging
 
 init_logging()
