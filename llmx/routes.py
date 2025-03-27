@@ -1,13 +1,12 @@
 from time import time
 from uuid import uuid4
 
-from agno.utils.pprint import pprint_run_response
 # from app.db import chat_exists, create_chat, get_redis
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
 from sse_starlette.sse import EventSourceResponse
 
-from llmx.team import lead, mitigator_team
+from llmx.team_lead import lead
 
 
 class ChatIn(BaseModel):
@@ -17,6 +16,12 @@ class ChatIn(BaseModel):
 
 
 router = APIRouter()
+
+
+@router.head('/health')
+@router.get('/health')
+def health_check():
+    return {"status": "healthy"}
 
 
 @router.post('/chat/new')
@@ -37,5 +42,5 @@ async def chat(chat_id: str, chat_in: ChatIn):
     # if not await chat_exists(rdb, chat_id):
     #     raise HTTPException(
     #         status_code=404, detail=f'Chat {chat_id} does not exist')
-    sse_stream = lead.run_stream(user_input=chat_in.message)
+    sse_stream = await lead.arun_stream(message=chat_in.message)
     return EventSourceResponse(content=sse_stream)
