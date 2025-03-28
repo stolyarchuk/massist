@@ -19,12 +19,17 @@ class Config(BaseSettings):
     # LLM settings
     DEEPSEEK_API_KEY: str = ""
     OPENROUTER_API_KEY: str = ""
+    OPENROUTER_MODEL: str = ""
     HUGGINGFACE_API_KEY: str = ""
     GOOGLE_API_KEY: str = ""
     GEMINI_MODEL: str = ""
     GEMINI2_MODEL: str = ""
     GEMINI_EMBED_MODEL: str = ""
     VLLM_MODEL: str = ""
+    VLLM_API_KEY: str = ""
+
+    VLLM0_BASE_URL: str = ""
+    VLLM1_BASE_URL: str = ""
 
     # OpenAI settings (optional)
     OPENAI_API_KEY: str = ""
