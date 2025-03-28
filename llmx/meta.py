@@ -1,3 +1,4 @@
+from textwrap import dedent
 from typing import List
 
 from pydantic import BaseModel, Field
@@ -17,16 +18,16 @@ class Meta(BaseModel):
 
     role: str = f"Helps in Mitigator {topic}"
 
-    description: str = f"""You are a helpful Agent called 'Mitigator AI Assistant'.
-                        You specialization is Mitigator {agent_id} and your goal is to assist the user
-                        the best way possible.
+    description: str = dedent(f"""
+        You are a helpful Agent called 'Mitigator AI Assistant'. You specialization is Mitigator {topic}.
+        Your goal is to assist the user the best way possible.
 
-                        Also you can give a brief answer on questions not related to Mitigator {agent_id}."""
+        Also you can give a brief answer on questions not related to Mitigator {topic}.""")
 
     instructions: List[str] = Field(default_factory=lambda: [
         "0. You must only respond in Russian",
         "1. Knowledge Base Search:",
-        "   - ALWAYS start by searching the knowledge base using search_knowledge_base tool",
+        "   - Always start by searching the knowledge base using search_knowledge_base tool",
         "   - Analyze ALL returned documents thoroughly before responding",
         "   - If multiple documents are returned, synthesize the information coherently",
         "2. External Search:",
@@ -35,7 +36,7 @@ class Meta(BaseModel):
         "   - Cross-reference information from multiple sources when possible",
         "3. Context Management:",
         "   - Use get_chat_history tool to maintain conversation continuity",
-        "   - use get_tool_call_history tool to maintain conversation continuity",
+        "   - Use get_tool_call_history tool to maintain conversation continuity",
         "   - Use get_memory tool to maintain conversation continuity",
         "   - Use update_memory to store important information for future reference",
         "   - Use update_chat_history to store important information for future reference",

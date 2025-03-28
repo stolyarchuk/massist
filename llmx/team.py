@@ -2,10 +2,11 @@ from textwrap import dedent
 
 from agno.models.base import Model
 from agno.team.team import Team
+from agno.tools.duckduckgo import DuckDuckGoTools
 
 from config import config
-from llmx.agent import AgentParams, get_agent
-from llmx.models import gemini2_model, gemini_model, or_gemini2_flash
+from llmx.agent import AgentParams, get_agent, get_search_agent
+from llmx.models import get_gemini_model, get_openrouter_model
 from llmx.storage_db import get_storage
 from llmx.team_memory import get_team_memory
 
@@ -13,14 +14,15 @@ from llmx.team_memory import get_team_memory
 def get_mitigator_team(
     user_id: str,
     session_id: str,
-    model: Model = gemini_model,
-    memory_model: Model = gemini2_model
+    model: Model,
+    memory_model: Model
 ) -> Team:
 
     agent_params = AgentParams(
         user_id=user_id,
         session_id=session_id,
-        model=model)
+        model=get_gemini_model(model_id=config.GEMINI_MODEL),
+        memory_model=get_openrouter_model())
 
     return Team(
         name="Mitigator Assistant Team Lead",
@@ -29,6 +31,7 @@ def get_mitigator_team(
         user_id=user_id,
         session_id=session_id,
         model=model,
+        tools=[DuckDuckGoTools()],
         members=[
             get_agent("install", "Installation", agent_params),
             get_agent("integrate", "Integration", agent_params),
@@ -38,6 +41,7 @@ def get_mitigator_team(
             get_agent("psg", "PCAP Signature Generator", agent_params),
             get_agent("contact", "Support", agent_params),
             get_agent("price", "Price", agent_params),
+            get_search_agent("web_search", "Web Search", agent_params)
         ],
         storage=get_storage('ceo'),
         memory=get_team_memory(
@@ -53,12 +57,16 @@ def get_mitigator_team(
             "Tech support questions decompose first and the route to appropriate agents.",
             "Setup and configure related questions route to knowledge base agent primary.",
             "Route query to all other agents at last.",
-            "After receiving responses from agents, combine and summarize them into a single, compehensive response.",
+            "After receiving responses from agents, combine them into a single, compehensive response.",
+            # "Route customer query to web_search agent if needed for comparison or if you didn't receive any " +
+            # "answers from agents.",
+            # "If no information provided from the agents, search customer query in the web " +
+            # "with duckduckgo_search tool.",
             "Then relay that information back to the user in a professional and helpful manner.",
-            # "Ensure a seamless experience for the user by maintaining context throughout the conversation.",
-            "Always reply in russian language."
-            # "Never disclose your team and agents information. Always give an abstract answer in questions " +
-            # "related to your team."
+            "Always reply in russian language.",
+            "Never disclose your team and agents information. Always give an abstract answer in questions " +
+            "related to your team.",
+            "Ensure a seamless experience for the user by maintaining context throughout the conversation.",
         ],
         # success_criteria="The team has reached a consensus.",
         # update_team_context=True,
@@ -72,7 +80,7 @@ def get_mitigator_team(
     )
 
 
-def get_ml_team(user_id: str = "stolyarchuk", model: Model = gemini_model) -> Team:
+def get_ml_team(user_id: str, model: Model) -> Team:
     return Team(
         name="Multi Language Team",
         mode="route",
@@ -89,7 +97,7 @@ def get_ml_team(user_id: str = "stolyarchuk", model: Model = gemini_model) -> Te
         show_tool_calls=True,
         storage=get_storage(agent_id='ceo'),
         memory=get_team_memory(
-            agent_id='ceo', user_id=user_id, model=or_gemini2_flash
+            agent_id='ceo', user_id=user_id, model=get_openrouter_model()
         ),
         markdown=True,
         instructions=[

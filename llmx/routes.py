@@ -18,7 +18,6 @@ class ChatIn(BaseModel):
 
 
 router = APIRouter()
-lead = TeamLead()
 
 
 @router.head('/health')
@@ -39,6 +38,10 @@ async def single_chat():
 async def chat(chat_id: str, chat_in: ChatIn):
     logger.debug("chat_id: %s, message: %s", chat_id, chat_in.message)
 
+    lead = TeamLead(user_id="stolyarchuk", session_id=chat_id)
+
     return EventSourceResponse(
-        content=lead.arun_stream(message=chat_in.message)  # type: ignore
+        content=lead.arun_stream(  # type: ignore
+            message=chat_in.message
+        )
     )
