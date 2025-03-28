@@ -6,7 +6,7 @@ from agno.tools.duckduckgo import DuckDuckGoTools
 
 from config import config
 from llmx.agent import AgentParams, get_agent, get_search_agent
-from llmx.models import get_gemini_model, get_openrouter_model
+from llmx.models import get_google_model, get_openrouter_model
 from llmx.storage_db import get_storage
 from llmx.team_memory import get_team_memory
 
@@ -21,7 +21,7 @@ def get_mitigator_team(
     agent_params = AgentParams(
         user_id=user_id,
         session_id=session_id,
-        model=get_gemini_model(model_id=config.GEMINI_MODEL),
+        model=get_google_model(model_id=config.GEMINI_MODEL),
         memory_model=get_openrouter_model())
 
     return Team(
