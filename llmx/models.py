@@ -23,7 +23,10 @@ from config import config  # Local import
 # )
 
 
-def get_gemini_model(model_id: str = config.GEMINI_MODEL, temperature: float = config.TEMPERATURE):
+def get_google_model(
+    model_id: str = config.GEMINI_MODEL,
+    temperature: float = config.TEMPERATURE
+):
     return Gemini(
         id=model_id,
         api_key=config.GOOGLE_API_KEY,
@@ -32,9 +35,9 @@ def get_gemini_model(model_id: str = config.GEMINI_MODEL, temperature: float = c
 
 
 def get_openrouter_model(
-        base_url: str = "https://openrouter.ai/api/v1",
-        model_id: str = config.OPENROUTER_MODEL,
-        temperature: float = config.TEMPERATURE
+    base_url: str = "https://openrouter.ai/api/v1",
+    model_id: str = config.OPENROUTER_MODEL,
+    temperature: float = config.TEMPERATURE
 ):
     return OpenAILike(
         id=model_id,
@@ -44,17 +47,19 @@ def get_openrouter_model(
     )
 
 
-# gemini_model = Gemini(
-#     id=config.GEMINI_MODEL,
-#     api_key=config.GOOGLE_API_KEY,
-#     temperature=config.TEMPERATURE
-# )
+def get_mistral_model(temperature: float = config.TEMPERATURE):
+    return get_openrouter_model(
+        model_id="mistralai/mistral-small-3.1-24b-instruct:free",
+        temperature=temperature
+    )
 
-# gemini2_model = Gemini(
-#     id=config.GEMINI2_MODEL,
-#     api_key=config.GOOGLE_API_KEY,
-#     temperature=config.TEMPERATURE
-# )
+
+def get_gemini_pri_model(temperature: float = config.TEMPERATURE):
+    return get_google_model(model_id=config.GEMINI_MODEL, temperature=temperature)
+
+
+def get_gemini_sub_model(temperature: float = config.TEMPERATURE):
+    return get_google_model(model_id=config.GEMINI2_MODEL, temperature=temperature)
 
 # or_gemini2_flash = OpenAILike(
 #     id="google/gemini-2.0-flash-lite-preview-02-05:free",
@@ -63,11 +68,6 @@ def get_openrouter_model(
 #     temperature=config.TEMPERATURE
 # )
 
-# or_mistral_small = OpenAILike(
-#     id="mistralai/mistral-small-3.1-24b-instruct:free",
-#     base_url="https://openrouter.ai/api/v1",
-#     api_key=config.OPENROUTER_API_KEY,
-# )
 
 # or_deepseek_r1 = OpenAILike(
 #     id="deepseek/deepseek-r1:free",
