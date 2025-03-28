@@ -9,7 +9,7 @@ from config import config
 from llmx.agent_memory import get_agent_memory
 from llmx.knowledge import get_kb
 from llmx.meta import Meta
-from llmx.models import get_gemini_model, get_openrouter_model
+from llmx.models import get_google_model, get_openrouter_model
 from llmx.storage_db import get_storage
 
 

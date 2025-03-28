@@ -9,7 +9,7 @@ from pydantic import BaseModel, ConfigDict, Field
 
 from config import config
 from llmx.logger import logger
-from llmx.models import get_gemini_model
+from llmx.models import get_google_model
 from llmx.storage_db import get_storage
 from llmx.team import get_mitigator_team
 
@@ -31,8 +31,8 @@ class TeamLead(BaseModel):
         self.mitigator_team = get_mitigator_team(
             user_id=self.user_id,
             session_id=self.session_id,
-            model=get_gemini_model(model_id=config.GEMINI_MODEL),
-            memory_model=get_gemini_model(model_id=config.GEMINI2_MODEL)
+            model=get_google_model(model_id=config.GEMINI_MODEL),
+            memory_model=get_google_model(model_id=config.GEMINI2_MODEL)
         )
 
     async def arun_stream(self, message: str) -> AsyncIterator[str]:
