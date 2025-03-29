@@ -19,6 +19,3 @@ app.add_middleware(
 )
 
 app.include_router(router)
-
-if __name__ == 'main':
-    uvicorn.run(app=app, reload=False)
