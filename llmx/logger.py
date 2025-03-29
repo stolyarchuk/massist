@@ -72,57 +72,77 @@ logging.addLevelName(logging.ERROR, "error")
 log_level = log_levels.get(config.LOG_LEVEL, logging.DEBUG)
 
 global_formatter = LoggerFormatter()
-global_handler = logging.StreamHandler()
-global_handler.setLevel(log_level)
-global_handler.setFormatter(global_formatter)
 
 
-logger = logging.getLogger(__name__)
-logger.setLevel(log_level)
-logger.addHandler(global_handler)
+def get_handler():
+    """
+    Creates and returns a configured logging handler.
+
+    Returns:
+        logging.Handler: A configured stream handler with proper formatting and level
+    """
+    handler = logging.StreamHandler()
+    handler.setLevel(log_level)
+    handler.setFormatter(global_formatter)
+    return handler
+
+
+def get_logger(name: str = __name__):
+    """
+    Creates and configures a logger with the specified name.
+
+    Args:
+        name (str): The name for the logger. Defaults to module name.
+
+    Returns:
+        logging.Logger: A configured logger instance
+    """
+    new_logger = logging.getLogger(name)
+    new_logger.setLevel(log_level)
+
+    # Remove any existing handlers to avoid duplicate logs
+    for handler in new_logger.handlers:
+        new_logger.removeHandler(handler)
+
+    new_logger.addHandler(get_handler())
+    return new_logger
+
+
+# Create the main logger using the new function
+logger = get_logger(__name__)
 
 
 def logger_factory(name: str):
-    name_logger = logging.getLogger(name)
-
-    for handler in name_logger.handlers:
-        name_logger.removeHandler(handler)
-
-    name_logger.setLevel(log_level)
-    name_logger.addHandler(global_handler)
-
-    return name_logger
+    """
+    Legacy function maintained for backward compatibility.
+    Consider using get_logger() instead.
+    """
+    return get_logger(name)
 
 
-def init_module_loggers(*args: str):
-    for logger_name in args:
-        module_logger = logging.getLogger(logger_name)
-
-        for handler in module_logger.handlers:
-            module_logger.removeHandler(handler)
-
-        module_logger.setLevel(log_level)
-        module_logger.addHandler(global_handler)
+def init_module_loggers(loggers: list[str]):
+    for logger_name in loggers:
+        get_logger(logger_name)
 
 
-def update_formatters(*args: str):
-    for logger_name in args:
-        module_logger = logging.getLogger(logger_name)
-
-        for handler in module_logger.handlers:
-            module_logger.removeHandler(handler)
-
-        module_logger.addHandler(global_handler)
+def update_formatters(loggers: list[str]):
+    for logger_name in loggers:
+        get_logger(logger_name)
 
 
-loggers = [logging.getLogger().name] + [
+available_loggers = [
     lg for lg in logging.Logger.manager.loggerDict.keys()
+    if "." not in lg
 ]
 
 
-logger.debug(loggers)
+logger.debug("Known logger names: %s", available_loggers)
 
 
 def init_logging():
-    # update_formatters(*loggers)
-    init_module_loggers(*loggers)
+    # init_module_loggers("main", "uvicorn", "fastapi")
+    init_module_loggers(loggers=available_loggers)
+
+
+__all__ = ["get_logger", "logger_factory", "logger", "get_handler",
+           "init_logging", "init_module_loggers", "update_formatters"]
