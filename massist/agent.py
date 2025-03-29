@@ -6,11 +6,11 @@ from agno.tools.duckduckgo import DuckDuckGoTools
 from pydantic import BaseModel, ConfigDict
 
 from config import config
-from llmx.agent_memory import get_agent_memory
-from llmx.knowledge import get_kb
-from llmx.meta import Meta
-from llmx.models import get_google_model, get_openrouter_model
-from llmx.storage_db import get_storage
+from massist.agent_memory import get_agent_memory
+from massist.knowledge import get_kb
+from massist.meta import Meta
+from massist.models import get_google_model, get_openrouter_model
+from massist.storage_db import get_storage
 
 
 class AgentParams(BaseModel):
