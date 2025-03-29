@@ -60,7 +60,8 @@ class LoggerFormatter(logging.Formatter):
 
 
 # define custom log level names
-log_levels = {"debug": logging.DEBUG, "info": logging.INFO, "warn": logging.WARNING, "error": logging.ERROR}
+log_levels = {"debug": logging.DEBUG, "info": logging.INFO,
+              "warn": logging.WARNING, "error": logging.ERROR}
 
 
 logging.addLevelName(logging.DEBUG, "debug")
@@ -74,6 +75,11 @@ global_formatter = LoggerFormatter()
 global_handler = logging.StreamHandler()
 global_handler.setLevel(log_level)
 global_handler.setFormatter(global_formatter)
+
+
+logger = logging.getLogger(__name__)
+logger.setLevel(log_level)
+logger.addHandler(global_handler)
 
 
 def logger_factory(name: str):
@@ -97,11 +103,6 @@ def init_module_loggers(*args: str):
 
         module_logger.setLevel(log_level)
         module_logger.addHandler(global_handler)
-
-
-logger = logging.getLogger(__name__)
-logger.setLevel(log_level)
-logger.addHandler(global_handler)
 
 
 __all__ = ["init_module_loggers", "logger_factory", "logger"]
