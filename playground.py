@@ -9,8 +9,8 @@ from massist.team import get_mitigator_team
 init_logging()
 
 mitigator_team = get_mitigator_team(
-    user_id="user_id",
-    session_id="session_id",
+    user_id="stolyarchuk",
+    session_id="",
     model=get_google_model(model_id=config.GEMINI_MODEL),
     memory_model=get_google_model(model_id=config.GEMINI2_MODEL)
 )
