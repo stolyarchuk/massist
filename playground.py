@@ -1,10 +1,19 @@
 from agno.playground.playground import Playground
 from agno.playground.serve import serve_playground_app  # type: ignore
 
-from llmx.logger import init_logging
-from llmx.team import mitigator_team
+from config import config
+from massist.logger import init_logging
+from massist.models import get_google_model
+from massist.team import get_mitigator_team
 
 init_logging()
+
+mitigator_team = get_mitigator_team(
+    user_id="user_id",
+    session_id="session_id",
+    model=get_google_model(model_id=config.GEMINI_MODEL),
+    memory_model=get_google_model(model_id=config.GEMINI2_MODEL)
+)
 
 app = Playground(agents=mitigator_team.members).get_app()  # type: ignore
 

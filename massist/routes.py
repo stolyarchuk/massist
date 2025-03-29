@@ -2,13 +2,13 @@ from time import time
 from uuid import uuid4
 
 # from app.db import chat_exists, create_chat, get_redis
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter
 from fastapi.responses import UJSONResponse
 from pydantic import BaseModel
 from sse_starlette.sse import EventSourceResponse
 
-from llmx.logger import logger
-from llmx.team_lead import TeamLead
+from massist.logger import logger
+from massist.team_lead import TeamLead
 
 
 class ChatIn(BaseModel):
@@ -29,7 +29,7 @@ def health_check():
 @router.post('/chat/new')
 async def single_chat():
     chat_id = str(uuid4())
-    created = int(time())
+    # created = int(time())
     # await create_chat(rdb, chat_id, created)
     return UJSONResponse({'chat_id': chat_id})
 

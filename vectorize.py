@@ -1,5 +1,5 @@
-from llmx.knowledge import get_kb
-from llmx.logger import init_logging
+from massist.knowledge import get_kb
+from massist.logger import init_logging
 
 # from llmx.models import vllm_model
 
