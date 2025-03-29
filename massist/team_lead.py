@@ -8,10 +8,10 @@ from agno.team.team import Team
 from pydantic import BaseModel, ConfigDict, Field
 
 from config import config
-from llmx.logger import logger
-from llmx.models import get_google_model
-from llmx.storage_db import get_storage
-from llmx.team import get_mitigator_team
+from massist.logger import logger
+from massist.models import get_google_model
+from massist.storage_db import get_storage
+from massist.team import get_mitigator_team
 
 
 class TeamLead(BaseModel):

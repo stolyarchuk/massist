@@ -5,10 +5,10 @@ from agno.team.team import Team
 from agno.tools.duckduckgo import DuckDuckGoTools
 
 from config import config
-from llmx.agent import AgentParams, get_agent, get_search_agent
-from llmx.models import get_google_model, get_openrouter_model
-from llmx.storage_db import get_storage
-from llmx.team_memory import get_team_memory
+from massist.agent import AgentParams, get_agent, get_search_agent
+from massist.models import get_google_model, get_openrouter_model
+from massist.storage_db import get_storage
+from massist.team_memory import get_team_memory
 
 
 def get_mitigator_team(
