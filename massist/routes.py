@@ -1,4 +1,4 @@
-from time import time
+# from time import time
 from uuid import uuid4
 
 # from app.db import chat_exists, create_chat, get_redis
