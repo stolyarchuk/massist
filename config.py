@@ -41,13 +41,16 @@ class Config(BaseSettings):
     POSTGRES_URL: str = ""
     MONGO_URL: str = ""
     SQLITE_URL: str = ""
+    DBLANCE_URL: str = ""
 
-    MAX_TOKENS: int = 5000
-    MAX_LINKS: int = 10
-    DIMS: int = 1024
     VECTOR_DB: str = ""
     STORAGE_DB: str = ""
     MEMORY_DB: str = ""
+
+    MAX_CHUNK_SIZE: int = 5000
+    MAX_LINKS: int = 10
+    MAX_TOKENS: int = 40000
+    DIMS: int = 1024
     LOG_LEVEL: str = "debug"
     TEMPERATURE: float = 0.5
     ALLOW_ORIGINS: str = "*"
