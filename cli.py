@@ -12,8 +12,8 @@ if __name__ == "__main__":
     mitigator_team = get_mitigator_team(
         user_id="user_id",
         session_id="session_id",
-        model=get_google_model(model_id=config.GEMINI_MODEL),
-        memory_model=get_google_model(model_id=config.GEMINI2_MODEL)
+        model=get_google_model(model_id=config.GEMINI_MODEL_PRI),
+        memory_model=get_google_model(model_id=config.GEMINI_MODEL_SEC)
     )
 
     asyncio.run(

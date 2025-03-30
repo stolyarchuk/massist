@@ -9,19 +9,22 @@ class Config(BaseSettings):
     """
 
     # LLM settings
-    DEEPSEEK_API_KEY: str = ""
-    OPENROUTER_API_KEY: str = ""
-    OPENROUTER_MODEL: str = ""
-    HUGGINGFACE_API_KEY: str = ""
-    GOOGLE_API_KEY: str = ""
-    GEMINI_MODEL: str = ""
-    GEMINI2_MODEL: str = ""
-    GEMINI_EMBED_MODEL: str = ""
+    DEEPSEEK_MODEL: str = ""
+    GEMINI_MODEL_PRI: str = ""
+    GEMINI_MODEL_SEC: str = ""
+    GEMINI_MODEL_EMBED: str = ""
     VLLM_MODEL: str = ""
-    VLLM_API_KEY: str = ""
+    VLLM_MODEL_EMBED: str = ""
+    OPENROUTER_MODEL: str = ""
 
-    VLLM0_BASE_URL: str = ""
-    VLLM1_BASE_URL: str = ""
+    DEEPSEEK_API_KEY: str = ""
+    GOOGLE_API_KEY: str = ""
+    OPENROUTER_API_KEY: str = ""
+    VLLM_API_KEY: str = ""
+    HUGGINGFACE_API_KEY: str = ""
+
+    VLLM_BASE_URL_PRI: str = ""
+    VLLM_BASE_URL_SEC: str = ""
 
     # Scraper settings
     WEBSITE_URL: str = ""
@@ -37,6 +40,7 @@ class Config(BaseSettings):
 
     POSTGRES_URL: str = ""
     MONGO_URL: str = ""
+    SQLITE_URL: str = ""
 
     MAX_TOKENS: int = 5000
     MAX_LINKS: int = 10
@@ -44,9 +48,9 @@ class Config(BaseSettings):
     VECTOR_DB: str = ""
     STORAGE_DB: str = ""
     MEMORY_DB: str = ""
-    LOG_LEVEL = 'debug'
+    LOG_LEVEL: str = "debug"
     TEMPERATURE = 0.5
-    ALLOW_ORIGINS = '*'
+    ALLOW_ORIGINS = "*"
 
     @model_validator(mode="after")
     def check_api_keys(self) -> "Config":
