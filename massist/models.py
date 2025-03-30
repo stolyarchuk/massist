@@ -1,9 +1,8 @@
 from agno.embedder.google import GeminiEmbedder
 from agno.embedder.openai import OpenAIEmbedder
-from agno.models.deepseek.deepseek import DeepSeek
+# from agno.models.deepseek.deepseek import DeepSeek
 from agno.models.google.gemini import Gemini
-from agno.models.huggingface.huggingface import HuggingFace
-from agno.models.openai.chat import OpenAIChat
+# from agno.models.huggingface.huggingface import HuggingFace
 from agno.models.openai.like import OpenAILike
 
 from config import config  # Local import
@@ -24,7 +23,7 @@ from config import config  # Local import
 
 
 def get_google_model(
-    model_id: str = config.GEMINI_MODEL,
+    model_id: str = config.GEMINI_MODEL_PRI,
     temperature: float = config.TEMPERATURE
 ):
     return Gemini(
@@ -55,11 +54,11 @@ def get_mistral_model(temperature: float = config.TEMPERATURE):
 
 
 def get_gemini_pri_model(temperature: float = config.TEMPERATURE):
-    return get_google_model(model_id=config.GEMINI_MODEL, temperature=temperature)
+    return get_google_model(model_id=config.GEMINI_MODEL_PRI, temperature=temperature)
 
 
 def get_gemini_sub_model(temperature: float = config.TEMPERATURE):
-    return get_google_model(model_id=config.GEMINI2_MODEL, temperature=temperature)
+    return get_google_model(model_id=config.GEMINI_MODEL_SEC, temperature=temperature)
 
 # or_gemini2_flash = OpenAILike(
 #     id="google/gemini-2.0-flash-lite-preview-02-05:free",
@@ -81,7 +80,7 @@ def get_gemini_sub_model(temperature: float = config.TEMPERATURE):
 #     dimensions=3072,
 # )
 
-def get_vllm_model(base_url: str = config.VLLM0_BASE_URL, model_id: str = config.VLLM_MODEL, ):
+def get_vllm_model(base_url: str = config.VLLM_BASE_URL_PRI, model_id: str = config.VLLM_MODEL, ):
     return OpenAILike(
         id=model_id,
         base_url=base_url,
@@ -90,7 +89,7 @@ def get_vllm_model(base_url: str = config.VLLM0_BASE_URL, model_id: str = config
     )
 
 
-def get_vllm_embedder(base_url: str = config.VLLM0_BASE_URL, model_id: str = "BAAI/bge-m3", dims: int = config.DIMS):
+def get_vllm_embedder(base_url: str = config.VLLM_BASE_URL_PRI, model_id: str = "BAAI/bge-m3", dims: int = config.DIMS):
     return OpenAIEmbedder(
         id=model_id,
         dimensions=dims,
