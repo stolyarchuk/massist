@@ -8,14 +8,6 @@ class Config(BaseSettings):
     Environment variables can be loaded from .env files using python-dotenv.
     """
 
-    TEMPERATURE: float = 0.5
-    MAX_TOKENS: int = 5000
-    MAX_LINKS: int = 10
-    DIMS: int = 1024
-    VECTOR_DB: str = ""
-    STORAGE_DB: str = ""
-    MEMORY_DB: str = ""
-
     # LLM settings
     DEEPSEEK_API_KEY: str = ""
     OPENROUTER_API_KEY: str = ""
@@ -31,17 +23,8 @@ class Config(BaseSettings):
     VLLM0_BASE_URL: str = ""
     VLLM1_BASE_URL: str = ""
 
-    # OpenAI settings (optional)
-    OPENAI_API_KEY: str = ""
-    OPENAI_BASE_URL: str = ""
-    OPENAI_MODEL: str = ""
-
     # Scraper settings
     WEBSITE_URL: str = ""
-    ALLOW_ORIGINS: str = '*'
-
-    # Crew settings
-    LOG_LEVEL: str = "debug"
 
     # Optional configuration
     AGENT_STREAM: bool = True
@@ -52,27 +35,29 @@ class Config(BaseSettings):
 
     TEAM_DEBUG: bool = True
 
-    POSTGRES_URL: str = "postgresql+psycopg://ai:ai@localhost:5532/ai"
-    MONGO_URL: str = "mongodb://192.168.31.240:27017"
+    POSTGRES_URL: str = ""
+    MONGO_URL: str = ""
 
-    # OLLAMA0_HOST: str = "http://localhost:11434"
-    # OLLAMA1_HOST: str = "http://localhost:11435"
+    MAX_TOKENS: int = 5000
+    MAX_LINKS: int = 10
+    DIMS: int = 1024
+    VECTOR_DB: str = ""
+    STORAGE_DB: str = ""
+    MEMORY_DB: str = ""
+    LOG_LEVEL = 'debug'
+    TEMPERATURE = 0.5
+    ALLOW_ORIGINS = '*'
 
     @model_validator(mode="after")
     def check_api_keys(self) -> "Config":
         """Validate that at least one API key is provided"""
         has_gemini = bool(self.GOOGLE_API_KEY)
-        has_openai = bool(self.OPENAI_API_KEY)
         has_deepseek = bool(self.DEEPSEEK_API_KEY)
 
-        if not (has_gemini or has_openai or has_deepseek):
+        if not (has_gemini or has_deepseek):
             raise ValueError(
-                "Either GEMINI_API_KEY, OPENAI_API_KEY, or DEEPSEEK_API_KEY must be set in environment variables"
+                "Either GEMINI_API_KEY or DEEPSEEK_API_KEY must be set in environment variables"
             )
-
-        # If DeepSeek key is provided but OpenAI key is not, use DeepSeek key for OpenAI
-        if has_deepseek and not has_openai:
-            self.OPENAI_API_KEY = self.DEEPSEEK_API_KEY
 
         return self
 
