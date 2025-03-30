@@ -49,8 +49,8 @@ class Config(BaseSettings):
     STORAGE_DB: str = ""
     MEMORY_DB: str = ""
     LOG_LEVEL: str = "debug"
-    TEMPERATURE = 0.5
-    ALLOW_ORIGINS = "*"
+    TEMPERATURE: float = 0.5
+    ALLOW_ORIGINS: str = "*"
 
     @model_validator(mode="after")
     def check_api_keys(self) -> "Config":
