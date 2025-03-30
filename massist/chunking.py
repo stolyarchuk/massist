@@ -6,4 +6,4 @@ from config import config
 
 
 def get_chunking_strategy(model: Model) -> ChunkingStrategy:
-    return AgenticChunking(model=model, max_chunk_size=config.MAX_TOKENS)
+    return AgenticChunking(model=model, max_chunk_size=config.MAX_CHUNK_SIZE)
