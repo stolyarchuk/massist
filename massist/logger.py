@@ -136,11 +136,10 @@ available_loggers = [
 ]
 
 
-logger.debug("Known logger names: %s", available_loggers)
+logger.debug("Loggers initialized: %s", available_loggers)
 
 
 def init_logging():
-    # init_module_loggers("main", "uvicorn", "fastapi")
     init_module_loggers(loggers=available_loggers)
 
 
