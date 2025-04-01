@@ -27,11 +27,15 @@ if __name__ == "__main__":
     # get_kb(topic="versions", chunking_model=chunking_model).load(
     #     recreate=True, upsert=True
     # )
-    get_kb(topic="maintenance", chunking_model=get_deepseek_model(temperature=0.7)).load(
+    # get_kb(topic="maintenance", chunking_model=get_deepseek_model(temperature=0.7)).load(
+    #     recreate=True, upsert=True)
+    # get_kb(topic="kb", chunking_model=chunking_model).load(
+    #     recreate=True, upsert=True)
+    # get_kb(topic="psg", chunking_model=chunking_model).load(
+    #     recreate=True, upsert=True)
+    # get_kb(topic="contact", chunking_model=chunking_model).load(
+    #     recreate=True, upsert=True)
+    get_kb(topic="price", chunking_model=chunking_model).load(
         recreate=True, upsert=True)
-    # get_kb(topic="kb").load(recreate=True, upsert=True)
-    # get_kb(topic="psg").load(recreate=True, upsert=True)
-    # get_kb(topic="contact").load(recreate=True, upsert=True)
-    # get_kb(topic="price").load(recreate=True, upsert=True)
     # get_kb(topic="collector").load(recreate=True, upsert=True)
     # pass
