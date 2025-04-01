@@ -132,7 +132,8 @@ def update_formatters(loggers: list[str]):
 
 available_loggers = [
     lg for lg in logging.Logger.manager.loggerDict.keys()
-    if "." not in lg or lg == "uvicorn.access"
+    if "." not in lg
+#    or lg == "uvicorn.access"
 ]
 
 

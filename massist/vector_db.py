@@ -17,10 +17,10 @@ def get_vector_db(topic: str, embedder: Embedder) -> VectorDb:
             content_language="russian",
         )
 
-    if config.VECTOR_DB == "lance":
+    if config.VECTOR_DB == "dblance":
         return LanceDb(
             table_name=f"embeddings_{topic}",
-            uri="tmp/lancedb",
+            uri="tmp/dblance",
             search_type=SearchType.vector,
             embedder=embedder,
         )

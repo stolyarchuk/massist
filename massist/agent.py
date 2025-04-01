@@ -9,7 +9,8 @@ from config import config
 from massist.agent_memory import get_agent_memory
 from massist.knowledge import get_kb
 from massist.meta import Meta
-from massist.models import get_google_model, get_openrouter_model
+from massist.models import (get_gemini_pri_model, get_gemini_sub_model,
+                            get_openrouter_model)
 from massist.storage_db import get_storage
 
 
@@ -17,7 +18,6 @@ class AgentParams(BaseModel):
     session_id: str
     user_id: str
     model: Model
-    memory_model: Model
 
     model_config = ConfigDict(arbitrary_types_allowed=True)
 
@@ -37,7 +37,12 @@ def get_agent(agent_id: str, topic: str, params: AgentParams):
         search_knowledge=True,
         storage=get_storage(agent_id),
         memory=get_agent_memory(
-            agent_id=agent_id, user_id=params.user_id, model=params.memory_model),
+            agent_id=agent_id,
+            user_id=params.user_id,
+            manager_model=get_gemini_pri_model(),
+            classifier_model=get_gemini_sub_model(),
+            summarizer_model=get_gemini_sub_model()
+        ),
         description=meta.description,
         instructions=meta.instructions,
         read_chat_history=True,
@@ -70,7 +75,12 @@ def get_search_agent(agent_id: str, topic: str, params: AgentParams):
         add_references=True,
         storage=get_storage(agent_id),
         memory=get_agent_memory(
-            agent_id=agent_id, user_id=params.user_id, model=get_openrouter_model()),
+            agent_id=agent_id,
+            user_id=params.user_id,
+            manager_model=get_gemini_pri_model(),
+            classifier_model=get_gemini_sub_model(),
+            summarizer_model=get_gemini_sub_model()
+        ),
         description="You are a Web Researcher",
         instructions=meta.instructions,
         read_chat_history=True,

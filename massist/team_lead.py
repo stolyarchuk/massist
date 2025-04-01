@@ -7,9 +7,8 @@ from agno.storage.base import Storage
 from agno.team.team import Team
 from pydantic import BaseModel, ConfigDict, Field
 
-from config import config
 from massist.logger import logger
-from massist.models import get_google_model
+from massist.models import get_gemini_pri_model, get_gemini_sub_model
 from massist.storage_db import get_storage
 from massist.team import get_mitigator_team
 
@@ -18,8 +17,8 @@ class TeamLead(BaseModel):
     model_config = ConfigDict(arbitrary_types_allowed=True)
     user_id: str = ""
     session_id: str = ""
-    storage_id: str = "ceo"  # Store the ID instead of the object
-    memory_id: str = "ceo"  # Store the ID instead of the object
+    storage_id: str = "lead"  # Store the ID instead of the object
+    memory_id: str = "lead"  # Store the ID instead of the object
     mitigator_team: Team | None = None
 
     @property
@@ -31,8 +30,8 @@ class TeamLead(BaseModel):
         self.mitigator_team = get_mitigator_team(
             user_id=self.user_id,
             session_id=self.session_id,
-            model=get_google_model(model_id=config.GEMINI_MODEL_PRI),
-            memory_model=get_google_model(model_id=config.GEMINI_MODEL_SEC)
+            model=get_gemini_pri_model(),
+            memory_model=get_gemini_sub_model()
         )
 
     async def arun_stream(self, message: str) -> AsyncIterator[str]:
@@ -66,27 +65,13 @@ class TeamLead(BaseModel):
             yield ujson.dumps({"event": "cancelled", "data": {"content": "Stream cancelled"}})
             return
 
-        # except Exception as e:
-        #     logger.error("team_lead_b: %s", e)
-        #     error_details = {
-        #         "error": str(e),
-        #         "type": type(e).__name__
-        #     }
-        #     yield ujson.dumps({"event": "error", "data": error_details})
+        except Exception as e:
+            logger.error("team_lead_b: %s", e)
+            error_details = {
+                "error": str(e),
+                "type": type(e).__name__
+            }
+            yield ujson.dumps({"event": "error", "data": error_details})
 
         finally:
             yield ujson.dumps({"event": "end", "data": ""})
-
-    # async def arun(self, message: str) -> TeamRunResponse:
-    #     if not message or not isinstance(message, str):
-    #         raise ValueError(
-    #             "Invalid input: user_input must be a non-empty string")
-
-    #     try:
-    #         response: TeamRunResponse = await self.mitigator_team.arun(  # type: ignore
-    #             message=message, stream=False, stream_intermediate_steps=False
-    #         )
-    #         return response
-    #     except Exception as e:
-    #         logger.error(e)
-    #         raise

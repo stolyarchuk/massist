@@ -95,7 +95,7 @@ def get_vllm_model(
 
 
 def get_vllm_embedder(
-        base_url: str = config.VLLM_BASE_URL_PRI,
+        base_url: str = config.VLLM_BASE_URL_SEC,
         model_id: str = "BAAI/bge-m3",
         dims: int = config.DIMS
 ) -> Embedder:
