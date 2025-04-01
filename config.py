@@ -1,4 +1,6 @@
-from pydantic import model_validator
+from typing import List
+
+from pydantic import field_validator, model_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
@@ -56,8 +58,15 @@ class Config(BaseSettings):
     DIMS: int = 1024
     LOG_LEVEL: str = "debug"
     TEMPERATURE: float = 0.5
-    ALLOW_ORIGINS: str = "*"
+    ALLOW_ORIGINS: str = '*'
     CHUNKING_STRATEGY: str = "agentic"
+
+    # @field_validator("ALLOW_ORIGINS", mode="before")
+    # @classmethod
+    # def parse_env_lists(cls, value: str):
+    #     if isinstance(value, str):
+    #         return value.split(";")
+    #     return value
 
     @model_validator(mode="after")
     def check_api_keys(self) -> "Config":
@@ -76,6 +85,7 @@ class Config(BaseSettings):
         env_file=".env",
         env_file_encoding="utf-8",
         case_sensitive=True,
+        env_prefix="MA_",
         env_nested_delimiter="__",
         extra="ignore"
     )

@@ -33,15 +33,16 @@ def get_mitigator_team(
         model=model,
         tools=[DuckDuckGoTools()],
         members=[
+            get_agent("index", "Main", agent_params),
             get_agent("install", "Installation", agent_params),
             get_agent("integrate", "Integration", agent_params),
             get_agent("versions", "Versions", agent_params),
             get_agent("maintenance", "Maintenance", agent_params),
-            get_agent("kb", "Knowledge Base", agent_params),
-            get_agent("psg", "PCAP Signature Generator", agent_params),
-            get_agent("contact", "Support", agent_params),
-            get_agent("price", "Price", agent_params),
-            get_search_agent("web_search", "Web Search", agent_params)
+            # get_agent("kb", "Knowledge Base", agent_params),
+            # get_agent("psg", "PCAP Signature Generator", agent_params),
+            # get_agent("contact", "Support", agent_params),
+            # get_agent("price", "Price", agent_params),
+            # get_search_agent("web_search", "Web Search", agent_params)
         ],
         storage=get_storage('ceo'),
         memory=get_team_memory(
