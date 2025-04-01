@@ -16,9 +16,11 @@ class Config(BaseSettings):
     VLLM_MODEL: str = ""
     VLLM_MODEL_EMBED: str = ""
     OPENROUTER_MODEL: str = ""
+    OPENAI_MODEL_EMBED: str = ""
 
     DEEPSEEK_API_KEY: str = ""
     GOOGLE_API_KEY: str = ""
+    OPENAI_API_KEY: str = ""
     OPENROUTER_API_KEY: str = ""
     VLLM_API_KEY: str = ""
     HUGGINGFACE_API_KEY: str = ""
