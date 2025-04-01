@@ -10,11 +10,11 @@ init_logging()
 
 if __name__ == "__main__":
     # chunking_model = get_mistral_model()
-    chunking_model = get_deepseek_model(temperature=0.7)
+    chunking_model = get_deepseek_model(temperature=0.5)
 
-    get_kb(topic="index", chunking_model=chunking_model, max_links=20, max_depth=1).load(
-        recreate=True, upsert=True
-    )
+    # get_kb(topic="index", chunking_model=chunking_model, max_links=20, max_depth=1).load(
+    #     recreate=True, upsert=True
+    # )
 
     # get_kb(topic="install", chunking_model=chunking_model,).load(
     #     recreate=True, upsert=True
@@ -23,11 +23,12 @@ if __name__ == "__main__":
     # get_kb(topic="integrate", chunking_model=chunking_model).load(
     #     recreate=True, upsert=True
     # )
+
     # get_kb(topic="versions", chunking_model=chunking_model).load(
     #     recreate=True, upsert=True
     # )
-    # get_kb(topic="maintenance", chunking_model=get_deepseek_model(temperature=0.7), max_links=40).load(
-    # recreate=True, upsert=True)
+    get_kb(topic="maintenance", chunking_model=get_deepseek_model(temperature=0.7)).load(
+        recreate=True, upsert=True)
     # get_kb(topic="kb").load(recreate=True, upsert=True)
     # get_kb(topic="psg").load(recreate=True, upsert=True)
     # get_kb(topic="contact").load(recreate=True, upsert=True)

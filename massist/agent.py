@@ -33,7 +33,7 @@ def get_agent(agent_id: str, topic: str, params: AgentParams):
         user_id=params.user_id,
         session_id=params.session_id,
         model=params.model,
-        knowledge=get_kb(agent_id, model=get_openrouter_model()),
+        knowledge=get_kb(agent_id, chunking_model=get_openrouter_model()),
         search_knowledge=True,
         storage=get_storage(agent_id),
         memory=get_agent_memory(
