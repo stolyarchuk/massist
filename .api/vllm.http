@@ -6,7 +6,7 @@
 
 
 ###
-GET {{hostname}}/openapi.json
+GET {{hostname}}/docs
 
 
 ###

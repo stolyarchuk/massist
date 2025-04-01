@@ -48,12 +48,14 @@ class Config(BaseSettings):
     MEMORY_DB: str = ""
 
     MAX_CHUNK_SIZE: int = 5000
-    MAX_LINKS: int = 10
     MAX_TOKENS: int = 40000
+    MAX_LINKS: int = 10
+    MAX_DEPTH: int = 4
     DIMS: int = 1024
     LOG_LEVEL: str = "debug"
     TEMPERATURE: float = 0.5
     ALLOW_ORIGINS: str = "*"
+    CHUNKING_STRATEGY: str = "agentic"
 
     @model_validator(mode="after")
     def check_api_keys(self) -> "Config":
