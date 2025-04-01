@@ -1,7 +1,7 @@
 from agno.embedder.base import Embedder
 from agno.embedder.openai import OpenAIEmbedder
 from agno.models.base import Model
-# from agno.models.deepseek.deepseek import DeepSeek
+from agno.models.deepseek.deepseek import DeepSeek
 from agno.models.google.gemini import Gemini
 # from agno.models.huggingface.huggingface import HuggingFace
 from agno.models.openai.like import OpenAILike
@@ -14,9 +14,15 @@ from config import config  # Local import
 #     id="mistralai/Mistral-Small-3.1-24B-Instruct-2503", max_tokens=65536, api_key=config.HUGGINGFACE_API_KEY
 # )
 
-# ds_deepseek_r1 = DeepSeek(
-#     id="deepseek-chat", max_tokens=65536, api_key=config.DEEPSEEK_API_KEY
-# )
+
+def get_deepseek_model(
+    model_id: str = config.DEEPSEEK_MODEL,
+    temperature: float = config.TEMPERATURE
+) -> Model:
+    return DeepSeek(
+        id=model_id,
+        api_key=config.DEEPSEEK_API_KEY,
+        temperature=temperature)
 
 # hf_deepseek_r1 = HuggingFace(
 #     id="deepseek-ai/DeepSeek-R1", max_tokens=65536, api_key=config.HUGGINGFACE_API_KEY
@@ -96,7 +102,7 @@ def get_vllm_model(
 
 def get_vllm_embedder(
         base_url: str = config.VLLM_BASE_URL_SEC,
-        model_id: str = "BAAI/bge-m3",
+        model_id: str = config.VLLM_MODEL_EMBED,
         dims: int = config.DIMS
 ) -> Embedder:
     return OpenAIEmbedder(
