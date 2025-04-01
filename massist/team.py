@@ -6,7 +6,7 @@ from agno.tools.duckduckgo import DuckDuckGoTools
 
 from config import config
 from massist.agent import AgentParams, get_agent, get_search_agent
-from massist.models import get_google_model, get_openrouter_model
+from massist.models import get_gemini_pri_model, get_openrouter_model
 from massist.storage_db import get_storage
 from massist.team_memory import get_team_memory
 
@@ -21,8 +21,8 @@ def get_mitigator_team(
     agent_params = AgentParams(
         user_id=user_id,
         session_id=session_id,
-        model=get_google_model(model_id=config.GEMINI_MODEL_PRI),
-        memory_model=get_openrouter_model())
+        model=get_gemini_pri_model()
+    )
 
     return Team(
         name="Mitigator Assistant Team Lead",

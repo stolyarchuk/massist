@@ -20,13 +20,13 @@ class ChatIn(BaseModel):
 router = APIRouter()
 
 
-@router.head('/health')
-@router.get('/health')
+@router.head('/v1/health')
+@router.get('/v1/health')
 def health_check():
     return UJSONResponse({'status': "healthy"})
 
 
-@router.post('/chat/new')
+@router.post('/v1/chat/new')
 async def single_chat():
     chat_id = str(uuid4())
     # created = int(time())
@@ -34,7 +34,7 @@ async def single_chat():
     return UJSONResponse({'chat_id': chat_id})
 
 
-@router.post('/chat/{chat_id}')
+@router.post('/v1/chat/{chat_id}')
 async def chat(chat_id: str, chat_in: ChatIn):
     logger.debug("chat_id: %s, message: %s", chat_id, chat_in.message)
 
