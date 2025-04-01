@@ -14,7 +14,7 @@ def get_vector_db(topic: str, embedder: Embedder) -> VectorDb:
             table_name=f"embeddings_{topic}",
             embedder=embedder,
             search_type=SearchType.vector,
-            content_language="russian",
+            content_language="russian"
         )
 
     if config.VECTOR_DB == "dblance":

@@ -111,3 +111,14 @@ def get_vllm_embedder(
         base_url=base_url,
         api_key=config.VLLM_API_KEY
     )
+
+
+def get_openai_embedder(
+        model_id: str = config.OPENAI_MODEL_EMBED,
+        dims: int = config.DIMS
+) -> Embedder:
+    return OpenAIEmbedder(
+        id=model_id,
+        dimensions=dims,
+        api_key=config.OPENAI_API_KEY
+    )
