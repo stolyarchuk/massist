@@ -74,75 +74,97 @@ log_level = log_levels.get(config.LOG_LEVEL, logging.DEBUG)
 global_formatter = LoggerFormatter()
 
 
-def get_handler():
+class Logger:
     """
-    Creates and returns a configured logging handler.
-
-    Returns:
-        logging.Handler: A configured stream handler with proper formatting and level
+    Singleton Logger class that encapsulates all logging functionality.
     """
-    handler = logging.StreamHandler()
-    handler.setLevel(log_level)
-    handler.setFormatter(global_formatter)
-    return handler
+    _instance = None
+
+    def __new__(cls):
+        if cls._instance is None:
+            cls._instance = super(Logger, cls).__new__(cls)
+            cls._instance._initialize()
+        return cls._instance
+
+    def _initialize(self):
+        """Initialize the logger instance"""
+        self.main_logger = self.get_logger(__name__)
+        self.available_loggers = [
+            lg for lg in logging.Logger.manager.loggerDict.keys()
+            if "." not in lg
+            or lg == "uvicorn.access"
+        ]
+        self.main_logger.debug("Loggers initialized: %s",
+                               self.available_loggers)
+
+    def get_handler(self):
+        """
+        Creates and returns a configured logging handler.
+
+        Returns:
+            logging.Handler: A configured stream handler with proper formatting and level
+        """
+        handler = logging.StreamHandler()
+        handler.setLevel(log_level)
+        handler.setFormatter(global_formatter)
+        return handler
+
+    def get_logger(self, name: str):
+        """
+        Creates and configures a logger with the specified name.
+
+        Args:
+            name (str): The name for the logger. Defaults to module name.
+
+        Returns:
+            logging.Logger: A configured logger instance
+        """
+        new_logger = logging.getLogger(name)
+        new_logger.setLevel(log_level)
+
+        # Remove any existing handlers to avoid duplicate logs
+        for handler in new_logger.handlers:
+            new_logger.removeHandler(handler)
+
+        new_logger.addHandler(self.get_handler())
+        return new_logger
+
+    def logger_factory(self, name: str):
+        """
+        Legacy function maintained for backward compatibility.
+        Consider using get_logger() instead.
+        """
+        return self.get_logger(name)
+
+    def init_module_loggers(self, loggers: list[str]):
+        """Initialize multiple loggers at once"""
+        for logger_name in loggers:
+            self.get_logger(logger_name)
+
+    def update_formatters(self, loggers: list[str]):
+        """Update formatters for the specified loggers"""
+        for logger_name in loggers:
+            self.get_logger(logger_name)
+
+    def init_logging(self):
+        """Initialize all available loggers"""
+        self.init_module_loggers(loggers=self.available_loggers)
 
 
-def get_logger(name: str = __name__):
-    """
-    Creates and configures a logger with the specified name.
+# Create the singleton instance
+logger_instance = Logger()
 
-    Args:
-        name (str): The name for the logger. Defaults to module name.
+# For backwards compatibility
+get_handler = logger_instance.get_handler
+get_logger = logger_instance.get_logger
+logger_factory = logger_instance.logger_factory
+init_module_loggers = logger_instance.init_module_loggers
+update_formatters = logger_instance.update_formatters
+init_logging = logger_instance.init_logging
 
-    Returns:
-        logging.Logger: A configured logger instance
-    """
-    new_logger = logging.getLogger(name)
-    new_logger.setLevel(log_level)
+# Create the main logger using the singleton
+logger = logger_instance.main_logger
 
-    # Remove any existing handlers to avoid duplicate logs
-    for handler in new_logger.handlers:
-        new_logger.removeHandler(handler)
-
-    new_logger.addHandler(get_handler())
-    return new_logger
-
-
-# Create the main logger using the new function
-logger = get_logger(__name__)
-
-
-def logger_factory(name: str):
-    """
-    Legacy function maintained for backward compatibility.
-    Consider using get_logger() instead.
-    """
-    return get_logger(name)
-
-
-def init_module_loggers(loggers: list[str]):
-    for logger_name in loggers:
-        get_logger(logger_name)
-
-
-def update_formatters(loggers: list[str]):
-    for logger_name in loggers:
-        get_logger(logger_name)
-
-
-available_loggers = [
-    lg for lg in logging.Logger.manager.loggerDict.keys()
-    if "." not in lg
-    or lg == "uvicorn.access"
-]
-
-
-logger.debug("Loggers initialized: %s", available_loggers)
-
-
-def init_logging():
-    init_module_loggers(loggers=available_loggers)
-
-
-__all__ = ["get_logger", "logger_factory", "logger", "get_handler",
-           "init_logging", "init_module_loggers", "update_formatters"]
+# For IDE and module level exports
+__all__ = ["Logger", "get_logger", "logger_factory", "logger", "get_handler",
+           "init_logging", "init_module_loggers", "update_formatters", "logger_instance"]
