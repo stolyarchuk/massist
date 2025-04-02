@@ -64,7 +64,7 @@ def get_gemini_pri_model(temperature: float = config.TEMPERATURE) -> Model:
     return get_google_model(model_id=config.GEMINI_MODEL_PRI, temperature=temperature)
 
 
-def get_gemini_sub_model(temperature: float = config.TEMPERATURE) -> Model:
+def get_gemini_sec_model(temperature: float = config.TEMPERATURE) -> Model:
     return get_google_model(model_id=config.GEMINI_MODEL_SEC, temperature=temperature)
 
 # or_gemini2_flash = OpenAILike(

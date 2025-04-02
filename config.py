@@ -46,6 +46,7 @@ class Config(BaseSettings):
     MONGO_URL: str = ""
     SQLITE_URL: str = ""
     DBLANCE_URL: str = ""
+    REDIS_URL: str = ""
 
     VECTOR_DB: str = ""
     STORAGE_DB: str = ""
@@ -60,6 +61,7 @@ class Config(BaseSettings):
     TEMPERATURE: float = 0.5
     ALLOW_ORIGINS: str = '*'
     CHUNKING_STRATEGY: str = "agentic"
+    CACHE_TTL: int = 86400
 
     # @field_validator("ALLOW_ORIGINS", mode="before")
     # @classmethod

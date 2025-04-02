@@ -8,7 +8,8 @@ from agno.team.team import Team
 from pydantic import BaseModel, ConfigDict, Field
 
 from massist.logger import logger
-from massist.models import get_gemini_pri_model, get_gemini_sub_model
+from massist.models import get_gemini_pri_model, get_gemini_sec_model
+from massist.redis import RedisCache, get_redis_pool
 from massist.storage_db import get_storage
 from massist.team import get_mitigator_team
 
@@ -18,7 +19,7 @@ class TeamLead(BaseModel):
     user_id: str = ""
     session_id: str = ""
     storage_id: str = "lead"  # Store the ID instead of the object
-    memory_id: str = "lead"  # Store the ID instead of the object
+    # memory_id: str = "lead"  # Store the ID instead of the object
     mitigator_team: Team | None = None
 
     @property
@@ -31,7 +32,7 @@ class TeamLead(BaseModel):
             user_id=self.user_id,
             session_id=self.session_id,
             model=get_gemini_pri_model(),
-            memory_model=get_gemini_sub_model()
+            memory_model=get_gemini_sec_model()
         )
 
     async def arun_stream(self, message: str) -> AsyncIterator[str]:
@@ -75,3 +76,13 @@ class TeamLead(BaseModel):
 
         finally:
             yield ujson.dumps({"event": "end", "data": ""})
+
+
+async def cache_user_profile(lead: TeamLead, prefix: str = "teamlead"):
+    cache = RedisCache(redis_pool=get_redis_pool(), prefix=prefix)
+    return await cache.set_model(f"lead:{lead.session_id}", lead, ex=7200)
+
+
+async def get_cached_profile(session_id: str, prefix: str = "teamlead") -> Optional[BaseModel]:
+    cache = RedisCache(redis_pool=get_redis_pool(), prefix=prefix)
+    return await cache.get_model(f"lead:{session_id}", TeamLead)
