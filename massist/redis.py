@@ -49,10 +49,10 @@ async def create_chat_index(rdb: Redis):
 
 
 async def setup_redis_pool(rdb: Redis):
-    logger.error(
+    logger.warning(
         "Make sure that the chat index exists, and create it if it doesn't")
     try:
-        print("stats", await get_redis_pool().ft(CHAT_IDX_NAME).info())
+        await get_redis_pool().ft(CHAT_IDX_NAME).info()
     except Exception:
         await create_chat_index(rdb)
 
@@ -103,12 +103,9 @@ class RedisCache:
         return await self.redis.delete(self._key(key))
 
 
-async def load_redis():
+async def init_redis():
+    logger.info("Entering main loop")
     async with get_redis_pool() as rdb:
         logger.debug('Setting up Redis DB')
         await setup_redis_pool(rdb)
         logger.debug('Redis DB initialized')
-
-
-logger.info("Entering main loop")
-# asyncio.run(load_redis())

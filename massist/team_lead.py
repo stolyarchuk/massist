@@ -29,26 +29,26 @@ class TeamLead(BaseModel):
         memory_model=get_gemini_sec_model()
     )
 
-    @property
-    def storage(self) -> Storage:
-        return get_storage(self.storage_id)
+    # @property
+    # def storage(self) -> Storage:
+    #     return get_storage(self.storage_id)
 
     # def __init__(self, user_id: str, session_id: str):
-    def __init__(self, **kwargs:  str):
-        super().__init__(
-            user_id=kwargs['user_id'],
-            session_id=kwargs['session_id']
-        )
+    # def __init__(self, **kwargs:  str):
+    #     super().__init__(
+    #         user_id=kwargs['user_id'],
+    #         session_id=kwargs['session_id']
+    #     )
 
-        self.user_id = kwargs['user_id']
-        self.session_id = kwargs['session_id']
+    #     self.user_id = kwargs['user_id']
+    #     self.session_id = kwargs['session_id']
 
-        self.mitigator_team = get_mitigator_team(
-            user_id=self.user_id,
-            session_id=self.session_id,
-            model=get_gemini_pri_model(),
-            memory_model=get_gemini_sec_model()
-        )
+    #     self.mitigator_team = get_mitigator_team(
+    #         user_id=self.user_id,
+    #         session_id=self.session_id,
+    #         model=get_gemini_pri_model(),
+    #         memory_model=get_gemini_sec_model()
+    #     )
 
     async def arun_stream(self, message: str) -> AsyncIterator[str]:
         error_data = {
