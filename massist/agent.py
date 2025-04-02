@@ -73,7 +73,7 @@ def get_search_agent(agent_id: str, topic: str, params: AgentParams):
         # knowledge=get_kb(agent_id),
         # search_knowledge=True,
         add_references=True,
-        # storage=get_storage(agent_id),
+        storage=get_storage(agent_id),
         # memory=get_agent_memory(
         #     agent_id=agent_id,
         #     user_id=params.user_id,

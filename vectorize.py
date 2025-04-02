@@ -5,8 +5,8 @@ from massist.logger import init_logging
 from massist.models import (get_deepseek_model, get_gemini_pri_model,
                             get_mistral_model, get_openrouter_model)
 
-load_dotenv()
-init_logging()
+# load_dotenv()
+# init_logging()
 
 if __name__ == "__main__":
     # chunking_model = get_mistral_model()
