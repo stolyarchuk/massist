@@ -61,6 +61,8 @@ async def chat(chat_id: str, chat_in: ChatIn):
 
     team_lead = await get_cached_profile(session_id=chat_id)
 
+    print("team_lead", team_lead)
+
     if team_lead is None:
         team_lead = await create_chat(session_id=chat_id)
 
