@@ -6,6 +6,9 @@
 GET {{hostname}}/health
 
 
+
+
+
 ###
 POST {{hostname}}/chat/{{session_id}}
 
