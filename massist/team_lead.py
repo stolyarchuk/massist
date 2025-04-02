@@ -19,8 +19,14 @@ class TeamLead(BaseModel):
     user_id: str = ""
     session_id: str = ""
     storage_id: str = "lead"  # Store the ID instead of the object
-    # memory_id: str = "lead"  # Store the ID instead of the object
-    mitigator_team: Team | None = None
+    memory_id: str = "lead"  # Store the ID instead of the object
+
+    mitigator_team: Team = get_mitigator_team(
+        user_id=user_id,
+        session_id=session_id,
+        model=get_gemini_pri_model(),
+        memory_model=get_gemini_sec_model()
+    )
 
     @property
     def storage(self) -> Storage:
