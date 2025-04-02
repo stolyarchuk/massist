@@ -5,7 +5,7 @@ from massist.logger import init_logging
 from massist.models import get_google_model
 from massist.team import get_mitigator_team
 
-init_logging()
+# init_logging()
 
 
 if __name__ == "__main__":

@@ -1,8 +1,10 @@
+import asyncio
 from typing import Optional, Sequence, Type
 
 import redis.asyncio as redis
 import ujson as json
 from pydantic import BaseModel
+from redis.asyncio.client import Redis
 from redis.commands.search.field import NumericField
 from redis.commands.search.indexDefinition import IndexDefinition, IndexType
 from redis.exceptions import RedisError
@@ -14,15 +16,15 @@ CHAT_IDX_NAME = 'idx:chat'
 CHAT_IDX_PREFIX = 'chat:'
 
 
-def get_redis_pool() -> redis.Redis:
+def get_redis_pool() -> Redis:
     return redis.from_url(
         config.REDIS_URL,
         encoding="utf-8",
-        decode_responses=False  # Store raw bytes for better compatibility
+        decode_responses=False
     )
 
 
-async def get_redis():
+async def get_rdb():
     rdb = get_redis_pool()
     try:
         yield rdb
@@ -30,13 +32,13 @@ async def get_redis():
         await rdb.aclose()
 
 
-async def create_chat_index(rdb: redis.Redis):
+async def create_chat_index(rdb: Redis):
     try:
         schema: Sequence[NumericField] = [
             NumericField('$.created', as_name='created', sortable=True,)
         ]
 
-        rdb.ft(CHAT_IDX_NAME).create_index(
+        await rdb.ft(CHAT_IDX_NAME).create_index(
             fields=schema,
             definition=IndexDefinition(
                 prefix=[CHAT_IDX_PREFIX], index_type=IndexType.JSON)
@@ -46,16 +48,17 @@ async def create_chat_index(rdb: redis.Redis):
         logger.warning(f"Error creating chat index '{CHAT_IDX_NAME}': {e}")
 
 
-async def setup_redis_pool(rdb: redis.Redis):
-    # Make sure that the chat index exists, and create it if it doesn't
+async def setup_redis_pool(rdb: Redis):
+    logger.error(
+        "Make sure that the chat index exists, and create it if it doesn't")
     try:
-        await get_redis_pool().ft(CHAT_IDX_NAME).info()
+        print("stats", await get_redis_pool().ft(CHAT_IDX_NAME).info())
     except Exception:
         await create_chat_index(rdb)
 
 
 class RedisCache:
-    def __init__(self, redis_pool: redis.Redis, prefix: str = "cache"):
+    def __init__(self, redis_pool: Redis, prefix: str = "cache"):
         self.redis = redis_pool
         self.prefix = prefix
 
@@ -89,7 +92,6 @@ class RedisCache:
         try:
             data = await self.redis.get(self._key(key))
             if data:
-                logger.warning(data)
                 return model_type(**json.loads(data))
         except (json.JSONDecodeError, RedisError) as e:
             logger.error(f"Cache get failed: {str(e)}")
@@ -99,3 +101,14 @@ class RedisCache:
     async def delete(self, key: str) -> int:
         """Remove cached entry"""
         return await self.redis.delete(self._key(key))
+
+
+async def load_redis():
+    async with get_redis_pool() as rdb:
+        logger.debug('Setting up Redis DB')
+        await setup_redis_pool(rdb)
+        logger.debug('Redis DB initialized')
+
+
+logger.info("Entering main loop")
+# asyncio.run(load_redis())

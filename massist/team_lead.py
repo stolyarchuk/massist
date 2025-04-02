@@ -1,5 +1,7 @@
 import asyncio
-from typing import Any, AsyncGenerator, AsyncIterator, Iterator, Optional
+from ast import Dict
+from typing import (Any, AsyncGenerator, AsyncIterator, Iterator, Optional,
+                    Union)
 
 import ujson
 from agno.run.team import TeamRunResponse
@@ -15,19 +17,26 @@ from massist.team import get_mitigator_team
 
 
 class TeamLead(BaseModel):
-    model_config = ConfigDict(arbitrary_types_allowed=True)
     user_id: str = ""
     session_id: str = ""
     storage_id: str = "lead"  # Store the ID instead of the object
-    # memory_id: str = "lead"  # Store the ID instead of the object
+    memory_id: str = "lead"  # Store the ID instead of the object
     mitigator_team: Team | None = None
 
     @property
     def storage(self) -> Storage:
         return get_storage(self.storage_id)
 
-    def __init__(self, user_id: str, session_id: str):
-        super().__init__(user_id=user_id, session_id=session_id)
+    # def __init__(self, user_id: str, session_id: str):
+    def __init__(self, **kwargs:  str):
+        super().__init__(
+            user_id=kwargs['user_id'],
+            session_id=kwargs['session_id']
+        )
+
+        self.user_id = kwargs['user_id']
+        self.session_id = kwargs['session_id']
+
         self.mitigator_team = get_mitigator_team(
             user_id=self.user_id,
             session_id=self.session_id,
@@ -76,6 +85,8 @@ class TeamLead(BaseModel):
 
         finally:
             yield ujson.dumps({"event": "end", "data": ""})
+
+    model_config = ConfigDict(arbitrary_types_allowed=True)
 
 
 async def cache_user_profile(lead: TeamLead, prefix: str = "teamlead"):
