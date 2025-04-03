@@ -76,6 +76,8 @@ class Logger:
     Singleton Logger class that encapsulates all logging functionality.
     """
     _instance = None
+    _logger: logging.Logger
+    _available_loggers: list[str]
 
     def __new__(cls):
         if cls._instance is None:
@@ -85,29 +87,16 @@ class Logger:
 
     def _initialize(self):
         """Initialize the logger instance"""
-        self.main_logger = self.get_logger(__name__)
-        self.available_loggers = [
+        self._logger = self.get_logger(__name__)
+        self._available_loggers = [
             lg for lg in logging.Logger.manager.loggerDict.keys()
             if "." not in lg
             or lg == "uvicorn.access"
         ]
-        self.main_logger.debug("Loggers initialized: %s",
-                               self.available_loggers)
+        self._logger.debug("Loggers initialized: %s",
+                           self._available_loggers)
 
-    def get_handler(self):
-        """
-        Creates and returns a configured logging handler.
-
-        Returns:
-            logging.Handler: A configured stream handler with proper formatting and level
-        """
-        formatter = LoggerFormatter()
-        handler = logging.StreamHandler()
-        handler.setLevel(log_level)
-        handler.setFormatter(formatter)
-        return handler
-
-    def get_logger(self, name: str):
+    def get_logger(self, name: str) -> logging.Logger:
         """
         Creates and configures a logger with the specified name.
 
@@ -124,33 +113,49 @@ class Logger:
         for handler in new_logger.handlers:
             new_logger.removeHandler(handler)
 
-        new_logger.addHandler(self.get_handler())
+        new_logger.addHandler(self._get_handler())
         return new_logger
 
-    async def init_module_loggers(self, loggers: list[str]):
-        """Initialize multiple loggers at once"""
-        for logger_name in loggers:
-            self.get_logger(logger_name)
-
-    async def init_logging(self, loggers: list[str] | None = None):
+    async def init_logging(self, loggers: list[str] | None = None) -> None:
         """Initialize all available loggers"""
         if loggers is None:
-            loggers = []
-        await self.init_module_loggers(loggers=self.available_loggers)
+            loggers = self._available_loggers
+        await self._init_module_loggers(loggers=loggers)
+
+    def _get_handler(self) -> logging.Handler:
+        """
+        Creates and returns a configured logging handler (private method).
+
+        Returns:
+            logging.Handler: A configured stream handler with proper formatting and level
+        """
+        formatter = LoggerFormatter()
+        handler = logging.StreamHandler()
+        handler.setLevel(log_level)
+        handler.setFormatter(formatter)
+        return handler
+
+    async def _init_module_loggers(self, loggers: list[str]):
+        """Initialize multiple loggers at once (private method)"""
+        for logger_name in loggers:
+            self.get_logger(logger_name)
 
 
 # Create the singleton instance
 logger_instance = Logger()
 
 # For backwards compatibility
-get_handler = logger_instance.get_handler
 get_logger = logger_instance.get_logger
-init_module_loggers = logger_instance.init_module_loggers
 init_logging = logger_instance.init_logging
 
 # Create the main logger using the singleton
-logger = logger_instance.main_logger
+logger = logger_instance.get_logger("root")
 
 # For IDE and module level exports
-__all__ = ["Logger", "get_logger",  "logger", "get_handler",
-           "init_logging", "init_module_loggers", "logger_instance"]
+__all__ = [
+    "Logger",
+    "get_logger",
+    "logger",
+    "init_logging",
+    "logger_instance"
+]

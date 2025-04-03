@@ -1,3 +1,4 @@
+import anyio
 from dotenv import load_dotenv
 
 from massist.knowledge import get_kb
@@ -5,10 +6,13 @@ from massist.logger import init_logging
 from massist.models import (get_deepseek_model, get_gemini_pri_model,
                             get_mistral_model, get_openrouter_model)
 
-# load_dotenv()
-# init_logging()
+
+async def main():
+    await init_logging()
 
 if __name__ == "__main__":
+    anyio.run(main)
+
     # chunking_model = get_mistral_model()
     chunking_model = get_deepseek_model(temperature=0.5)
 

@@ -4,7 +4,7 @@ from agno.models.base import Model
 from config import config
 from massist.chunking import get_chunking_strategy
 from massist.logger import logger
-from massist.models import get_openai_embedder, get_vllm_embedder
+from massist.models import get_vllm_embedder
 from massist.vector_db import get_vector_db
 
 
