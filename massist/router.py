@@ -1,4 +1,3 @@
-from typing import List
 from uuid import uuid4
 
 from fastapi import APIRouter, Depends
@@ -7,11 +6,11 @@ from pydantic import BaseModel
 from redis.asyncio.client import Redis
 from sse_starlette.sse import EventSourceResponse
 
-from massist import team_lead
-from massist.logger import logger
+from massist.logger import get_logger
 from massist.redis import get_rdb
-from massist.storage_db import get_storage
-from massist.team_lead import TeamLead, cache_user_profile, get_cached_profile
+from massist.team_lead import TeamLead, cache_team_lead, get_cached_team_lead
+
+logger = get_logger(__name__)
 
 
 class ChatIn(BaseModel):
@@ -26,17 +25,18 @@ class MessageResponse(BaseModel):
     # created_at: str
 
 
-async def create_chat(session_id: str):
-    team_lead = TeamLead(user_id="stolyarchuk", session_id=session_id)
+async def create_chat(user_id: str, session_id: str, rdb: Redis):
+    logger.debug("Creating chat session_id: %s", session_id)
 
-    if not await cache_user_profile(team_lead):
-        logger.error("Failed to serialize TeamLead: %s",
-                     team_lead.model_dump())
+    teamlead = TeamLead.model_validate(
+        obj={"user_id": user_id, "session_id": session_id}
+    )
 
-    return team_lead
+    if not await cache_team_lead(teamlead=teamlead, rdb=rdb):
+        logger.error("Failed to cache TeamLead: %s",
+                     teamlead.model_dump())
 
-# Get Redis db dependency
-
+    return teamlead
 
 router = APIRouter()
 
@@ -53,22 +53,26 @@ async def single_chat(rdb: Redis = Depends(get_rdb)):
     # created = int(time())
     # await create_chat(rdb, chat_id, created)
     # cache = RedisCache(rdb, prefix="items")
-    await create_chat(session_id=chat_id)
+    await create_chat(user_id="massist_buddy", session_id=chat_id, rdb=rdb)
     return UJSONResponse({'chat_id': chat_id})
 
 
 @router.post('/chat/{chat_id}')
-async def chat(chat_id: str, chat_in: ChatIn):
+async def chat(chat_id: str, chat_in: ChatIn, rdb: Redis = Depends(get_rdb)):
     logger.debug("chat_id: %s, message: %s", chat_id, chat_in.message)
 
-    team_lead = await get_cached_profile(session_id=chat_id)
-
-    print("team_lead", team_lead)
+    team_lead = await get_cached_team_lead(session_id=chat_id, rdb=rdb)
 
     if team_lead is None:
-        team_lead = await create_chat(session_id=chat_id)
+        team_lead = await create_chat(
+            user_id="massist_buddy",
+            session_id=chat_id,
+            rdb=rdb)
+    else:
+        logger.info("TeamLead fetched from cache: %s",
+                    team_lead.run.session_id)
 
-    # lead = TeamLead(user_id="stolyarchuk", session_id=chat_id)
+    # team_lead = TeamLead(user_id="stolyarchuk", session_id=chat_id)
 
     return EventSourceResponse(
         content=team_lead.arun_stream(  # type: ignore
