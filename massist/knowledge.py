@@ -3,9 +3,11 @@ from agno.models.base import Model
 
 from config import config
 from massist.chunking import get_chunking_strategy
-from massist.logger import logger
+from massist.logger import get_logger
 from massist.models import get_vllm_embedder
 from massist.vector_db import get_vector_db
+
+logger = get_logger(__name__)
 
 
 def get_kb(

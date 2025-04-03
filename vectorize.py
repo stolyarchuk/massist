@@ -1,5 +1,4 @@
 import anyio
-from dotenv import load_dotenv
 
 from massist.knowledge import get_kb
 from massist.logger import init_logging
@@ -10,15 +9,15 @@ from massist.models import (get_deepseek_model, get_gemini_pri_model,
 async def main():
     await init_logging()
 
-if __name__ == "__main__":
-    anyio.run(main)
-
     # chunking_model = get_mistral_model()
     chunking_model = get_deepseek_model(temperature=0.5)
 
     # get_kb(topic="index", chunking_model=chunking_model, max_links=20, max_depth=1).load(
     #     recreate=True, upsert=True
     # )
+
+
+    
 
     # get_kb(topic="install", chunking_model=chunking_model,).load(
     #     recreate=True, upsert=True
@@ -43,3 +42,7 @@ if __name__ == "__main__":
         recreate=True, upsert=True)
     # get_kb(topic="collector").load(recreate=True, upsert=True)
     # pass
+
+
+if __name__ == "__main__":
+    anyio.run(main)

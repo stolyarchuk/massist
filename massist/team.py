@@ -14,15 +14,18 @@ from massist.team_memory import get_team_memory
 def get_mitigator_team(
     user_id: str,
     session_id: str,
-    model: Model,
-    memory_model: Model
+    model: Model
 ) -> Team:
 
-    agent_params = AgentParams(
-        user_id=user_id,
-        session_id=session_id,
-        model=get_gemini_pri_model()
-    )
+    def get_agent_params():
+        return AgentParams(
+            user_id=user_id,
+            session_id=session_id,
+            model=get_gemini_pri_model()
+        )
+
+    def get_tools():
+        return DuckDuckGoTools()
 
     return Team(
         name="Mitigator Assistant Team Lead",
@@ -31,10 +34,10 @@ def get_mitigator_team(
         user_id=user_id,
         session_id=session_id,
         model=model,
-        # tools=[DuckDuckGoTools()],
+        tools=[get_tools()],
         members=[
-            # get_agent("index", "Main", agent_params),
-            # get_agent("install", "Installation", agent_params),
+            get_agent("index", "Main", get_agent_params()),
+            get_agent("install", "Installation", get_agent_params()),
             # get_agent("integrate", "Integration", agent_params),
             # get_agent("versions", "Versions", agent_params),
             # get_agent("maintenance", "Maintenance", agent_params),
@@ -42,7 +45,7 @@ def get_mitigator_team(
             # get_agent("psg", "PCAP Signature Generator", agent_params),
             # get_agent("contact", "Support", agent_params),
             # get_agent("price", "Price", agent_params),
-            get_search_agent("web_search", "Web Search", agent_params)
+            get_search_agent("web_search", "Web Search", get_agent_params())
         ],
         # storage=get_storage('lead'),
         # memory=get_team_memory(
@@ -81,34 +84,34 @@ def get_mitigator_team(
     )
 
 
-def get_ml_team(user_id: str, model: Model) -> Team:
-    return Team(
-        name="Multi Language Team",
-        mode="route",
-        user_id=user_id,
-        model=model,
-        members=[
-            # english_agent,
-            # spanish_agent,
-            # japanese_agent,
-            # french_agent,
-            # german_agent,
-            # chinese_agent,
-        ],
-        show_tool_calls=True,
-        storage=get_storage(agent_id='ceo'),
-        memory=get_team_memory(
-            agent_id='ceo', user_id=user_id, model=get_openrouter_model()
-        ),
-        markdown=True,
-        instructions=[
-            "You are a language router that directs questions to the appropriate language agent.",
-            "If the user asks in a language whose agent is not a team member, respond in English with:",
-            "'I can only answer in the following languages: English, Spanish, Japanese, " +
-            "French and German. Please ask your question in one of these languages.'",
-            "Always check the language of the user's input before routing to an agent.",
-            "For unsupported languages like Italian, respond in English with the above message.",
-        ],
-        show_members_responses=True,
-        enable_team_history=True,
-    )
+# def get_ml_team(user_id: str, model: Model) -> Team:
+#     return Team(
+#         name="Multi Language Team",
+#         mode="route",
+#         user_id=user_id,
+#         model=model,
+#         members=[
+#             # english_agent,
+#             # spanish_agent,
+#             # japanese_agent,
+#             # french_agent,
+#             # german_agent,
+#             # chinese_agent,
+#         ],
+#         show_tool_calls=True,
+#         storage=get_storage(agent_id='ceo'),
+#         memory=get_team_memory(
+#             agent_id='ceo', user_id=user_id, model=get_openrouter_model()
+#         ),
+#         markdown=True,
+#         instructions=[
+#             "You are a language router that directs questions to the appropriate language agent.",
+#             "If the user asks in a language whose agent is not a team member, respond in English with:",
+#             "'I can only answer in the following languages: English, Spanish, Japanese, " +
+#             "French and German. Please ask your question in one of these languages.'",
+#             "Always check the language of the user's input before routing to an agent.",
+#             "For unsupported languages like Italian, respond in English with the above message.",
+#         ],
+#         show_members_responses=True,
+#         enable_team_history=True,
+#     )

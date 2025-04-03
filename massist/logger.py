@@ -1,4 +1,5 @@
 import logging
+from typing import Any
 
 from config import config
 
@@ -46,11 +47,11 @@ class Colors:
 
 class LoggerFormatter(logging.Formatter):
     FORMATS = {
-        logging.DEBUG: Colors.DARK_GRAY + "%(asctime)s.%(msecs)03d [%(levelname)s] %(message)s" + Colors.END,
-        logging.INFO: Colors.GREEN + "%(asctime)s.%(msecs)03d [%(levelname)s] %(message)s" + Colors.END,
-        logging.WARNING: Colors.YELLOW + "%(asctime)s.%(msecs)03d [%(levelname)s] %(message)s" + Colors.END,
-        logging.ERROR: Colors.RED + "%(asctime)s.%(msecs)03d [%(levelname)s] %(message)s" + Colors.END,
-        logging.CRITICAL: Colors.LIGHT_RED + "%(asctime)s.%(msecs)03d [%(levelname)s] %(message)s" + Colors.END,
+        logging.DEBUG: Colors.DARK_GRAY + "%(asctime)s.%(msecs)03d [%(levelname)s] [%(name)s] %(message)s" + Colors.END,
+        logging.INFO: Colors.GREEN + "%(asctime)s.%(msecs)03d [%(levelname)s] [%(name)s] %(message)s" + Colors.END,
+        logging.WARNING: Colors.YELLOW + "%(asctime)s.%(msecs)03d [%(levelname)s] [%(name)s] %(message)s" + Colors.END,
+        logging.ERROR: Colors.RED + "%(asctime)s.%(msecs)03d [%(levelname)s] [%(name)s] %(message)s" + Colors.END,
+        logging.CRITICAL: Colors.LIGHT_RED + "%(asctime)s.%(msecs)03d [%(levelname)s] [%(name)s] %(message)s" + Colors.END,
     }
 
     def format(self, record: logging.LogRecord):
@@ -77,7 +78,6 @@ class Logger:
     """
     _instance = None
     _logger: logging.Logger
-    _available_loggers: list[str]
 
     def __new__(cls):
         if cls._instance is None:
@@ -88,15 +88,8 @@ class Logger:
     def _initialize(self):
         """Initialize the logger instance"""
         self._logger = self.get_logger(__name__)
-        self._available_loggers = [
-            lg for lg in logging.Logger.manager.loggerDict.keys()
-            if "." not in lg
-            or lg == "uvicorn.access"
-        ]
-        self._logger.debug("Loggers initialized: %s",
-                           self._available_loggers)
 
-    def get_logger(self, name: str) -> logging.Logger:
+    def get_logger(self, name: str | None = None) -> logging.Logger:
         """
         Creates and configures a logger with the specified name.
 
@@ -106,6 +99,10 @@ class Logger:
         Returns:
             logging.Logger: A configured logger instance
         """
+
+        if name is None:
+            name = __name__
+
         new_logger = logging.getLogger(name)
         new_logger.setLevel(log_level)
 
@@ -114,13 +111,33 @@ class Logger:
             new_logger.removeHandler(handler)
 
         new_logger.addHandler(self._get_handler())
+        new_logger.debug("Created logger: %s", name)
+
         return new_logger
 
     async def init_logging(self, loggers: list[str] | None = None) -> None:
         """Initialize all available loggers"""
+
         if loggers is None:
-            loggers = self._available_loggers
+            loggers = [
+                lg for lg in logging.Logger.manager.loggerDict.keys()
+                if "." not in lg
+                or lg == "uvicorn.access"
+            ]
+
         await self._init_module_loggers(loggers=loggers)
+
+    def info(self, msg: Any, *args: Any | None):
+        self._logger.info(msg, *args)
+
+    def error(self, msg: Any, *args: Any | None):
+        self._logger.info(msg, *args)
+
+    def warning(self, msg: Any, *args: Any | None):
+        self._logger.info(msg, *args)
+
+    def debug(self, msg: Any, *args: Any | None):
+        self._logger.info(msg, *args)
 
     def _get_handler(self) -> logging.Handler:
         """
@@ -141,21 +158,12 @@ class Logger:
             self.get_logger(logger_name)
 
 
-# Create the singleton instance
-logger_instance = Logger()
-
 # For backwards compatibility
-get_logger = logger_instance.get_logger
-init_logging = logger_instance.init_logging
-
-# Create the main logger using the singleton
-logger = logger_instance.get_logger("root")
+get_logger = Logger().get_logger
+init_logging = Logger().init_logging
 
 # For IDE and module level exports
 __all__ = [
-    "Logger",
     "get_logger",
-    "logger",
-    "init_logging",
-    "logger_instance"
+    "init_logging"
 ]
