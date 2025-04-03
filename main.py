@@ -1,3 +1,4 @@
+# import asyncio
 from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
@@ -5,16 +6,19 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from config import config
 from massist.logger import init_logging
-from massist.redis import RedisCache, get_rdb, get_redis_pool, init_redis
-from massist.routes import router
+from massist.redis import get_redis_pool, init_redis
+from massist.router import router
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    # Initialize Redis on startup
+    # Initialize Redis on startup await asyncio.gather()
+
     await init_logging()
     await init_redis()
+
     yield
+
     # Close Redis connections on shutdown
     redis_pool = get_redis_pool()
     await redis_pool.aclose()
@@ -31,4 +35,4 @@ app.add_middleware(
     allow_headers=['*'],
 )
 
-app.include_router(router)
+app.include_router(router, prefix="/v1")
