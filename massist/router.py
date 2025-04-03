@@ -8,7 +8,7 @@ from sse_starlette.sse import EventSourceResponse
 
 from massist.logger import get_logger
 from massist.redis import get_rdb
-from massist.team_lead import TeamLead, cache_team_lead, get_cached_teamlead
+from massist.team_lead import TeamLead, cache_teamlead, get_cached_teamlead
 
 logger = get_logger(__name__)
 
@@ -32,7 +32,7 @@ async def create_chat(user_id: str, session_id: str, rdb: Redis) -> TeamLead:
     # Use dict conversion instead of model_validate to avoid type errors
     # When creating an instance directly, model_validate is unnecessary
 
-    if not await cache_team_lead(teamlead=teamlead, rdb=rdb):
+    if not await cache_teamlead(teamlead=teamlead, rdb=rdb):
         logger.error("Failed to cache TeamLead: %s",
                      teamlead.model_dump())
 
@@ -61,21 +61,22 @@ async def single_chat(rdb: Redis = Depends(get_rdb)):
 async def chat(chat_id: str, chat_in: ChatIn, rdb: Redis = Depends(get_rdb)):
     logger.debug("chat_id: %s, message: %s", chat_id, chat_in.message)
 
-    team_lead = await get_cached_teamlead(session_id=chat_id, rdb=rdb)
+    teamlead = await get_cached_teamlead(session_id=chat_id, rdb=rdb)
 
-    if team_lead is None:
-        team_lead = await create_chat(
+    if teamlead is None:
+        teamlead = await create_chat(
             user_id="massist_buddy",
             session_id=chat_id,
             rdb=rdb)
-    else:
-        logger.info("TeamLead fetched from cache: %s",
-                    team_lead.session_id)
 
-    # team_lead = TeamLead(user_id="stolyarchuk", session_id=chat_id)
+    else:
+        logger.debug("TeamLead fetched from cache: %s",
+                     teamlead.session_id)
+
+    await cache_teamlead(teamlead=teamlead, rdb=rdb)
 
     return EventSourceResponse(
-        content=team_lead.arun_stream(
+        content=teamlead.arun_stream(
             message=chat_in.message
         )
     )

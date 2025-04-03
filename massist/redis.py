@@ -64,10 +64,10 @@ class AsyncRedisPoolContext(AbstractAsyncContextManager):
             await self.connection.aclose()
             self.connection = None
 
-    async def close(self):
-        """Close the connection pool and release all connections."""
-        if self.pool:
-            await self.pool.disconnect()
+    # async def close(self):
+    #     """Close the connection pool and release all connections."""
+    #     if self.pool:
+    #         await self.pool.disconnect()
 
 
 async def get_rdb():
