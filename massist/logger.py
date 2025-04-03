@@ -60,18 +60,15 @@ class LoggerFormatter(logging.Formatter):
 
 
 # define custom log level names
-log_levels = {"debug": logging.DEBUG, "info": logging.INFO,
-              "warn": logging.WARNING, "error": logging.ERROR}
-
-
 logging.addLevelName(logging.DEBUG, "debug")
 logging.addLevelName(logging.INFO, "info ")
 logging.addLevelName(logging.WARNING, "warn ")
 logging.addLevelName(logging.ERROR, "error")
 
-log_level = log_levels.get(config.LOG_LEVEL, logging.DEBUG)
+log_levels = {"debug": logging.DEBUG, "info": logging.INFO,
+              "warn": logging.WARNING, "error": logging.ERROR}
 
-global_formatter = LoggerFormatter()
+log_level = log_levels.get(config.LOG_LEVEL, logging.DEBUG)
 
 
 class Logger:
@@ -104,9 +101,10 @@ class Logger:
         Returns:
             logging.Handler: A configured stream handler with proper formatting and level
         """
+        formatter = LoggerFormatter()
         handler = logging.StreamHandler()
         handler.setLevel(log_level)
-        handler.setFormatter(global_formatter)
+        handler.setFormatter(formatter)
         return handler
 
     def get_logger(self, name: str):
@@ -129,26 +127,16 @@ class Logger:
         new_logger.addHandler(self.get_handler())
         return new_logger
 
-    def logger_factory(self, name: str):
-        """
-        Legacy function maintained for backward compatibility.
-        Consider using get_logger() instead.
-        """
-        return self.get_logger(name)
-
-    def init_module_loggers(self, loggers: list[str]):
+    async def init_module_loggers(self, loggers: list[str]):
         """Initialize multiple loggers at once"""
         for logger_name in loggers:
             self.get_logger(logger_name)
 
-    def update_formatters(self, loggers: list[str]):
-        """Update formatters for the specified loggers"""
-        for logger_name in loggers:
-            self.get_logger(logger_name)
-
-    def init_logging(self):
+    async def init_logging(self, loggers: list[str] | None = None):
         """Initialize all available loggers"""
-        self.init_module_loggers(loggers=self.available_loggers)
+        if loggers is None:
+            loggers = []
+        await self.init_module_loggers(loggers=self.available_loggers)
 
 
 # Create the singleton instance
@@ -157,14 +145,12 @@ logger_instance = Logger()
 # For backwards compatibility
 get_handler = logger_instance.get_handler
 get_logger = logger_instance.get_logger
-logger_factory = logger_instance.logger_factory
 init_module_loggers = logger_instance.init_module_loggers
-update_formatters = logger_instance.update_formatters
 init_logging = logger_instance.init_logging
 
 # Create the main logger using the singleton
 logger = logger_instance.main_logger
 
 # For IDE and module level exports
-__all__ = ["Logger", "get_logger", "logger_factory", "logger", "get_handler",
-           "init_logging", "init_module_loggers", "update_formatters", "logger_instance"]
+__all__ = ["Logger", "get_logger",  "logger", "get_handler",
+           "init_logging", "init_module_loggers", "logger_instance"]
