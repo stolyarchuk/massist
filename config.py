@@ -11,26 +11,28 @@ class Config(BaseSettings):
     """
 
     # LLM settings
-    DEEPSEEK_MODEL: str = ""
-    GEMINI_MODEL_PRI: str = ""
-    GEMINI_MODEL_SEC: str = ""
-    GEMINI_MODEL_EMBED: str = ""
-    VLLM_MODEL: str = ""
-    VLLM_MODEL_EMBED: str = ""
-    OPENROUTER_MODEL: str = ""
-    OPENAI_MODEL_EMBED: str = ""
+    GOOGLE_API_KEY: str = ""
+    GOOGLE_MODEL_PRI: str = ""
+    GOOGLE_MODEL_SEC: str = ""
+    GOOGLE_MODEL_EMBED: str = ""
 
     DEEPSEEK_API_KEY: str = ""
-    GOOGLE_API_KEY: str = ""
-    OPENAI_API_KEY: str = ""
-    OPENROUTER_API_KEY: str = ""
-    VLLM_API_KEY: str = ""
-    HUGGINGFACE_API_KEY: str = ""
+    DEEPSEEK_MODEL: str = ""
 
+    VLLM_API_KEY: str = ""
+    VLLM_MODEL: str = ""
+    VLLM_MODEL_EMBED: str = ""
     VLLM_BASE_URL_PRI: str = ""
     VLLM_BASE_URL_SEC: str = ""
 
-    # Scraper settings
+    OPENROUTER_API_KEY: str = ""
+    OPENROUTER_MODEL: str = ""
+
+    OPENAI_API_KEY: str = ""
+    OPENAI_MODEL_EMBED: str = ""
+
+    HUGGINGFACE_API_KEY: str = ""
+
     WEBSITE_URL: str = ""
 
     # Optional configuration
@@ -66,8 +68,6 @@ class Config(BaseSettings):
     @field_validator("ALLOW_ORIGINS", mode="before")
     @classmethod
     def parse_env_lists(cls, value: Any) -> List[str]:
-        print(value)
-
         if isinstance(value, str):
             # Strip whitespace and filter out empty strings
             return [item.strip() for item in value.split(",") if item.strip()]

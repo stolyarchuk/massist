@@ -30,7 +30,7 @@ def get_deepseek_model(
 
 
 def get_google_model(
-    model_id: str = config.GEMINI_MODEL_PRI,
+    model_id: str = config.GOOGLE_MODEL_PRI,
     temperature: float = config.TEMPERATURE
 ) -> Model:
     return Gemini(
@@ -61,11 +61,11 @@ def get_mistral_model(temperature: float = config.TEMPERATURE) -> Model:
 
 
 def get_gemini_pri_model(temperature: float = config.TEMPERATURE) -> Model:
-    return get_google_model(model_id=config.GEMINI_MODEL_PRI, temperature=temperature)
+    return get_google_model(model_id=config.GOOGLE_MODEL_PRI, temperature=temperature)
 
 
 def get_gemini_sec_model(temperature: float = config.TEMPERATURE) -> Model:
-    return get_google_model(model_id=config.GEMINI_MODEL_SEC, temperature=temperature)
+    return get_google_model(model_id=config.GOOGLE_MODEL_SEC, temperature=temperature)
 
 # or_gemini2_flash = OpenAILike(
 #     id="google/gemini-2.0-flash-lite-preview-02-05:free",
