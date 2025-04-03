@@ -1,4 +1,5 @@
 # import asyncio
+import asyncio
 from contextlib import asynccontextmanager
 
 # import anyio
@@ -21,8 +22,8 @@ async def lifespan(app: FastAPI):
     #     tg.start_soon(init_logging)
     #     tg.start_soon(init_redis)
 
-    # await init_logging(['uvicorn.access', 'uvicorn.error'])
-    await init_logging()
+    await init_logging('uvicorn.access', 'uvicorn.error', 'httpx', 'asyncio', 'uvicorn')
+    # await init_logging()
     await init_redis()
 
     yield

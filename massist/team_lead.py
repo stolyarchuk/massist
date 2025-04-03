@@ -115,11 +115,9 @@ async def get_cached_teamlead(
         The TeamLead object if found in cache, None otherwise
     """
     cache = RedisCache(redis_pool=rdb)
-    cached_data = await cache.get_model(f"{prefix}:{session_id}", TeamLead)
+    cached_teamlead = await cache.get_model(f"{prefix}:{session_id}", TeamLead)
 
-    logger.warning("get_model %s", cached_data)
-
-    if not cached_data:
+    if not cached_teamlead:
         return None
 
     # When creating a new TeamLead instance, you can pass context data
@@ -127,7 +125,7 @@ async def get_cached_teamlead(
     context = {"session_id": session_id}
 
     # Use model_validate with context
-    return TeamLead.model_validate(obj=cached_data, context=context)
+    return TeamLead.model_validate(obj=cached_teamlead, context=context)
 
 
 async def cache_teamlead(
@@ -139,8 +137,8 @@ async def cache_teamlead(
     cache = RedisCache(redis_pool=rdb, prefix=prefix)
 
     # Convert to dict and serialize with custom encoder
-    data = teamlead.model_dump()
     try:
+        data = teamlead.model_dump()
         serialized = custom_serialize(data)
         return await cache.set_model(f"{prefix}:{teamlead.session_id}", serialized, ex=7200)
     except Exception as e:
