@@ -33,16 +33,19 @@ def get_agent(agent_id: str, topic: str, params: AgentParams):
         user_id=params.user_id,
         session_id=params.session_id,
         model=params.model,
-        knowledge=get_kb(agent_id, chunking_model=get_openrouter_model()),
-        search_knowledge=True,
-        storage=get_storage(agent_id),
-        memory=get_agent_memory(
-            agent_id=agent_id,
-            user_id=params.user_id,
-            manager_model=get_gemini_pri_model(),
-            classifier_model=get_gemini_sec_model(),
-            summarizer_model=get_gemini_sec_model()
+        knowledge=get_kb(
+            topic=agent_id,
+            chunking_model=get_openrouter_model()
         ),
+        search_knowledge=True,
+        # storage=get_storage(agent_id),
+        # memory=get_agent_memory(
+        #     agent_id=agent_id,
+        #     user_id=params.user_id,
+        #     manager_model=get_gemini_pri_model(),
+        #     classifier_model=get_gemini_sec_model(),
+        #     summarizer_model=get_gemini_sec_model()
+        # ),
         description=meta.description,
         instructions=meta.instructions,
         read_chat_history=True,
@@ -73,7 +76,7 @@ def get_search_agent(agent_id: str, topic: str, params: AgentParams):
         # knowledge=get_kb(agent_id),
         # search_knowledge=True,
         add_references=True,
-        storage=get_storage(agent_id),
+        # storage=get_storage(agent_id),
         # memory=get_agent_memory(
         #     agent_id=agent_id,
         #     user_id=params.user_id,
