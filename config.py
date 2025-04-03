@@ -59,16 +59,16 @@ class Config(BaseSettings):
     DIMS: int = 1024
     LOG_LEVEL: str = "debug"
     TEMPERATURE: float = 0.5
-    ALLOW_ORIGINS: str = '*'
+    ALLOW_ORIGINS: List[str] = ['*']
     CHUNKING_STRATEGY: str = "agentic"
     CACHE_TTL: int = 86400
 
-    # @field_validator("ALLOW_ORIGINS", mode="before")
-    # @classmethod
-    # def parse_env_lists(cls, value: str):
-    #     if isinstance(value, str):
-    #         return value.split(";")
-    #     return value
+    @field_validator("ALLOW_ORIGINS", mode="before")
+    @classmethod
+    def parse_env_lists(cls, value: str | List[str]) -> List[str]:
+        if isinstance(value, str):
+            return value.split(",")
+        return value
 
     @model_validator(mode="after")
     def check_api_keys(self) -> "Config":
