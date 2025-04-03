@@ -1,9 +1,10 @@
 import asyncio
-from typing import Optional, Sequence, Type
+from dataclasses import field
+from typing import Any, Optional, Sequence, Type
 
 import redis.asyncio as redis
 import ujson as json
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 from redis.asyncio.client import Redis
 from redis.commands.search.field import NumericField
 from redis.commands.search.indexDefinition import IndexDefinition, IndexType
@@ -33,25 +34,27 @@ async def get_rdb():
 
 
 async def create_chat_index(rdb: Redis):
+    logger.debug(f"Creating Redis index '{CHAT_IDX_NAME}'")
+
     try:
         schema: Sequence[NumericField] = [
             NumericField('$.created', as_name='created', sortable=True,)
         ]
 
         await rdb.ft(CHAT_IDX_NAME).create_index(
-            fields=schema,
+            fields=list(schema),
             definition=IndexDefinition(
                 prefix=[CHAT_IDX_PREFIX], index_type=IndexType.JSON)
         )
-        logger.info(f"Chat index '{CHAT_IDX_NAME}' created successfully")
+        logger.info(f"Redis index '{CHAT_IDX_NAME}' created successfully")
     except Exception as e:
         logger.warning(f"Error creating chat index '{CHAT_IDX_NAME}': {e}")
 
 
 async def setup_redis_pool(rdb: Redis):
-    logger.warning(
-        "Make sure that the chat index exists, and create it if it doesn't")
+    logger.debug('Setting up Redis DB')
     try:
+        logger.debug(f"Getting Redis index '{CHAT_IDX_NAME}")
         await get_redis_pool().ft(CHAT_IDX_NAME).info()
     except Exception:
         await create_chat_index(rdb)
@@ -104,8 +107,8 @@ class RedisCache:
 
 
 async def init_redis():
-    logger.info("Initializing KV: %s", config.REDIS_URL)
+    logger.debug("Initializing KV: %s", config.REDIS_URL)
     async with get_redis_pool() as rdb:
-        logger.debug('Setting up Redis DB')
+
         await setup_redis_pool(rdb)
         logger.debug('Redis DB initialized')
