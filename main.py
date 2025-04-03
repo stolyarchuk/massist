@@ -1,21 +1,26 @@
 # import asyncio
 from contextlib import asynccontextmanager
 
+import anyio
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from config import config
-from massist.logger import init_logging
+# from massist.logger import init_logging
 from massist.redis import get_redis_pool, init_redis
 from massist.router import router
+
+ALLOW_ORIGINS = config.ALLOW_ORIGINS
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    # Initialize Redis on startup await asyncio.gather()
+    # Initialize Redis on startup
 
-    await init_logging()
-    await init_redis()
+    async with anyio.create_task_group() as tg:
+        tg.start_soon(init_redis)
+
+    # await init_redis()
 
     yield
 
@@ -29,7 +34,7 @@ app = FastAPI(lifespan=lifespan)
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=config.ALLOW_ORIGINS,
+    allow_origins=ALLOW_ORIGINS,
     allow_credentials=True,
     allow_methods=['*'],
     allow_headers=['*'],

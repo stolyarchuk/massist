@@ -1,6 +1,6 @@
-from typing import List
+from typing import Any, List
 
-from pydantic import field_validator, model_validator
+from pydantic import Field, field_validator, model_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
@@ -59,15 +59,19 @@ class Config(BaseSettings):
     DIMS: int = 1024
     LOG_LEVEL: str = "debug"
     TEMPERATURE: float = 0.5
-    ALLOW_ORIGINS: List[str] = ['*']
+    ALLOW_ORIGINS: List[str] = Field(default=["localhost", "127.0.0.1"])
     CHUNKING_STRATEGY: str = "agentic"
     CACHE_TTL: int = 86400
 
     @field_validator("ALLOW_ORIGINS", mode="before")
     @classmethod
-    def parse_env_lists(cls, value: str | List[str]) -> List[str]:
+    def parse_env_lists(cls, value: Any) -> List[str]:
+        print(value)
+
         if isinstance(value, str):
-            return value.split(",")
+            # Strip whitespace and filter out empty strings
+            return [item.strip() for item in value.split(",") if item.strip()]
+
         return value
 
     @model_validator(mode="after")
@@ -86,7 +90,7 @@ class Config(BaseSettings):
     model_config = SettingsConfigDict(
         env_file=".env",
         env_file_encoding="utf-8",
-        case_sensitive=True,
+        case_sensitive=False,
         env_prefix="MA_",
         env_nested_delimiter="__",
         extra="ignore"
