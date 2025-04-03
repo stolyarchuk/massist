@@ -7,7 +7,7 @@ from massist.models import (get_deepseek_model, get_gemini_pri_model,
 
 
 async def main():
-    await init_logging()
+    # await init_logging()
 
     # chunking_model = get_mistral_model()
     chunking_model = get_deepseek_model(temperature=0.5)
@@ -15,9 +15,6 @@ async def main():
     # get_kb(topic="index", chunking_model=chunking_model, max_links=20, max_depth=1).load(
     #     recreate=True, upsert=True
     # )
-
-
-    
 
     # get_kb(topic="install", chunking_model=chunking_model,).load(
     #     recreate=True, upsert=True
