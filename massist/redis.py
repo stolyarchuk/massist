@@ -104,7 +104,7 @@ class RedisCache:
 
 
 async def init_redis():
-    logger.info("Entering main loop")
+    logger.info("Initializing KV: %s", config.REDIS_URL)
     async with get_redis_pool() as rdb:
         logger.debug('Setting up Redis DB')
         await setup_redis_pool(rdb)
