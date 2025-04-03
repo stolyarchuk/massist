@@ -104,6 +104,7 @@ class Logger:
             name = __name__
 
         new_logger = logging.getLogger(name)
+        new_logger.propagate = False
         new_logger.setLevel(log_level)
 
         # Remove any existing handlers to avoid duplicate logs
@@ -115,17 +116,22 @@ class Logger:
 
         return new_logger
 
-    async def init_logging(self, loggers: list[str] | None = None) -> None:
+    async def init_logging(self, *args: str) -> None:
         """Initialize all available loggers"""
 
-        if loggers is None:
+        if len(args) == 0:
             loggers = [
                 lg for lg in logging.Logger.manager.loggerDict.keys()
                 if "." not in lg
-                or lg == "uvicorn.access"
+                or lg in args
             ]
+        else:
+            loggers = [arg for arg in args]
 
-        await self._init_module_loggers(loggers=loggers)
+        loggers = set(loggers)
+
+        self._logger.debug("Initializing loggers: %s", str(loggers))
+        await self._init_module_loggers(*loggers)
 
     def info(self, msg: Any, *args: Any | None):
         self._logger.info(msg, *args)
@@ -152,10 +158,11 @@ class Logger:
         handler.setFormatter(formatter)
         return handler
 
-    async def _init_module_loggers(self, loggers: list[str]):
+    async def _init_module_loggers(self, *args: str):
         """Initialize multiple loggers at once (private method)"""
-        for logger_name in loggers:
-            self.get_logger(logger_name)
+        for logger_name in args:
+            logger = self.get_logger(logger_name)
+            logger.propagate = False
 
 
 # For backwards compatibility
