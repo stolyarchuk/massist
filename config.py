@@ -82,7 +82,7 @@ class Config(BaseSettings):
 
         if not (has_gemini or has_deepseek):
             raise ValueError(
-                "Either GEMINI_API_KEY or DEEPSEEK_API_KEY must be set in environment variables"
+                "Either GOOGLE_API_KEY or DEEPSEEK_API_KEY must be set in environment variables"
             )
 
         return self
@@ -92,7 +92,7 @@ class Config(BaseSettings):
         env_file_encoding="utf-8",
         case_sensitive=False,
         env_prefix="MA_",
-        env_nested_delimiter="__",
+        # env_nested_delimiter="__",
         extra="ignore",
     )
 
