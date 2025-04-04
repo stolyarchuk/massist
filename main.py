@@ -32,7 +32,7 @@ async def lifespan(app: FastAPI):
 
     # Close Redis connections on shutdown
     async with AsyncRedisPoolContext() as rdb:
-        await rdb.aclose()
+        await rdb.aclose()  # noqa
 
     # TODO: close db connections as well
 
