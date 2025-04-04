@@ -122,8 +122,8 @@ class Logger:
         if len(args) == 0:
             loggers = ["root"] + [
                 lg for lg in logging.Logger.manager.loggerDict.keys()
-                # if "." in lg
-                # or lg in args
+                if "." not in lg
+                or lg in args
             ]
         else:
             loggers = args
