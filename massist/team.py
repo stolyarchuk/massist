@@ -6,8 +6,9 @@ from agno.tools.duckduckgo import DuckDuckGoTools
 
 from config import config
 from massist.agent import AgentParams, get_agent, get_search_agent
-from massist.models import get_gemini_pri_model, get_openrouter_model
-from massist.storage_db import get_storage
+from massist.models import (get_gemini_pri_model, get_gemini_sec_model,
+                            get_openrouter_model)
+from massist.storage import get_storage
 from massist.team_memory import get_team_memory
 
 
@@ -47,9 +48,13 @@ def get_mitigator_team(
             # get_agent("price", "Price", agent_params),
             get_search_agent("web_search", "Web Search", get_agent_params())
         ],
-        # storage=get_storage('lead'),
-        # memory=get_team_memory(
-        #     agent_id='lead', user_id=user_id, model=memory_model),
+        storage=get_storage('lead'),
+        memory=get_team_memory(
+            agent_id='lead',
+            user_id=user_id,
+            manager_model=get_gemini_pri_model(),
+            classifier_model=get_gemini_sec_model()
+        ),
         description=dedent("""
             You are the lead customer support team agent responsible for classifying and
             routing customer inquiries."""),
@@ -73,14 +78,16 @@ def get_mitigator_team(
             "Ensure a seamless experience for the user by maintaining context throughout the conversation.",
         ],
         # success_criteria="The team has reached a consensus.",
-        # update_team_context=True,
         # send_team_context_to_members=True,
+        # reasoning=True,
+        # reasoning_model=get_gemini_pri_model(),
         show_tool_calls=config.AGENT_SHOW_TOOL_CALLS,
         markdown=config.AGENT_MARKDOWN,
         debug_mode=config.TEAM_DEBUG,
         show_members_responses=True,
         enable_team_history=True,
         enable_agentic_context=True,
+        telemetry=False,
     )
 
 

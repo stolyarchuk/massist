@@ -3,15 +3,19 @@ from agno.memory.manager import MemoryManager
 from agno.memory.team import TeamMemory
 from agno.models.base import Model
 
-from massist.memory_db import get_memory_db
+from massist.memory import get_memory_db
 
 
-def get_team_memory(agent_id: str, user_id: str, model: Model) -> TeamMemory:
+def get_team_memory(
+    agent_id: str,
+    user_id: str,
+    manager_model: Model,
+    classifier_model: Model
+) -> TeamMemory:
     return TeamMemory(
         user_id=user_id,
         db=get_memory_db(agent_id),
         create_user_memories=True,
-        # create_session_summary=True,
-        manager=MemoryManager(model=model),
-        classifier=MemoryClassifier(model=model),
+        manager=MemoryManager(model=manager_model),
+        classifier=MemoryClassifier(model=classifier_model),
     )

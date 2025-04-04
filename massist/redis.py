@@ -3,7 +3,7 @@ from typing import (Any, AsyncGenerator, AsyncIterator, ClassVar, Optional,
                     Sequence, Type)
 
 import redis.asyncio as redisio
-import ujson as json
+import ujson
 from agno.agent.agent import Agent
 from agno.team.team import Team
 from pydantic import BaseModel, Field, model_validator
@@ -14,7 +14,6 @@ from redis.commands.search.indexDefinition import IndexDefinition, IndexType
 from redis.exceptions import RedisError
 
 from config import config
-from massist.json_serializers import custom_serialize
 from massist.logger import get_logger
 
 CHAT_IDX_NAME = 'idx:session'
@@ -130,29 +129,30 @@ class RedisCache:
     async def set_model(
         self,
         key: str,
-        model: Any,
+        model: BaseModel | str,
         ex: Optional[int] = None
     ) -> bool:
         """Cache a Pydantic model with expiration"""
+
         try:
             logger.debug(f"Caching '{model}'. Key: {key}.")
 
-            # Handle different types of models
+            # # Handle different types of models
             if isinstance(model, (Agent, Team)):
                 # Use custom serialization for Agent and Team objects
-                serialized = custom_serialize(model)
+                serialized = ujson.dumps(model)
             elif isinstance(model, BaseModel):
                 # Standard Pydantic model
-                serialized = json.dumps(model.model_dump())
-            elif isinstance(model, dict):
-                # Dictionary
-                serialized = json.dumps(model)
+                serialized = model.model_dump_json()
+            # elif isinstance(model, dict):
+            #     # Dictionary
+            #     serialized = ujson.dumps(model)
             elif isinstance(model, str):
                 # Already serialized string
                 serialized = model
             else:
                 # Fallback
-                serialized = custom_serialize(model)
+                serialized = ujson.dumps(model.model_dump())
 
             result = await self.redis.set(
                 name=self._key(key),
@@ -161,10 +161,11 @@ class RedisCache:
             )
 
             logger.debug(f"Cached '{model}. Result: {result}.")
-            return True
         except (TypeError, ValueError, RedisError) as e:
             logger.error(f"Caching failed: {str(e)}")
             return False
+
+        return True
 
     async def get_model(
         self,
@@ -173,18 +174,21 @@ class RedisCache:
     ) -> Optional[BaseModel]:
         """Retrieve and deserialize a cached model"""
 
-        logger.debug("Trying to get model '%s' from cache.", key)
+        logger.debug("Trying to get model from cache: %s.", key)
+        model = None
 
         try:
             data = await self.redis.get(self._key(key))
 
             if data:
-                return model_type(**json.loads(data))
+                model = model_type(**ujson.loads(data))
+                logger.debug("Model fetched from cache %s.", key)
 
-        except (json.JSONDecodeError, RedisError) as e:
+        except (ujson.JSONDecodeError, RedisError) as e:
             logger.error(f"Cache get failed: {str(e)}")
             await self.delete(key)  # Clean invalid entries
-        return None
+
+        return model
 
     async def delete(self, key: str) -> int:
         """Remove cached entry"""
@@ -198,14 +202,3 @@ async def init_redis():
         await setup_redis_pool(rdb)
 
     logger.debug('KV initialized %s', config.REDIS_URL)
-
-
-# async def cache_model(
-#     key: str,
-#     model: BaseModel,
-#     rdb: Redis = get_redis_pool(),
-#     prefix: str = "lead"
-# ):
-#     cache = RedisCache(redis_pool=rdb)
-
-#     return await cache.set_model(f"{prefix}:{key}", model, ex=7200)
