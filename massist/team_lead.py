@@ -92,7 +92,7 @@ class TeamLead(BaseModel):
     model_config = ConfigDict(
         arbitrary_types_allowed=True,
         json_encoders={
-            # Team: lambda v: None,
+            Team: lambda v: None,
             Storage: lambda v: None,
             RecursiveChunking: lambda v: None,
             # MemoryDb: lambda v: None,
