@@ -6,23 +6,18 @@ from agno.tools.duckduckgo import DuckDuckGoTools
 
 from config import config
 from massist.agent import AgentParams, get_agent, get_search_agent
-from massist.models import (get_gemini_pri_model, get_gemini_sec_model,
-                            get_openrouter_model)
+from massist.models import (
+    get_gemini_pri_model,
+    get_gemini_sec_model,
+)
 from massist.storage import get_storage
 from massist.team_memory import get_team_memory
 
 
-def get_mitigator_team(
-    user_id: str,
-    session_id: str,
-    model: Model
-) -> Team:
-
+def get_mitigator_team(user_id: str, session_id: str, model: Model) -> Team:
     def get_agent_params():
         return AgentParams(
-            user_id=user_id,
-            session_id=session_id,
-            model=get_gemini_pri_model()
+            user_id=user_id, session_id=session_id, model=get_gemini_pri_model()
         )
 
     def get_tools():
@@ -46,14 +41,14 @@ def get_mitigator_team(
             get_agent("psg", "PCAP Signature Generator", get_agent_params()),
             get_agent("contact", "Support", get_agent_params()),
             get_agent("price", "Price", get_agent_params()),
-            get_search_agent("web_search", "Web Search", get_agent_params())
+            get_search_agent("web_search", "Web Search", get_agent_params()),
         ],
-        storage=get_storage('lead'),
+        storage=get_storage("lead"),
         memory=get_team_memory(
-            agent_id='lead',
+            agent_id="lead",
             user_id=user_id,
             manager_model=get_gemini_pri_model(),
-            classifier_model=get_gemini_sec_model()
+            classifier_model=get_gemini_sec_model(),
         ),
         description=dedent("""
             You are the lead customer support team agent responsible for classifying and
@@ -73,8 +68,8 @@ def get_mitigator_team(
             # "with duckduckgo_search tool.",
             "Then relay that information back to the user in a professional and helpful manner.",
             "Always reply in russian language.",
-            "Always disclose your team and agents information. Always give an abstract answer in questions " +
-            "related to your team.",
+            "Always disclose your team and agents information. Always give an abstract answer in questions "
+            + "related to your team.",
             "Ensure a seamless experience for the user by maintaining context throughout the conversation.",
         ],
         # success_criteria="The team has reached a consensus.",

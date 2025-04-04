@@ -1,12 +1,11 @@
 from contextlib import AbstractAsyncContextManager
-from typing import (Any, AsyncGenerator, AsyncIterator, ClassVar, Optional,
-                    Sequence, Type)
+from typing import Optional, Sequence, Type
 
 import redis.asyncio as redisio
 import ujson
 from agno.agent.agent import Agent
 from agno.team.team import Team
-from pydantic import BaseModel, Field, model_validator
+from pydantic import BaseModel
 from redis.asyncio.client import Redis
 from redis.asyncio.connection import ConnectionPool as RedisConnectionPool
 from redis.commands.search.field import TextField
@@ -16,8 +15,8 @@ from redis.exceptions import RedisError
 from config import config
 from massist.logger import get_logger
 
-CHAT_IDX_NAME = 'idx:session'
-CHAT_IDX_PREFIX = 'session:'
+CHAT_IDX_NAME = "idx:session"
+CHAT_IDX_PREFIX = "session:"
 
 logger = get_logger(__name__)
 
@@ -28,9 +27,7 @@ class AsyncRedisPoolContext(AbstractAsyncContextManager):
 
     def __init__(self, max_connection: int = 100):
         self.pool = RedisConnectionPool.from_url(
-            url=config.REDIS_URL,
-            encoding="utf-8",
-            decode_responses=False
+            url=config.REDIS_URL, encoding="utf-8", decode_responses=False
         )
 
     async def get_connection(self) -> Redis:
@@ -81,11 +78,7 @@ async def get_rdb():
 
 
 def get_redis_pool() -> Redis:
-    return redisio.from_url(
-        config.REDIS_URL,
-        encoding="utf-8",
-        decode_responses=False
-    )
+    return redisio.from_url(config.REDIS_URL, encoding="utf-8", decode_responses=False)
 
 
 async def create_chat_index(rdb: Redis):
@@ -93,15 +86,18 @@ async def create_chat_index(rdb: Redis):
 
     try:
         schema: Sequence[TextField] = [
-            TextField('$.session_id', as_name='session_id', sortable=True,)
+            TextField(
+                "$.session_id",
+                as_name="session_id",
+                sortable=True,
+            )
         ]
 
         await rdb.ft(CHAT_IDX_NAME).create_index(
             fields=schema,
             definition=IndexDefinition(
-                prefix=[CHAT_IDX_PREFIX],
-                index_type=IndexType.JSON
-            )
+                prefix=[CHAT_IDX_PREFIX], index_type=IndexType.JSON
+            ),
         )
         logger.info(f"Redis index '{CHAT_IDX_NAME}' created successfully")
     except Exception as e:
@@ -109,7 +105,7 @@ async def create_chat_index(rdb: Redis):
 
 
 async def setup_redis_pool(rdb: Redis):
-    logger.debug('Setting up Redis DB')
+    logger.debug("Setting up Redis DB")
     try:
         logger.debug(f"Getting Redis index '{CHAT_IDX_NAME}'")
         index_info = await rdb.ft(CHAT_IDX_NAME).info()
@@ -127,10 +123,7 @@ class RedisCache:
         return f"{self.prefix}:{key}"
 
     async def set_model(
-        self,
-        key: str,
-        model: BaseModel | str,
-        ex: Optional[int] = None
+        self, key: str, model: BaseModel | str, ex: Optional[int] = None
     ) -> bool:
         """Cache a Pydantic model with expiration"""
 
@@ -155,9 +148,7 @@ class RedisCache:
                 serialized = ujson.dumps(model.model_dump())
 
             result = await self.redis.set(
-                name=self._key(key),
-                value=serialized,
-                ex=ex or config.CACHE_TTL
+                name=self._key(key), value=serialized, ex=ex or config.CACHE_TTL
             )
 
             logger.debug(f"Cached '{model}. Result: {result}.")
@@ -168,9 +159,7 @@ class RedisCache:
         return True
 
     async def get_model(
-        self,
-        key: str,
-        model_type: Type[BaseModel]
+        self, key: str, model_type: Type[BaseModel]
     ) -> Optional[BaseModel]:
         """Retrieve and deserialize a cached model"""
 
@@ -201,4 +190,4 @@ async def init_redis():
     async with AsyncRedisPoolContext() as rdb:
         await setup_redis_pool(rdb)
 
-    logger.debug('KV initialized %s', config.REDIS_URL)
+    logger.debug("KV initialized %s", config.REDIS_URL)

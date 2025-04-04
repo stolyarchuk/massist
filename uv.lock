@@ -671,6 +671,7 @@ dependencies = [
     { name = "sqlalchemy" },
     { name = "sse-starlette" },
     { name = "tiktoken" },
+    { name = "types-ujson" },
     { name = "ujson" },
     { name = "uvicorn", extra = ["standard"] },
     { name = "uvloop" },
@@ -701,6 +702,7 @@ requires-dist = [
     { name = "sqlalchemy", specifier = ">=2.0.40" },
     { name = "sse-starlette", specifier = ">=2.2.1" },
     { name = "tiktoken", specifier = ">=0.9.0" },
+    { name = "types-ujson", specifier = ">=5.10.0.20250326" },
     { name = "ujson", specifier = ">=5.10.0" },
     { name = "uvicorn", extras = ["standard"], specifier = ">=0.34.0" },
     { name = "uvloop", specifier = ">=0.21.0" },
@@ -1606,6 +1608,15 @@ dependencies = [
 sdist = { url = "https://files.pythonhosted.org/packages/e9/6e/c54e6705e5fe67c3606e4c7c91123ecf10d7e1e6d7a9c11b52970cf2196c/types_setuptools-78.1.0.20250329.tar.gz", hash = "sha256:31e62950c38b8cc1c5114b077504e36426860a064287cac11b9666ab3a483234", size = 43942 }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/7d/31/85d0264705d8ef47680d28f4dc9bb1e27d8cace785fbe3f8d009fad6cb88/types_setuptools-78.1.0.20250329-py3-none-any.whl", hash = "sha256:ea47eab891afb506f470eee581dcde44d64dc99796665da794da6f83f50f6776", size = 66985 },
+]
+
+[[package]]
+name = "types-ujson"
+version = "5.10.0.20250326"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/cc/5c/c974451c4babdb4ae3588925487edde492d59a8403010b4642a554d09954/types_ujson-5.10.0.20250326.tar.gz", hash = "sha256:5469e05f2c31ecb3c4c0267cc8fe41bcd116826fbb4ded69801a645c687dd014", size = 8340 }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/3e/c9/8a73a5f8fa6e70fc02eed506d5ac0ae9ceafbd2b8c9ad34a7de0f29900d6/types_ujson-5.10.0.20250326-py3-none-any.whl", hash = "sha256:acc0913f569def62ef6a892c8a47703f65d05669a3252391a97765cf207dca5b", size = 7644 },
 ]
 
 [[package]]
