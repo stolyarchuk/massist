@@ -1,16 +1,24 @@
 import asyncio
 from typing import Any, AsyncIterator, Dict, Optional
 
+import agno
+import agno.memory
+import agno.memory.db
+import agno.memory.db.postgres
 import ujson
+from agno.memory.agent import AgentMemory
+from agno.memory.db.base import MemoryDb
+from agno.memory.db.postgres import PgMemoryDb
+from agno.memory.team import TeamMemory
 from agno.run.team import TeamRunResponse
+from agno.storage.base import Storage
 from agno.team.team import Team
 from pydantic import BaseModel, ConfigDict, Field
 
-from massist.json_serializers import custom_serialize
 from massist.logger import get_logger
 from massist.models import get_gemini_pri_model, get_gemini_sec_model
 from massist.redis import Redis, RedisCache, get_redis_pool
-from massist.storage_db import get_storage
+from massist.storage import get_storage
 from massist.team import get_mitigator_team
 
 logger = get_logger(__name__)
@@ -21,19 +29,19 @@ class TeamLead(BaseModel):
     session_id: str
     storage_id: str = "guest"
     memory_id: str = "guest"
-    mitigator_team: Optional[Team] = Field(default=None, exclude=True)
+    team: Optional[Team] = None
 
     def model_post_init(self, context: Any, /) -> None:
         """Initialize the mitigator team after all attributes are set."""
         logger.debug("Post initializing BaseModel. context: %s", context)
 
-        if self.mitigator_team:
+        if self.team:
             logger.warning("Replacing team. TeamLead session_id: %s",
-                           context.session_id)
+                           self.session_id)
 
         # The context is passed automatically by Pydantic
         # We use self.user_id and self.session_id since they would have been set by Pydantic
-        self.mitigator_team = get_mitigator_team(
+        self.team = get_mitigator_team(
             user_id=self.user_id,
             session_id=self.session_id,
             model=get_gemini_pri_model()
@@ -50,7 +58,7 @@ class TeamLead(BaseModel):
         yield ujson.dumps({"event": "start", "data": ""})
 
         try:
-            response_stream:  AsyncIterator[TeamRunResponse] = await self.mitigator_team.arun(  # type: ignore
+            response_stream:  AsyncIterator[TeamRunResponse] = await self.team.arun(  # type: ignore
                 message=message, stream_intermediate_steps=True, stream=True
             )
 
@@ -66,8 +74,7 @@ class TeamLead(BaseModel):
                     yield ujson.dumps({"event": "message", "data": str(chunk)})
 
         except asyncio.CancelledError as e:
-            logger.warning("team_lead: %s", e)
-            yield ujson.dumps({"event": "cancelled", "data": {"content": "Stream cancelled"}})
+            yield ujson.dumps({"event": "cancelled", "data": {"content": str(e)}})
             return
 
         except Exception as e:
@@ -83,24 +90,21 @@ class TeamLead(BaseModel):
 
     model_config = ConfigDict(
         arbitrary_types_allowed=True,
-        # Exclude Team from JSON serialization
-        json_encoders={Team: lambda v: None}
+        json_encoders={
+            # Team: lambda v: None,
+            Storage: lambda v: None,
+            # MemoryDb: lambda v: None,
+            # PgMemoryDb: lambda v: None,
+            agno.memory.db.postgres.PgMemoryDb: lambda v: None,
+            # TeamMemory: lambda v: None,
+            # AgentMemory: lambda v: None
+        }
     )
-
-
-async def cache_team_lead(
-    teamlead: TeamLead,
-    rdb: Redis = get_redis_pool(),
-    prefix: str = "teamlead"
-) -> bool:
-    cache = RedisCache(redis_pool=rdb)
-
-    return await cache.set_model(f"{prefix}:{teamlead.session_id}", teamlead, ex=7200)
 
 
 async def get_cached_teamlead(
     session_id: str,
-    rdb: Redis = get_redis_pool(),
+    rdb: Redis,
     prefix: str = "teamlead"
 ) -> Optional[TeamLead]:
     """
@@ -120,26 +124,24 @@ async def get_cached_teamlead(
     if not cached_teamlead:
         return None
 
-    # When creating a new TeamLead instance, you can pass context data
-    # The context will automatically be passed to model_post_init
-    context = {"session_id": session_id}
+    teamlead = TeamLead.model_validate(obj=cached_teamlead)
 
-    # Use model_validate with context
-    return TeamLead.model_validate(obj=cached_teamlead, context=context)
+    teamlead.team = get_mitigator_team(user_id=teamlead.user_id, teamlead,)
+
+    return teamlead
 
 
 async def cache_teamlead(
     teamlead: TeamLead,
-    rdb: Redis = get_redis_pool(),
+    rdb: Redis,
     prefix: str = "teamlead"
 ):
     """Cache the TeamLead object in Redis."""
-    cache = RedisCache(redis_pool=rdb, prefix=prefix)
+    cache = RedisCache(redis_pool=rdb)
 
-    # Convert to dict and serialize with custom encoder
     try:
-        data = teamlead.model_dump()
-        serialized = custom_serialize(data)
+        serialized = teamlead.model_dump_json()
+        logger.debug("serialized: %s", serialized)
         return await cache.set_model(f"{prefix}:{teamlead.session_id}", serialized, ex=7200)
     except Exception as e:
         logger.error(f"Caching failed: {e}")

@@ -22,8 +22,8 @@ async def lifespan(app: FastAPI):
     #     tg.start_soon(init_logging)
     #     tg.start_soon(init_redis)
 
-    await init_logging('uvicorn.access', 'uvicorn.error', 'httpx', 'asyncio', 'uvicorn')
-    # await init_logging()
+    # await init_logging('uvicorn.access', 'uvicorn.error', 'httpx', 'asyncio', 'uvicorn', 'agno', 'agno-team')
+    await init_logging()
     await init_redis()
 
     yield

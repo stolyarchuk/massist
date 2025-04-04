@@ -17,9 +17,7 @@ def get_kb(
     max_depth: int = config.MAX_DEPTH
 ):
     url = f"{config.WEBSITE_URL}{topic}.html" if topic == "index" else f"{config.WEBSITE_URL}{topic}/"
-    logger.info("Using topic: %s, url: %s", topic, url)
-
-    return WebsiteKnowledgeBase(
+    kb = WebsiteKnowledgeBase(
         urls=[url],
         max_links=max_links,
         max_depth=max_depth,
@@ -27,3 +25,6 @@ def get_kb(
         num_documents=3,
         chunking_strategy=get_chunking_strategy(chunking_model)
     )
+
+    logger.info("Loaded KB: %s. (source: %s)", kb, url)
+    return kb

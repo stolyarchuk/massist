@@ -32,6 +32,8 @@ async def create_chat(user_id: str, session_id: str, rdb: Redis) -> TeamLead:
     # Use dict conversion instead of model_validate to avoid type errors
     # When creating an instance directly, model_validate is unnecessary
 
+    # logger.warning(str(teamlead.team))
+
     if not await cache_teamlead(teamlead=teamlead, rdb=rdb):
         logger.error("Failed to cache TeamLead: %s",
                      teamlead.model_dump())
