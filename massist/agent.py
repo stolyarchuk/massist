@@ -1,4 +1,3 @@
-from typing import Any, Dict
 
 from agno.agent.agent import Agent
 from agno.models.base import Model
@@ -6,12 +5,11 @@ from agno.tools.duckduckgo import DuckDuckGoTools
 from pydantic import BaseModel, ConfigDict
 
 from config import config
-from massist.agent_memory import get_agent_memory
 from massist.knowledge import get_kb
 from massist.meta import Meta
-from massist.models import (get_gemini_pri_model, get_gemini_sec_model,
-                            get_openrouter_model)
-from massist.storage import get_storage
+from massist.models import (
+    get_openrouter_model,
+)
 
 
 class AgentParams(BaseModel):
@@ -33,10 +31,7 @@ def get_agent(agent_id: str, topic: str, params: AgentParams):
         user_id=params.user_id,
         session_id=params.session_id,
         model=params.model,
-        knowledge=get_kb(
-            topic=agent_id,
-            chunking_model=get_openrouter_model()
-        ),
+        knowledge=get_kb(topic=agent_id, chunking_model=get_openrouter_model()),
         search_knowledge=True,
         # storage=get_storage(agent_id),
         # memory=get_agent_memory(
@@ -59,7 +54,7 @@ def get_agent(agent_id: str, topic: str, params: AgentParams):
         show_tool_calls=config.AGENT_SHOW_TOOL_CALLS,
         stream=config.AGENT_STREAM,
         debug_mode=config.AGENT_DEBUG,
-        monitoring=config.AGENT_MONITORING
+        monitoring=config.AGENT_MONITORING,
     )
 
 
@@ -97,5 +92,5 @@ def get_search_agent(agent_id: str, topic: str, params: AgentParams):
         show_tool_calls=config.AGENT_SHOW_TOOL_CALLS,
         stream=config.AGENT_STREAM,
         debug_mode=config.AGENT_DEBUG,
-        monitoring=config.AGENT_MONITORING
+        monitoring=config.AGENT_MONITORING,
     )

@@ -93,7 +93,7 @@ class Config(BaseSettings):
         case_sensitive=False,
         env_prefix="MA_",
         env_nested_delimiter="__",
-        extra="ignore"
+        extra="ignore",
     )
 
 
