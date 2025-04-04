@@ -7,10 +7,7 @@ from massist.memory import get_memory_db
 
 
 def get_team_memory(
-    agent_id: str,
-    user_id: str,
-    manager_model: Model,
-    classifier_model: Model
+    agent_id: str, user_id: str, manager_model: Model, classifier_model: Model
 ) -> TeamMemory:
     return TeamMemory(
         user_id=user_id,
