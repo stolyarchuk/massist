@@ -1,0 +1,158 @@
+{
+  // See https://go.microsoft.com/fwlink/?LinkId=733558
+  // for the documentation about the tasks.json format
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Run File",
+      "type": "process",
+      "command": "${command:python.interpreterPath}",
+      "args": [
+        "${file}"
+      ],
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": true
+      },
+      "group": {
+        "kind": "build",
+        "isDefault": false
+      },
+      "problemMatcher": [
+        {
+          "owner": "python",
+          "fileLocation": [
+            "relative",
+            "${workspaceFolder}"
+          ],
+          "pattern": [
+            {
+              "regexp": "^\\s*File \"([^\"]+)\", line (\\d+)",
+              "file": 1,
+              "line": 2
+            },
+            {
+              "regexp": "^\\s*([^:]+): (.*)$",
+              "message": 2
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "label": "Run Vectorize",
+      "type": "process",
+      "command": "${command:python.interpreterPath}",
+      "args": [
+        "${workspaceFolder}/vectorize.py"
+      ],
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": true
+      },
+      "group": {
+        "kind": "build",
+        "isDefault": false
+      },
+      "problemMatcher": [
+        {
+          "owner": "python",
+          "fileLocation": [
+            "relative",
+            "${workspaceFolder}"
+          ],
+          "pattern": [
+            {
+              "regexp": "^\\s*File \"([^\"]+)\", line (\\d+)",
+              "file": 1,
+              "line": 2
+            },
+            {
+              "regexp": "^\\s*([^:]+): (.*)$",
+              "message": 2
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "label": "Run Playground",
+      "type": "process",
+      "command": "${command:python.interpreterPath}",
+      "args": [
+        "${workspaceFolder}/playground.py"
+      ],
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": true
+      },
+      "group": {
+        "kind": "build",
+        "isDefault": false
+      },
+      "problemMatcher": [
+        {
+          "owner": "python",
+          "fileLocation": [
+            "relative",
+            "${workspaceFolder}"
+          ],
+          "pattern": [
+            {
+              "regexp": "^\\s*File \"([^\"]+)\", line (\\d+)",
+              "file": 1,
+              "line": 2
+            },
+            {
+              "regexp": "^\\s*([^:]+): (.*)$",
+              "message": 2
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "label": "Run Main",
+      "type": "shell",
+      "command": "${command:python.interpreterPath}",
+      "args": [
+        "${cwd}/.venv/bin/uvicorn",
+        "main:app",
+        "--host=0.0.0.0",
+        "--port=8000"
+      ],
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": true
+      },
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "problemMatcher": [
+        {
+          "owner": "python",
+          "fileLocation": [
+            "relative",
+            "${workspaceFolder}"
+          ],
+          "pattern": [
+            {
+              "regexp": "^\\s*File \"([^\"]+)\", line (\\d+)",
+              "file": 1,
+              "line": 2
+            },
+            {
+              "regexp": "^\\s*([^:]+): (.*)$",
+              "message": 2
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
