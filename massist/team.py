@@ -27,7 +27,8 @@ def get_mitigator_team(user_id: str, session_id: str, model: Model) -> Team:
         model=model,
         tools=[
             DuckDuckGoTools(),
-            TelegramTools(chat_id=config.TGBOT_CHAT_ID, token=config.TGBOT_API_TOKEN),
+            TelegramTools(chat_id=config.TGBOT_CHAT_ID,
+                          token=config.TGBOT_API_TOKEN),
         ],
         members=[
             get_agent("index", "Major", get_agent_params()),
@@ -65,9 +66,10 @@ def get_mitigator_team(user_id: str, session_id: str, model: Model) -> Team:
             # "If no information provided from the agents, search customer query in the web " +
             # "with duckduckgo_search tool.",
             "Then relay that information back to the user in a professional and helpful manner.",
+            "Try not say hi/hello greetings often. Follow slightly non-formal dialog style.",
             "Always reply in russian language.",
-            "Always disclose your team and agents information. Always give an abstract answer in questions "
-            + "related to your team.",
+            "Always disclose your team and agents information." +
+            "Never disclose any info about yourself and your creators. Always give an abstract answer in questions related to yourself.",
             "Ensure a seamless experience for the user by maintaining context throughout the conversation.",
         ],
         # success_criteria="The team has reached a consensus.",
