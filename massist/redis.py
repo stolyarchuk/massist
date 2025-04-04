@@ -1,3 +1,4 @@
+import asyncio
 from contextlib import AbstractAsyncContextManager
 from typing import Optional, Sequence, Type
 
@@ -7,7 +8,7 @@ from agno.agent.agent import Agent
 from agno.team.team import Team
 from pydantic import BaseModel
 from redis.asyncio.client import Redis
-from redis.asyncio.connection import ConnectionPool as RedisConnectionPool
+from redis.asyncio.connection import ConnectionPool
 from redis.commands.search.field import TextField
 from redis.commands.search.indexDefinition import IndexDefinition, IndexType
 from redis.exceptions import RedisError
@@ -22,11 +23,11 @@ logger = get_logger(__name__)
 
 
 class AsyncRedisPoolContext(AbstractAsyncContextManager):
-    pool: RedisConnectionPool
+    pool: ConnectionPool | None = None
     connection: Redis | None = None
 
     def __init__(self, max_connection: int = 100):
-        self.pool = RedisConnectionPool.from_url(
+        self.pool = ConnectionPool.from_url(
             url=config.REDIS_URL, encoding="utf-8", decode_responses=False
         )
 
@@ -57,7 +58,7 @@ class AsyncRedisPoolContext(AbstractAsyncContextManager):
             exc_tb: The traceback if an exception was raised.
         """
         if self.connection:
-            await self.connection.aclose()
+            await asyncio.create_task(self.connection.aclose())
             self.connection = None
 
     # async def close(self):
@@ -88,7 +89,7 @@ async def create_chat_index(rdb: Redis):
         schema: Sequence[TextField] = [
             TextField(
                 "$.session_id",
-                as_name="session_id",
+                as_name="session",
                 sortable=True,
             )
         ]
