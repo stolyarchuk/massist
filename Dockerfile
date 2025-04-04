@@ -6,12 +6,14 @@ ENV DEBIAN_FRONTEND=noninteractive \
     PYTHONUNBUFFERED=1 \
     PIP_ROOT_USER_ACTION=ignore
 
-COPY . .
+COPY requirements.txt .
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
     build-essential && rm -rf /var/lib/apt/lists/* && \
-    pip install --no-cache-dir --upgrade uv && uv sync && \
+    pip install --no-cache-dir --upgrade -r requirements.txt && \
     apt-get purge -y build-essential && apt-get -y autoremove
+
+COPY . .
 
 EXPOSE 8000
 
