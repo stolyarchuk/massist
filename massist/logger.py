@@ -47,11 +47,21 @@ class Colors:
 
 class LoggerFormatter(logging.Formatter):
     FORMATS = {
-        logging.DEBUG: Colors.DARK_GRAY + "%(asctime)s.%(msecs)03d [%(levelname)s] [%(name)s] %(message)s" + Colors.END,
-        logging.INFO: Colors.GREEN + "%(asctime)s.%(msecs)03d [%(levelname)s] [%(name)s] %(message)s" + Colors.END,
-        logging.WARNING: Colors.YELLOW + "%(asctime)s.%(msecs)03d [%(levelname)s] [%(name)s] %(message)s" + Colors.END,
-        logging.ERROR: Colors.RED + "%(asctime)s.%(msecs)03d [%(levelname)s] [%(name)s] %(message)s" + Colors.END,
-        logging.CRITICAL: Colors.LIGHT_RED + "%(asctime)s.%(msecs)03d [%(levelname)s] [%(name)s] %(message)s" + Colors.END,
+        logging.DEBUG: Colors.DARK_GRAY
+        + "%(asctime)s.%(msecs)03d [%(levelname)s] [%(name)s] %(message)s"
+        + Colors.END,
+        logging.INFO: Colors.GREEN
+        + "%(asctime)s.%(msecs)03d [%(levelname)s] [%(name)s] %(message)s"
+        + Colors.END,
+        logging.WARNING: Colors.YELLOW
+        + "%(asctime)s.%(msecs)03d [%(levelname)s] [%(name)s] %(message)s"
+        + Colors.END,
+        logging.ERROR: Colors.RED
+        + "%(asctime)s.%(msecs)03d [%(levelname)s] [%(name)s] %(message)s"
+        + Colors.END,
+        logging.CRITICAL: Colors.LIGHT_RED
+        + "%(asctime)s.%(msecs)03d [%(levelname)s] [%(name)s] %(message)s"
+        + Colors.END,
     }
 
     def format(self, record: logging.LogRecord):
@@ -66,8 +76,12 @@ logging.addLevelName(logging.INFO, "info ")
 logging.addLevelName(logging.WARNING, "warn ")
 logging.addLevelName(logging.ERROR, "error")
 
-log_levels = {"debug": logging.DEBUG, "info": logging.INFO,
-              "warn": logging.WARNING, "error": logging.ERROR}
+log_levels = {
+    "debug": logging.DEBUG,
+    "info": logging.INFO,
+    "warn": logging.WARNING,
+    "error": logging.ERROR,
+}
 
 log_level = log_levels.get(config.LOG_LEVEL, logging.DEBUG)
 
@@ -76,6 +90,7 @@ class Logger:
     """
     Singleton Logger class that encapsulates all logging functionality.
     """
+
     _instance = None
     _logger: logging.Logger
 
@@ -121,9 +136,9 @@ class Logger:
 
         if len(args) == 0:
             loggers = ["root"] + [
-                lg for lg in logging.Logger.manager.loggerDict.keys()
-                if "." not in lg
-                or lg in args
+                lg
+                for lg in logging.Logger.manager.loggerDict.keys()
+                if "." not in lg or lg in args
             ]
         else:
             loggers = args
@@ -170,7 +185,4 @@ get_logger = Logger().get_logger
 init_logging = Logger().init_logging
 
 # For IDE and module level exports
-__all__ = [
-    "get_logger",
-    "init_logging"
-]
+__all__ = ["get_logger", "init_logging"]
