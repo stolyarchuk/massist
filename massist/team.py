@@ -6,10 +6,7 @@ from agno.tools.duckduckgo import DuckDuckGoTools
 
 from config import config
 from massist.agent import AgentParams, get_agent, get_search_agent
-from massist.models import (
-    get_gemini_pri_model,
-    get_gemini_sec_model,
-)
+from massist.models import get_gemini_pri_model, get_gemini_sec_model
 from massist.storage import get_storage
 from massist.team_memory import get_team_memory
 
@@ -19,9 +16,6 @@ def get_mitigator_team(user_id: str, session_id: str, model: Model) -> Team:
         return AgentParams(
             user_id=user_id, session_id=session_id, model=get_gemini_pri_model()
         )
-
-    def get_tools():
-        return DuckDuckGoTools()
 
     return Team(
         name="Mitigator AI Assistant",
