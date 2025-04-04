@@ -35,6 +35,9 @@ class Config(BaseSettings):
 
     WEBSITE_URL: str = ""
 
+    TGBOT_API_TOKEN: str = ""
+    TGBOT_CHAT_ID: str = ""
+
     # Optional configuration
     AGENT_STREAM: bool = True
     AGENT_MARKDOWN: bool = True
@@ -64,6 +67,9 @@ class Config(BaseSettings):
     ALLOW_ORIGINS: List[str] = Field(default=["localhost", "127.0.0.1"])
     CHUNKING_STRATEGY: str = "agentic"
     CACHE_TTL: int = 86400
+
+    CHAT_IDX_NAME: str = ""
+    CHAT_IDX_PREFIX: str = ""
 
     @field_validator("ALLOW_ORIGINS", mode="before")
     @classmethod
