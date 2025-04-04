@@ -35,7 +35,7 @@ def get_mitigator_team(
         user_id=user_id,
         session_id=session_id,
         model=model,
-        tools=[get_tools()],
+        tools=[DuckDuckGoTools()],
         members=[
             get_agent("index", "Major", get_agent_params()),
             get_agent("install", "Installation", get_agent_params()),
