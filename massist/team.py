@@ -27,10 +27,7 @@ def get_mitigator_team(user_id: str, session_id: str, model: Model) -> Team:
         model=model,
         tools=[
             DuckDuckGoTools(),
-            TelegramTools(
-                chat_id=config.TGBOT_CHAT_ID,
-                token=config.TGBOT_API_TOKEN
-            )
+            TelegramTools(chat_id=config.TGBOT_CHAT_ID, token=config.TGBOT_API_TOKEN),
         ],
         members=[
             get_agent("index", "Major", get_agent_params()),
