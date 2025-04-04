@@ -1,9 +1,9 @@
 import anyio
 
 from massist.knowledge import get_kb
-from massist.logger import init_logging
-from massist.models import (get_deepseek_model, get_gemini_pri_model,
-                            get_mistral_model, get_openrouter_model)
+from massist.models import (
+    get_deepseek_model,
+)
 
 
 async def main():
@@ -36,7 +36,8 @@ async def main():
     # get_kb(topic="contact", chunking_model=chunking_model).load(
     #     recreate=True, upsert=True)
     get_kb(topic="price", chunking_model=chunking_model).load(
-        recreate=True, upsert=True)
+        recreate=True, upsert=True
+    )
     # get_kb(topic="collector").load(recreate=True, upsert=True)
     # pass
 

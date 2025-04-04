@@ -8,10 +8,7 @@ from config import config
 
 def get_memory_db(agent_id: str) -> MemoryDb:
     if config.MEMORY_DB == "pg":
-        return PgMemoryDb(
-            table_name=f"memory_{agent_id}",
-            db_url=config.POSTGRES_URL
-        )
+        return PgMemoryDb(table_name=f"memory_{agent_id}", db_url=config.POSTGRES_URL)
 
     if config.MEMORY_DB == "sqlite":
         return SqliteMemoryDb(
@@ -21,9 +18,7 @@ def get_memory_db(agent_id: str) -> MemoryDb:
 
     if config.MEMORY_DB == "mongo":
         return MongoMemoryDb(
-            collection_name=f"memory_{agent_id}",
-            db_url=config.MONGO_URL,
-            db_name="ai"
+            collection_name=f"memory_{agent_id}", db_url=config.MONGO_URL, db_name="ai"
         )
 
     raise ValueError("bad storage class name")
