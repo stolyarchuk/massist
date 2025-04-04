@@ -1,4 +1,3 @@
-import asyncio
 from contextlib import AbstractAsyncContextManager
 from typing import Optional, Sequence, Type
 
@@ -24,7 +23,7 @@ logger = get_logger(__name__)
 
 class AsyncRedisPoolContext(AbstractAsyncContextManager):
     pool: ConnectionPool | None = None
-    connection: Redis | None = None
+    connection: Redis
 
     def __init__(self, max_connection: int = 100):
         self.pool = ConnectionPool.from_url(
@@ -60,13 +59,11 @@ class AsyncRedisPoolContext(AbstractAsyncContextManager):
             exc_tb: The traceback if an exception was raised.
         """
         if self.connection:
-            await asyncio.create_task(self.connection.aclose())
+            await self.connection.aclose()
             self.connection = None
 
-    # async def close(self):
-    #     """Close the connection pool and release all connections."""
-    #     if self.pool:
-    #         await self.pool.disconnect()
+        if self.pool:
+            await self.pool.disconnect()
 
 
 async def get_rdb():
