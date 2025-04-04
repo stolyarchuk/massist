@@ -11,3 +11,12 @@ POST {{hostname}}/chat/{{session_id}}
 {
   "message": "Расскажи про себя и свою команду."
 }
+
+@token=7801364399:AAGyaOWH4YvYE8dDh88lB2awJTZkdYRFTRs
+
+
+###
+POST https://api.telegram.org/bot{{token}}/sendMessage
+Content-Type: application/json
+
+{"chat_id": 229147236, "text": "asdasdasdasdasd"}
