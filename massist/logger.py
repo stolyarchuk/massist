@@ -120,15 +120,15 @@ class Logger:
         """Initialize all available loggers"""
 
         if len(args) == 0:
-            loggers = [
+            loggers = ["root"] + [
                 lg for lg in logging.Logger.manager.loggerDict.keys()
-                if "." not in lg
+                if "." in lg
                 or lg in args
             ]
         else:
-            loggers = [arg for arg in args]
+            loggers = args
 
-        loggers = set(loggers)
+        # loggers = set(loggers)
 
         self._logger.debug("Initializing loggers: %s", str(loggers))
         await self._init_module_loggers(*loggers)

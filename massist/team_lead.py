@@ -1,11 +1,12 @@
 import asyncio
 from typing import Any, AsyncIterator, Dict, Optional
 
-import agno
-import agno.memory
-import agno.memory.db
-import agno.memory.db.postgres
+# import agno
+# import agno.memory
+# import agno.memory.db
+# import agno.memory.db.postgres
 import ujson
+from agno.document.chunking.recursive import RecursiveChunking
 from agno.memory.agent import AgentMemory
 from agno.memory.db.base import MemoryDb
 from agno.memory.db.postgres import PgMemoryDb
@@ -33,7 +34,7 @@ class TeamLead(BaseModel):
 
     def model_post_init(self, context: Any, /) -> None:
         """Initialize the mitigator team after all attributes are set."""
-        logger.debug("Post initializing BaseModel. context: %s", context)
+        logger.debug("Model post init: %s", context)
 
         if self.team:
             logger.warning("Replacing team. TeamLead session_id: %s",
@@ -93,9 +94,10 @@ class TeamLead(BaseModel):
         json_encoders={
             # Team: lambda v: None,
             Storage: lambda v: None,
+            RecursiveChunking: lambda v: None,
             # MemoryDb: lambda v: None,
             # PgMemoryDb: lambda v: None,
-            agno.memory.db.postgres.PgMemoryDb: lambda v: None,
+            PgMemoryDb: lambda v: None,
             # TeamMemory: lambda v: None,
             # AgentMemory: lambda v: None
         }
@@ -119,14 +121,18 @@ async def get_cached_teamlead(
         The TeamLead object if found in cache, None otherwise
     """
     cache = RedisCache(redis_pool=rdb)
-    cached_teamlead = await cache.get_model(f"{prefix}:{session_id}", TeamLead)
+    teamlead_cache = await cache.get_model(f"{prefix}:{session_id}", TeamLead)
 
-    if not cached_teamlead:
+    if not teamlead_cache:
         return None
 
-    teamlead = TeamLead.model_validate(obj=cached_teamlead)
+    teamlead = TeamLead.model_validate(teamlead_cache)
 
-    teamlead.team = get_mitigator_team(user_id=teamlead.user_id, teamlead,)
+    teamlead.team = get_mitigator_team(
+        user_id=teamlead.user_id,
+        session_id=teamlead.session_id,
+        model=get_gemini_pri_model()
+    )
 
     return teamlead
 
