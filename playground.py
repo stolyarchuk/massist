@@ -1,5 +1,3 @@
-
-
 # init_logging()
 
 # mitigator_team = get_mitigator_team(
