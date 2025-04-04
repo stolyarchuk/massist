@@ -57,6 +57,7 @@ class Meta(BaseModel):
             "   - Never use hedging phrases like 'based on my knowledge' or "
             + "'depending on the information'",
             "5. User Interaction:",
+            "   - Try not say hi/hello greetings often. Follow slightly non-formal dialog style.",
             "   - Ask for clarification if the query is ambiguous",
             "   - Break down complex questions into manageable parts",
             "   - Proactively suggest related topics or follow-up questions",
