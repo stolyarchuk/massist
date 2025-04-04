@@ -31,7 +31,9 @@ class AsyncRedisPoolContext(AbstractAsyncContextManager):
             url=config.REDIS_URL, encoding="utf-8", decode_responses=False
         )
 
-    async def get_connection(self) -> Redis:
+        self.connection = self.get_connection()
+
+    def get_connection(self) -> Redis:
         """Get a Redis connection from the pool.
 
         Returns:
@@ -46,7 +48,7 @@ class AsyncRedisPoolContext(AbstractAsyncContextManager):
         Returns:
             Redis: An active Redis connection that can be used within the context.
         """
-        self.connection = await self.get_connection()
+        self.connection = self.get_connection()
         return self.connection
 
     async def __aexit__(self, exc_type, exc_val, exc_tb):
