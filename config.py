@@ -35,6 +35,9 @@ class Config(BaseSettings):
 
     WEBSITE_URL: str = ""
 
+    TGBOT_API_TOKEN: str = ""
+    TGBOT_CHAT_ID: str = ""
+
     # Optional configuration
     AGENT_STREAM: bool = True
     AGENT_MARKDOWN: bool = True

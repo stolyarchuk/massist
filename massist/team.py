@@ -3,6 +3,7 @@ from textwrap import dedent
 from agno.models.base import Model
 from agno.team.team import Team
 from agno.tools.duckduckgo import DuckDuckGoTools
+from agno.tools.telegram import TelegramTools
 
 from config import config
 from massist.agent import AgentParams, get_agent, get_search_agent
@@ -24,7 +25,13 @@ def get_mitigator_team(user_id: str, session_id: str, model: Model) -> Team:
         user_id=user_id,
         session_id=session_id,
         model=model,
-        tools=[DuckDuckGoTools()],
+        tools=[
+            DuckDuckGoTools(),
+            TelegramTools(
+                chat_id=config.TGBOT_CHAT_ID,
+                token=config.TGBOT_API_TOKEN
+            )
+        ],
         members=[
             get_agent("index", "Major", get_agent_params()),
             get_agent("install", "Installation", get_agent_params()),
