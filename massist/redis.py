@@ -15,9 +15,6 @@ from redis.exceptions import RedisError
 from config import config
 from massist.logger import get_logger
 
-CHAT_IDX_NAME = "idx:session"
-CHAT_IDX_PREFIX = "session:"
-
 logger = get_logger(__name__)
 
 
@@ -78,38 +75,41 @@ async def get_rdb():
 
 
 def get_redis_pool() -> Redis:
-    return redisio.from_url(config.REDIS_URL, encoding="utf-8", decode_responses=False)
+    return Redis.from_url(config.REDIS_URL, encoding="utf-8", decode_responses=False)
 
 
 async def create_chat_index(rdb: Redis):
-    logger.debug(f"Creating Redis index '{CHAT_IDX_NAME}'")
+    logger.debug(f"Creating Redis index '{config.CHAT_IDX_NAME}'")
 
     try:
         schema: Sequence[TextField] = [
             TextField(
                 "$.session_id",
-                as_name="session",
+                as_name="session_id",
                 sortable=True,
             )
         ]
 
-        await rdb.ft(CHAT_IDX_NAME).create_index(
+        await rdb.ft(config.CHAT_IDX_NAME).create_index(
             fields=schema,
             definition=IndexDefinition(
-                prefix=[CHAT_IDX_PREFIX], index_type=IndexType.JSON
+                prefix=[config.CHAT_IDX_PREFIX], index_type=IndexType.JSON
             ),
         )
-        logger.info(f"Redis index '{CHAT_IDX_NAME}' created successfully")
+        logger.info(
+            f"Redis index '{config.CHAT_IDX_NAME}' created successfully")
     except Exception as e:
-        logger.warning(f"Error creating chat index '{CHAT_IDX_NAME}': {e}")
+        logger.warning(
+            f"Error creating chat index '{config.CHAT_IDX_NAME}': {e}")
 
 
 async def setup_redis_pool(rdb: Redis):
     logger.debug("Setting up Redis DB")
     try:
-        logger.debug(f"Getting Redis index '{CHAT_IDX_NAME}'")
-        index_exists = await rdb.ft(CHAT_IDX_NAME).info()
-        logger.debug(f"Redis index '{CHAT_IDX_NAME}' exists: '{index_exists}'")
+        logger.debug(f"Getting Redis index '{config.CHAT_IDX_NAME}'")
+        index_exists = await rdb.ft(config.CHAT_IDX_NAME).info()
+        logger.debug(
+            f"Redis index '{config.CHAT_IDX_NAME}' exists: '{index_exists}'")
     except Exception:
         await create_chat_index(rdb)
 

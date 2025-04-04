@@ -65,6 +65,9 @@ class Config(BaseSettings):
     CHUNKING_STRATEGY: str = "agentic"
     CACHE_TTL: int = 86400
 
+    CHAT_IDX_NAME: str = ""
+    CHAT_IDX_PREFIX: str = ""
+
     @field_validator("ALLOW_ORIGINS", mode="before")
     @classmethod
     def parse_env_lists(cls, value: Any) -> List[str]:
