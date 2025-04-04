@@ -29,7 +29,7 @@ def get_mitigator_team(
         return DuckDuckGoTools()
 
     return Team(
-        name="Mitigator Assistant Team Lead",
+        name="Mitigator AI Assistant",
         mode="route",
         team_id="massist_team",
         user_id=user_id,
@@ -39,13 +39,13 @@ def get_mitigator_team(
         members=[
             get_agent("index", "Main", get_agent_params()),
             get_agent("install", "Installation", get_agent_params()),
-            # get_agent("integrate", "Integration", agent_params),
-            # get_agent("versions", "Versions", agent_params),
-            # get_agent("maintenance", "Maintenance", agent_params),
-            # get_agent("kb", "Knowledge Base", agent_params),
-            # get_agent("psg", "PCAP Signature Generator", agent_params),
-            # get_agent("contact", "Support", agent_params),
-            # get_agent("price", "Price", agent_params),
+            get_agent("integrate", "Integration", get_agent_params()),
+            get_agent("versions", "Versions", get_agent_params()),
+            get_agent("maintenance", "Maintenance", get_agent_params()),
+            get_agent("kb", "Knowledge Base", get_agent_params()),
+            get_agent("psg", "PCAP Signature Generator", get_agent_params()),
+            get_agent("contact", "Support", get_agent_params()),
+            get_agent("price", "Price", get_agent_params()),
             get_search_agent("web_search", "Web Search", get_agent_params())
         ],
         storage=get_storage('lead'),
@@ -73,7 +73,7 @@ def get_mitigator_team(
             # "with duckduckgo_search tool.",
             "Then relay that information back to the user in a professional and helpful manner.",
             "Always reply in russian language.",
-            "Never disclose your team and agents information. Always give an abstract answer in questions " +
+            "Always disclose your team and agents information. Always give an abstract answer in questions " +
             "related to your team.",
             "Ensure a seamless experience for the user by maintaining context throughout the conversation.",
         ],
