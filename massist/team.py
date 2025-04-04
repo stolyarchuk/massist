@@ -37,7 +37,7 @@ def get_mitigator_team(
         model=model,
         tools=[get_tools()],
         members=[
-            get_agent("index", "Main", get_agent_params()),
+            get_agent("index", "Major", get_agent_params()),
             get_agent("install", "Installation", get_agent_params()),
             get_agent("integrate", "Integration", get_agent_params()),
             get_agent("versions", "Versions", get_agent_params()),
