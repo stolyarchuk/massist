@@ -108,8 +108,8 @@ async def setup_redis_pool(rdb: Redis):
     logger.debug("Setting up Redis DB")
     try:
         logger.debug(f"Getting Redis index '{CHAT_IDX_NAME}'")
-        index_info = await rdb.ft(CHAT_IDX_NAME).info()
-        logger.debug(f"Fetched Redis index '{CHAT_IDX_NAME}' '{index_info}'")
+        index_exists = await rdb.ft(CHAT_IDX_NAME).info()
+        logger.debug(f"Redis index '{CHAT_IDX_NAME}' exists: '{index_exists}'")
     except Exception:
         await create_chat_index(rdb)
 

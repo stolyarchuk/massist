@@ -141,7 +141,7 @@ class Logger:
                 if "." not in lg or lg in args
             ]
         else:
-            loggers = args
+            loggers = list(args)
 
         # loggers = set(loggers)
 
