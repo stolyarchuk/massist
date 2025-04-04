@@ -1,0 +1,33 @@
+[project]
+name = "massist"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "agno>=1.2.6",
+    "bs4>=0.0.2",
+    "chonkie>=0.5.1",
+    "duckduckgo-search>=7.5.5",
+    "fastapi>=0.115.12",
+    "google-genai>=1.8.0",
+    "huggingface-hub>=0.29.3",
+    "lancedb>=0.21.2",
+    "lxml>=5.3.1",
+    "mypy>=1.15.0",
+    "ollama>=0.4.7",
+    "openai>=1.69.0",
+    "pandas>=2.2.3",
+    "pgvector>=0.4.0",
+    "psycopg[binary]>=3.2.6",
+    "pymongo>=4.11.3",
+    "redis>=5.2.1",
+    "redis-om>=0.3.4",
+    "ruff>=0.11.2",
+    "sqlalchemy>=2.0.40",
+    "sse-starlette>=2.2.1",
+    "tiktoken>=0.9.0",
+    "ujson>=5.10.0",
+    "uvicorn[standard]>=0.34.0",
+    "uvloop>=0.21.0",
+]
