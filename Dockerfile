@@ -6,6 +6,7 @@ ENV DEBIAN_FRONTEND=noninteractive \
     PYTHONUNBUFFERED=1 \
     PIP_ROOT_USER_ACTION=ignore
 
+# Copy requirements first to leverage Docker cache
 COPY requirements.txt .
 
 # Install system dependencies
@@ -13,9 +14,6 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     build-essential && rm -rf /var/lib/apt/lists/* && \
     pip install --no-cache-dir --upgrade -r requirements.txt && \
     apt-get purge -y build-essential && apt-get -y autoremove
-
-# Copy requirements first to leverage Docker cache
-# RUN pip install --no-cache-dir -U pip && uv sync
 
 # Copy project files
 COPY . .
