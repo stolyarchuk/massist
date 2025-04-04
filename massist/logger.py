@@ -47,21 +47,11 @@ class Colors:
 
 class LoggerFormatter(logging.Formatter):
     FORMATS = {
-        logging.DEBUG: Colors.DARK_GRAY
-        + "%(asctime)s.%(msecs)03d [%(levelname)s] [%(name)s] %(message)s"
-        + Colors.END,
-        logging.INFO: Colors.GREEN
-        + "%(asctime)s.%(msecs)03d [%(levelname)s] [%(name)s] %(message)s"
-        + Colors.END,
-        logging.WARNING: Colors.YELLOW
-        + "%(asctime)s.%(msecs)03d [%(levelname)s] [%(name)s] %(message)s"
-        + Colors.END,
-        logging.ERROR: Colors.RED
-        + "%(asctime)s.%(msecs)03d [%(levelname)s] [%(name)s] %(message)s"
-        + Colors.END,
-        logging.CRITICAL: Colors.LIGHT_RED
-        + "%(asctime)s.%(msecs)03d [%(levelname)s] [%(name)s] %(message)s"
-        + Colors.END,
+        logging.DEBUG: Colors.DARK_GRAY + "[%(levelname)s] [%(name)s] %(message)s" + Colors.END,
+        logging.INFO: Colors.GREEN + "[%(levelname)s] [%(name)s] %(message)s" + Colors.END,
+        logging.WARNING: Colors.YELLOW + "[%(levelname)s] [%(name)s] %(message)s" + Colors.END,
+        logging.ERROR: Colors.RED + "[%(levelname)s] [%(name)s] %(message)s" + Colors.END,
+        logging.CRITICAL: Colors.LIGHT_RED + "[%(levelname)s] [%(name)s] %(message)s" + Colors.END,
     }
 
     def format(self, record: logging.LogRecord):
