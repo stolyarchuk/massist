@@ -1,5 +1,5 @@
 from contextlib import AbstractAsyncContextManager
-from typing import Optional, Sequence, Type
+from typing import Any, Optional, Sequence, Type
 
 import ujson
 from agno.agent.agent import Agent
