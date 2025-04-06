@@ -54,9 +54,7 @@ async def single_chat(rdb: Redis = Depends(get_rdb)):
     teamlead_cached = await cache_teamlead(teamlead, rdb=rdb)
 
     logger.info(
-        "TeamLead created: %s. Cached: %s",
-        teamlead.session_id,
-        teamlead_cached
+        "TeamLead created: %s. Cached: %s", teamlead.session_id, teamlead_cached
     )
     logger.debug("Created new chat with ID: %s", chat_id)
 
@@ -71,17 +69,13 @@ async def chat(chat_id: str, chat_in: ChatIn, rdb: Redis = Depends(get_rdb)):
 
     if teamlead is None:
         teamlead = await create_chat(
-            user_id="massist_buddy",
-            session_id=chat_id,
-            rdb=rdb
+            user_id="massist_buddy", session_id=chat_id, rdb=rdb
         )
 
         teamlead_cached = await cache_teamlead(teamlead, rdb=rdb)
 
         logger.info(
-            "TeamLead created: %s. Cached: %s",
-            teamlead.session_id,
-            teamlead_cached
+            "TeamLead created: %s. Cached: %s", teamlead.session_id, teamlead_cached
         )
     else:
         logger.debug("TeamLead fetched from cache: %s", teamlead.session_id)
