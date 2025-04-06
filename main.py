@@ -17,16 +17,16 @@ ALLOW_ORIGINS = config.ALLOW_ORIGINS
 async def lifespan(app: FastAPI):
     # Initialize Redis on startup
 
-    await init_logging()
-    # await init_logging(
-    #     "uvicorn.access",
-    #     "uvicorn.error",
-    #     "httpx",
-    #     "asyncio",
-    #     "uvicorn",
-    #     "agno",
-    #     "agno-team",
-    # )
+    # await init_logging()
+    await init_logging(
+        "uvicorn.access",
+        "uvicorn.error",
+        "httpx",
+        "asyncio",
+        "uvicorn",
+        "agno",
+        "agno-team",
+    )
     await init_redis()
 
     yield

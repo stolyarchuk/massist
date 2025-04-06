@@ -30,5 +30,5 @@ def get_kb(
         chunking_strategy=get_chunking_strategy(chunking_model),
     )
 
-    logger.info("Loaded KB: %s. (source: %s)", kb, url)
+    logger.debug("Loaded KB: %s. (source: %s)", kb, url)
     return kb

@@ -32,11 +32,6 @@ async def create_chat(user_id: str, session_id: str, rdb: Redis) -> TeamLead:
     # Use dict conversion instead of model_validate to avoid type errors
     # When creating an instance directly, model_validate is unnecessary
 
-    # logger.warning(str(teamlead.team))
-
-    if not await cache_teamlead(teamlead=teamlead, rdb=rdb):
-        logger.error("Failed to cache TeamLead: %s", teamlead.model_dump())
-
     return teamlead
 
 
@@ -55,7 +50,16 @@ async def single_chat(rdb: Redis = Depends(get_rdb)):
     # created = int(time())
     # await create_chat(rdb, chat_id, created)
     # cache = RedisCache(rdb, prefix="items")
-    await create_chat(user_id="massist_buddy", session_id=chat_id, rdb=rdb)
+    teamlead = await create_chat(user_id="massist_buddy", session_id=chat_id, rdb=rdb)
+    teamlead_cached = await cache_teamlead(teamlead, rdb=rdb)
+
+    logger.info(
+        "TeamLead created: %s. Cached: %s",
+        teamlead.session_id,
+        teamlead_cached
+    )
+    logger.debug("Created new chat with ID: %s", chat_id)
+
     return UJSONResponse({"chat_id": chat_id})
 
 
@@ -67,13 +71,20 @@ async def chat(chat_id: str, chat_in: ChatIn, rdb: Redis = Depends(get_rdb)):
 
     if teamlead is None:
         teamlead = await create_chat(
-            user_id="massist_buddy", session_id=chat_id, rdb=rdb
+            user_id="massist_buddy",
+            session_id=chat_id,
+            rdb=rdb
         )
 
+        teamlead_cached = await cache_teamlead(teamlead, rdb=rdb)
+
+        logger.info(
+            "TeamLead created: %s. Cached: %s",
+            teamlead.session_id,
+            teamlead_cached
+        )
     else:
         logger.debug("TeamLead fetched from cache: %s", teamlead.session_id)
-
-    await cache_teamlead(teamlead=teamlead, rdb=rdb)
 
     return EventSourceResponse(content=teamlead.arun_stream(message=chat_in.message))
 
