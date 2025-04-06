@@ -1,6 +1,6 @@
 # Mitigator AI Assistant
 
-[![Validate](https://github.com/stolyarchuk/massist/actions/workflows/validate.yml/badge.svg)](https://github.com/stolyarchuk/massist/actions/workflows/validate.yml)
+[![Validate](https://github.com/stolyarchuk/massist/actions/workflows/validate.yml/badge.svg?branch=dev)](https://github.com/stolyarchuk/massist/actions/workflows/validate.yml)
 [![Dependabot Updates](https://github.com/stolyarchuk/massist/actions/workflows/dependabot/dependabot-updates/badge.svg)](https://github.com/stolyarchuk/massist/actions/workflows/dependabot/dependabot-updates)
 [![Build and Publish Docker Image](https://github.com/stolyarchuk/massist/actions/workflows/docker_publish.yml/badge.svg)](https://github.com/stolyarchuk/massist/actions/workflows/docker_publish.yml)
 [![GitHub stars](https://img.shields.io/github/stars/stolyarchuk/massist.svg)](https://github.com/stolyarchuk/massist/stargazers)
