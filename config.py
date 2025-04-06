@@ -83,12 +83,10 @@ class Config(BaseSettings):
     @model_validator(mode="after")
     def check_api_keys(self) -> "Config":
         """Validate that at least one API key is provided"""
-        has_gemini = bool(self.GOOGLE_API_KEY)
-        has_deepseek = bool(self.DEEPSEEK_API_KEY)
 
-        if not (has_gemini or has_deepseek):
+        if not self.GOOGLE_API_KEY:
             raise ValueError(
-                "Either GOOGLE_API_KEY or DEEPSEEK_API_KEY must be set in environment variables"
+                "MAI_GOOGLE_API_KEY must be set in environment variables"
             )
 
         return self
