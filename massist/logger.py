@@ -82,9 +82,9 @@ class Logger:
                 for lg in logging.Logger.manager.loggerDict.keys()
                 if "." not in lg or lg in args
             ]
-            loggers = set(loggers)
+            loggers = list(set(loggers))
         else:
-            loggers = set(args)
+            loggers = list(set(args))
 
         self._logger.debug("Initializing loggers: %s", str(loggers))
         await self._init_module_loggers(*loggers)
