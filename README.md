@@ -1,10 +1,9 @@
 # Mitigator AI Assistant
 
 [![Validate](https://github.com/stolyarchuk/massist/actions/workflows/validate.yml/badge.svg)](https://github.com/stolyarchuk/massist/actions/workflows/validate.yml)
+[![Dependabot Updates](https://github.com/stolyarchuk/massist/actions/workflows/dependabot/dependabot-updates/badge.svg)](https://github.com/stolyarchuk/massist/actions/workflows/dependabot/dependabot-updates)
+[![Build and Publish Docker Image](https://github.com/stolyarchuk/massist/actions/workflows/docker_publish.yml/badge.svg)](https://github.com/stolyarchuk/massist/actions/workflows/docker_publish.yml)
 [![GitHub stars](https://img.shields.io/github/stars/stolyarchuk/massist.svg)](https://github.com/stolyarchuk/massist/stargazers)
-[![GitHub forks](https://img.shields.io/github/forks/stolyarchuk/massist.svg)](https://github.com/stolyarchuk/massist/network)
-[![GitHub issues](https://img.shields.io/github/issues/stolyarchuk/massist.svg)](https://github.com/stolyarchuk/massist/issues)
-[![GitHub license](https://img.shields.io/github/license/stolyarchuk/massist.svg)](https://github.com/stolyarchuk/massist/blob/main/LICENSE)
 
 A lightweight assistant tool for large language model interactions.
 
