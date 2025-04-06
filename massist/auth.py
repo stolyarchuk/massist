@@ -1,5 +1,3 @@
-import os
-
 from fastapi import Depends, HTTPException, status
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 
@@ -15,7 +13,8 @@ MAI_LLMX_API_KEY = config.MAI_LLMX_API_KEY
 
 if not MAI_LLMX_API_KEY:
     logger.warning(
-        "MAI_LLMX_API_KEY environment variable is not set. API will be accessible without authentication!")
+        "MAI_LLMX_API_KEY environment variable is not set. API will be accessible without authentication!"
+    )
 
 
 async def verify_token(credentials: HTTPAuthorizationCredentials = Depends(security)):
