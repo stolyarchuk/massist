@@ -95,11 +95,9 @@ async def create_chat_index(rdb: Redis):
                 prefix=[config.CHAT_IDX_PREFIX], index_type=IndexType.JSON
             ),
         )
-        logger.info(
-            f"Redis index '{config.CHAT_IDX_NAME}' created successfully")
+        logger.info(f"Redis index '{config.CHAT_IDX_NAME}' created successfully")
     except Exception as e:
-        logger.warning(
-            f"Error creating chat index '{config.CHAT_IDX_NAME}': {e}")
+        logger.warning(f"Error creating chat index '{config.CHAT_IDX_NAME}': {e}")
 
 
 async def setup_redis_pool(rdb: Redis):
@@ -107,8 +105,7 @@ async def setup_redis_pool(rdb: Redis):
     try:
         logger.debug(f"Getting Redis index '{config.CHAT_IDX_NAME}'")
         index_exists = await rdb.ft(config.CHAT_IDX_NAME).info()
-        logger.debug(
-            f"Redis index '{config.CHAT_IDX_NAME}' exists: '{index_exists}'")
+        logger.debug(f"Redis index '{config.CHAT_IDX_NAME}' exists: '{index_exists}'")
     except Exception:
         await create_chat_index(rdb)
 
