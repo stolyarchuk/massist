@@ -126,7 +126,9 @@ async def get_cached_teamlead(
     return teamlead
 
 
-async def cache_teamlead(teamlead: TeamLead, rdb: Redis, prefix: str = "teamlead"):
+async def cache_teamlead(
+    teamlead: TeamLead, rdb: Redis, prefix: str = "teamlead"
+) -> bool:
     """Cache the TeamLead object in Redis."""
     cache = RedisCache(redis_pool=rdb)
 
