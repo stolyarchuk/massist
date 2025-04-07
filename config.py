@@ -33,6 +33,8 @@ class Config(BaseSettings):
 
     HUGGINGFACE_API_KEY: str = ""
 
+    LLMX_API_KEY: str = ""
+
     WEBSITE_URL: str = ""
 
     TGBOT_API_TOKEN: str = ""
@@ -46,6 +48,10 @@ class Config(BaseSettings):
     AGENT_DEBUG: bool = False
 
     TEAM_DEBUG: bool = True
+
+    # ThinkingTools configuration
+    THINKING_TOOLS_ENABLE: bool = False
+    THINKING_TOOLS_ADD_INSTRUCTIONS: bool = False
 
     POSTGRES_URL: str = ""
     MONGO_URL: str = ""
@@ -85,7 +91,8 @@ class Config(BaseSettings):
         """Validate that at least one API key is provided"""
 
         if not self.GOOGLE_API_KEY:
-            raise ValueError("MAI_GOOGLE_API_KEY must be set in environment variables")
+            raise ValueError(
+                "MAI_GOOGLE_API_KEY must be set in environment variables")
 
         return self
 

@@ -1,15 +1,20 @@
 from textwrap import dedent
+from typing import Any, List
 
 from agno.models.base import Model
 from agno.team.team import Team
 from agno.tools.duckduckgo import DuckDuckGoTools
 from agno.tools.telegram import TelegramTools
+from agno.tools.thinking import ThinkingTools
 
 from config import config
 from massist.agent import AgentParams, get_agent, get_search_agent
+from massist.logger import get_logger
 from massist.models import get_gemini_pri_model, get_gemini_sec_model
 from massist.storage import get_storage
 from massist.team_memory import get_team_memory
+
+logger = get_logger(__name__)
 
 
 def get_mitigator_team(user_id: str, session_id: str, model: Model) -> Team:
@@ -18,6 +23,19 @@ def get_mitigator_team(user_id: str, session_id: str, model: Model) -> Team:
             user_id=user_id, session_id=session_id, model=get_gemini_pri_model()
         )
 
+    # Setup tools list based on configuration
+    tools: List[Any] = [
+        DuckDuckGoTools(),
+        TelegramTools(chat_id=config.TGBOT_CHAT_ID, token=config.TGBOT_API_TOKEN),
+    ]
+
+    # Add ThinkingTools only if enabled in config
+    if config.THINKING_TOOLS_ENABLE:
+        tools.append(
+            ThinkingTools(add_instructions=config.THINKING_TOOLS_ADD_INSTRUCTIONS)
+        )
+        logger.info("ThinkingTools enabled")
+
     return Team(
         name="Mitigator AI Assistant",
         mode="route",
@@ -25,10 +43,7 @@ def get_mitigator_team(user_id: str, session_id: str, model: Model) -> Team:
         user_id=user_id,
         session_id=session_id,
         model=model,
-        tools=[
-            DuckDuckGoTools(),
-            TelegramTools(chat_id=config.TGBOT_CHAT_ID, token=config.TGBOT_API_TOKEN),
-        ],
+        tools=tools,
         members=[
             get_agent("index", "Major", get_agent_params()),
             get_agent("install", "Installation", get_agent_params()),
