@@ -26,7 +26,7 @@ class Meta(BaseModel):
 
     instructions: List[str] = Field(
         default_factory=lambda: [
-            # "0. You must only respond in Russian",
+            "0. You must only respond in Russian",
             "1. Knowledge Base Search:",
             "   - Always start by searching the knowledge base using search_knowledge_base tool",
             "   - Analyze ALL returned documents thoroughly before responding",
