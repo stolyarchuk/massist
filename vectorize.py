@@ -2,7 +2,7 @@ import asyncio
 
 from massist.knowledge import get_kb
 from massist.logger import init_logging
-from massist.models import get_deepseek_model, get_mistral_model
+from massist.models import get_mistral_model
 
 
 async def main():
@@ -12,12 +12,13 @@ async def main():
     # chunking_model = get_deepseek_model(temperature=0.5)
 
     await asyncio.gather(
-        get_kb(topic="index", chunking_model=chunking_model, max_links=20, max_depth=1).async_load(
-            recreate=False, upsert=True
-        ),
-        get_kb(topic="install", chunking_model=chunking_model,).async_load(
-            recreate=True, upsert=True
-        ),
+        get_kb(
+            topic="index", chunking_model=chunking_model, max_links=20, max_depth=1
+        ).async_load(recreate=False, upsert=True),
+        get_kb(
+            topic="install",
+            chunking_model=chunking_model,
+        ).async_load(recreate=True, upsert=True),
         # get_kb(topic="integrate", chunking_model=chunking_model).aload(
         #     recreate=True, upsert=True
         # ),
