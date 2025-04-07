@@ -9,7 +9,7 @@ security = HTTPBearer(auto_error=False)
 logger = Logger().get_logger(__name__)
 
 # Get API key from config
-MAI_LLMX_API_KEY = config.MAI_LLMX_API_KEY
+MAI_LLMX_API_KEY = config.LLMX_API_KEY
 
 if not MAI_LLMX_API_KEY:
     logger.warning(
