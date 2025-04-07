@@ -9,19 +9,18 @@ class LoggerFormatter(logging.Formatter):
 
     # ANSI color codes
     COLORS = {
-        'debug': '\033[90m',  # Gray
-        'info ': '\033[32m',  # Green
-        'warn ': '\033[33m',  # Yellow
-        'error': '\033[31m',  # Red
-        'reset': '\033[0m'    # Reset
+        "debug": "\033[90m",  # Gray
+        "info ": "\033[32m",  # Green
+        "warn ": "\033[33m",  # Yellow
+        "error": "\033[31m",  # Red
+        "reset": "\033[0m",  # Reset
     }
 
     def format(self, record: logging.LogRecord):
         levelname = record.levelname.lower()
-        color = self.COLORS.get(levelname, self.COLORS['reset'])
+        color = self.COLORS.get(levelname, self.COLORS["reset"])
         formatter = logging.Formatter(
-            f"{color}{self.FORMAT}{self.COLORS['reset']}",
-            "%Y-%m-%d %H:%M:%S"
+            f"{color}{self.FORMAT}{self.COLORS['reset']}", "%Y-%m-%d %H:%M:%S"
         )
         return formatter.format(record)
 
