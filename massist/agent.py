@@ -27,8 +27,8 @@ def get_agent(agent_id: str, topic: str, params: AgentParams):
     # FIXME: remove default stolyarchuk
 
     return Agent(
-        name=f"Mitigator {topic} Assistant",
-        agent_id=f"mitigator_assistant_{agent_id}",
+        name=f"Mitigator {topic} Agent",
+        agent_id=f"mitigator_agent_{agent_id}",
         role=meta.role,
         user_id=params.user_id,
         session_id=params.session_id,
@@ -64,8 +64,8 @@ def get_search_agent(agent_id: str, topic: str, params: AgentParams):
     meta = Meta(agent_id=agent_id, topic=topic)
 
     return Agent(
-        name=f"Mitigator {topic} Assistant",
-        agent_id=f"mitigator_assistant_{agent_id}",
+        name=f"Mitigator {topic} Agent",
+        agent_id=f"mitigator_agent_{agent_id}",
         role=meta.role,
         user_id=params.user_id,
         session_id=params.session_id,
