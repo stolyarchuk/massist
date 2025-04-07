@@ -34,4 +34,4 @@ dependencies = [
 ]
 
 [tool.uv.sources]
-agno = { git = "https://github.com/stolyarchuk/agno.git", subdirectory = "libs/agno" }
+agno = { git = "https://github.com/stolyarchuk/agno.git", subdirectory = "libs/agno", rev = "main" }
