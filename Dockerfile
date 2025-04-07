@@ -7,12 +7,12 @@ ENV DEBIAN_FRONTEND=noninteractive \
     PIP_ROOT_USER_ACTION=ignore
 
 COPY requirements.txt .
-COPY *.toml .
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    build-essential && rm -rf /var/lib/apt/lists/* && \
-    pip install -U pip && pip install -r requirements.txt && \
-    apt-get purge -y build-essential && apt-get -y autoremove
+    build-essential && pip install -U pip && \
+    pip install -r requirements.txt && \
+    apt-get purge -y build-essential && apt-get -y autoremove && \
+    apt-get clean all && rm -rf /var/lib/apt/lists/*
 
 COPY . .
 
