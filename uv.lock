@@ -5,7 +5,7 @@ requires-python = ">=3.12"
 [[package]]
 name = "agno"
 version = "1.2.11"
-source = { git = "https://github.com/stolyarchuk/agno.git?subdirectory=libs%2Fagno#2467d9afc19c1e5b92d6e529b35fdc440295ff9a" }
+source = { git = "https://github.com/stolyarchuk/agno.git?subdirectory=libs%2Fagno&rev=main#2467d9afc19c1e5b92d6e529b35fdc440295ff9a" }
 dependencies = [
     { name = "docstring-parser" },
     { name = "gitpython" },
@@ -568,7 +568,7 @@ dependencies = [
 
 [package.metadata]
 requires-dist = [
-    { name = "agno", git = "https://github.com/stolyarchuk/agno.git?subdirectory=libs%2Fagno" },
+    { name = "agno", git = "https://github.com/stolyarchuk/agno.git?subdirectory=libs%2Fagno&rev=main" },
     { name = "bs4", specifier = ">=0.0.2" },
     { name = "chonkie", specifier = ">=0.5.1" },
     { name = "duckduckgo-search", specifier = ">=7.5.5" },
