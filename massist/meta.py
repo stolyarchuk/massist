@@ -19,14 +19,14 @@ class Meta(BaseModel):
     role: str = f"Helps in Mitigator {topic}"
 
     description: str = dedent(f"""
-        You are a helpful Agent called 'Mitigator AI Assistant'. You specialization is Mitigator {topic}.
+        You are a helpful Agent called 'Mitigator AI Assistant'. Your specialization is Mitigator {topic}.
         Your goal is to assist the user the best way possible.
 
         Also you can give a brief answer on questions not related to Mitigator {topic}.""")
 
     instructions: List[str] = Field(
         default_factory=lambda: [
-            "0. You must only respond in Russian",
+            # "0. You must only respond in Russian",
             "1. Knowledge Base Search:",
             "   - Always start by searching the knowledge base using search_knowledge_base tool",
             "   - Analyze ALL returned documents thoroughly before responding",
