@@ -20,7 +20,7 @@ def get_vector_db(topic: str, embedder: Embedder) -> VectorDb:
     if config.VECTOR_DB == "dblance":
         return LanceDb(
             table_name=f"embeddings_{topic}",
-            uri="tmp/dblance",
+            uri=config.DBLANCE_URL,
             search_type=SearchType.vector,
             embedder=embedder,
         )

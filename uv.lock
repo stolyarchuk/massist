@@ -124,15 +124,15 @@ wheels = [
 
 [[package]]
 name = "chonkie"
-version = "1.0.1"
+version = "1.0.2"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "tokenizers" },
     { name = "tqdm" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/21/f0/be2b1d639868595e72f708ee7f2ebd9b1c353ae49b1d7d6f7abf6b90196a/chonkie-1.0.1.tar.gz", hash = "sha256:dc19dc10d0855e1fc2bdee6133608965ab5d2310f098e6ab2e98394f364e7d02", size = 42688 }
+sdist = { url = "https://files.pythonhosted.org/packages/69/7c/5fe68d5eec5e741ad63721c9ffda4264c24aeebc2bd6f545bffb710a0389/chonkie-1.0.2.tar.gz", hash = "sha256:70515ed439ca6840ab7eb0e2f5abeab6feecbfca592317b1f91dd1a7986597d4", size = 42693 }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/b7/03/d73dfc2ca90cf672638cf8b12a1f2cf7adf85afbfdb11dd4ba899514e330/chonkie-1.0.1-py3-none-any.whl", hash = "sha256:9b5f1cbacf24e142a2b6a64e6aa31105e5b1a2c8e01b52af321b6371e8cbaa25", size = 50671 },
+    { url = "https://files.pythonhosted.org/packages/94/21/d2785bbce3a162c675c3b719a3b6cafe3798fce75ea8af8128f7708031e1/chonkie-1.0.2-py3-none-any.whl", hash = "sha256:f8157099f22f2132395303e547232d9a4eccd9053298062ec472d9d4d88f4da9", size = 50706 },
 ]
 
 [[package]]
