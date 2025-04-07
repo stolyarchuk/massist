@@ -7,10 +7,12 @@ ENV DEBIAN_FRONTEND=noninteractive \
     PIP_ROOT_USER_ACTION=ignore
 
 COPY requirements.txt .
+COPY pyproject.toml uv.lock* ./
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    build-essential && pip install -U pip && \
-    pip install -r requirements.txt && \
+    build-essential git curl && pip install -U pip uv
+
+RUN uv pip install --system -r requirements.txt && \
     apt-get purge -y build-essential && apt-get -y autoremove && \
     apt-get clean all && rm -rf /var/lib/apt/lists/*
 
