@@ -7,8 +7,22 @@ from config import config
 class LoggerFormatter(logging.Formatter):
     FORMAT = "[%(levelname)s] [%(name)s] %(message)s"
 
+    # ANSI color codes
+    COLORS = {
+        'debug': '\033[90m',  # Gray
+        'info ': '\033[32m',  # Green
+        'warn ': '\033[33m',  # Yellow
+        'error': '\033[31m',  # Red
+        'reset': '\033[0m'    # Reset
+    }
+
     def format(self, record: logging.LogRecord):
-        formatter = logging.Formatter(self.FORMAT, "%Y-%m-%d %H:%M:%S")
+        levelname = record.levelname.lower()
+        color = self.COLORS.get(levelname, self.COLORS['reset'])
+        formatter = logging.Formatter(
+            f"{color}{self.FORMAT}{self.COLORS['reset']}",
+            "%Y-%m-%d %H:%M:%S"
+        )
         return formatter.format(record)
 
 
@@ -93,13 +107,13 @@ class Logger:
         self._logger.info(msg, *args)
 
     def error(self, msg: Any, *args: Any | None):
-        self._logger.info(msg, *args)
+        self._logger.error(msg, *args)
 
     def warning(self, msg: Any, *args: Any | None):
-        self._logger.info(msg, *args)
+        self._logger.warning(msg, *args)
 
     def debug(self, msg: Any, *args: Any | None):
-        self._logger.info(msg, *args)
+        self._logger.debug(msg, *args)
 
     def _get_handler(self) -> logging.Handler:
         """
