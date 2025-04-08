@@ -4,10 +4,10 @@ from functools import partial
 
 from dotenv import load_dotenv
 
-from massist.config import config
-from massist.knowledge import get_kb
-from massist.logger import init_logging
-from massist.models import get_mistral_model
+from config import config
+from mai.knowledge import get_kb
+from mai.logger import init_logging
+from mai.models import get_mistral_model
 
 load_dotenv()
 
@@ -90,7 +90,8 @@ async def main():
     # )
     # get_kb(topic="maintenance", chunking_model=chunking_model).load(
     #     recreate=True, upsert=True)
-    get_kb(topic="kb", chunking_model=chunking_model).load(recreate=True, upsert=True)
+    get_kb(topic="kb", chunking_model=chunking_model).load(
+        recreate=True, upsert=True)
     # get_kb(topic="psg", chunking_model=chunking_model).load(
     #     recreate=True, upsert=True)
     # get_kb(topic="contact", chunking_model=chunking_model).load(
@@ -106,21 +107,13 @@ async def main():
         )
 
         await loop.run_in_executor(pool, partial(load_kb, topic="kb"))
-
-        await loop.run_in_executor(pool, partial(load_kb, topic="install"))
-
-        await loop.run_in_executor(pool, partial(load_kb, topic="integrate"))
-
-        await loop.run_in_executor(pool, partial(load_kb, topic="versions"))
-
-        await loop.run_in_executor(pool, partial(load_kb, topic="maintenance"))
-
-        await loop.run_in_executor(pool, partial(load_kb, topic="psg"))
-        await loop.run_in_executor(pool, partial(load_kb, topic="contact"))
-        await loop.run_in_executor(pool, partial(load_kb, topic="price"))
-        # await loop.run_in_executor(
-        #     pool, partial(load_kb, topic="kb")
-        # )
+        # await loop.run_in_executor(pool, partial(load_kb, topic="install"))
+        # await loop.run_in_executor(pool, partial(load_kb, topic="integrate"))
+        # await loop.run_in_executor(pool, partial(load_kb, topic="versions"))
+        # await loop.run_in_executor(pool, partial(load_kb, topic="maintenance"))
+        # await loop.run_in_executor(pool, partial(load_kb, topic="psg"))
+        # await loop.run_in_executor(pool, partial(load_kb, topic="contact"))
+        # await loop.run_in_executor(pool, partial(load_kb, topic="price"))
 
     # await loop.run_in_executor(
     # load_kb(topic="index", max_links=20, max_depth=1)

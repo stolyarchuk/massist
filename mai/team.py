@@ -7,12 +7,12 @@ from agno.tools.duckduckgo import DuckDuckGoTools
 from agno.tools.telegram import TelegramTools
 from agno.tools.thinking import ThinkingTools
 
-from massist.config import config
-from massist.agent import AgentParams, get_agent, get_search_agent
-from massist.logger import get_logger
-from massist.models import get_gemini_pri_model, get_gemini_sec_model
-from massist.storage import get_storage
-from massist.team_memory import get_team_memory
+from config import config
+from mai.agent import AgentParams, get_agent, get_search_agent
+from mai.logger import get_logger
+from mai.models import get_gemini_pri_model, get_gemini_sec_model
+from mai.storage import get_storage
+from mai.team_memory import get_team_memory
 
 logger = get_logger(__name__)
 

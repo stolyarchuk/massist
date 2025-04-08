@@ -6,10 +6,10 @@ from pydantic import BaseModel
 from redis.asyncio.client import Redis
 from sse_starlette.sse import EventSourceResponse
 
-from massist.auth import verify_token
-from massist.logger import get_logger
-from massist.redis import get_rdb
-from massist.team_lead import cache_teamlead, create_teamlead, get_cached_teamlead
+from mai.auth import verify_token
+from mai.logger import get_logger
+from mai.redis import get_rdb
+from mai.team_lead import cache_teamlead, create_teamlead, get_cached_teamlead
 
 logger = get_logger(__name__)
 

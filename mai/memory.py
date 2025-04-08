@@ -3,7 +3,7 @@ from agno.memory.db.mongodb import MongoMemoryDb
 from agno.memory.db.postgres import PgMemoryDb
 from agno.memory.db.sqlite import SqliteMemoryDb
 
-from massist.config import config
+from config import config
 
 
 def get_memory_db(agent_id: str) -> MemoryDb:

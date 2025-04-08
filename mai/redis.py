@@ -11,8 +11,8 @@ from redis.commands.search.field import TextField
 from redis.commands.search.indexDefinition import IndexDefinition, IndexType
 from redis.exceptions import RedisError
 
-from massist.config import config
-from massist.logger import get_logger
+from config import config
+from mai.logger import get_logger
 
 logger = get_logger(__name__)
 

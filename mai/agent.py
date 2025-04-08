@@ -5,11 +5,11 @@ from agno.models.base import Model
 from agno.tools.duckduckgo import DuckDuckGoTools
 from pydantic import BaseModel, ConfigDict
 
-from massist.config import config
-from massist.agent_memory import get_agent_memory
-from massist.knowledge import get_kb
-from massist.meta import Meta
-from massist.models import (
+from config import config
+from mai.agent_memory import get_agent_memory
+from mai.knowledge import get_kb
+from mai.meta import Meta
+from mai.models import (
     get_gemini_pri_model,
     get_gemini_sec_model,
     get_openrouter_model,

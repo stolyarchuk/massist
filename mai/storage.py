@@ -3,7 +3,7 @@ from agno.storage.mongodb import MongoDbStorage
 from agno.storage.postgres import PostgresStorage
 from agno.storage.sqlite import SqliteStorage
 
-from massist.config import config
+from config import config
 
 
 def get_storage(agent_id: str) -> Storage:

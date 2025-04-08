@@ -8,7 +8,7 @@ from agno.models.google.gemini import Gemini
 # from agno.models.huggingface.huggingface import HuggingFace
 from agno.models.openai.like import OpenAILike
 
-from massist.config import config  # Local import
+from config import config  # Local import
 
 # openai_model = OpenAIChat(api_key=config.OPENAI_API_KEY)
 

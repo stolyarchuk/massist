@@ -4,8 +4,8 @@ from agno.vectordb.lancedb.lance_db import LanceDb
 from agno.vectordb.pgvector.pgvector import PgVector
 from agno.vectordb.search import SearchType
 
-from massist.config import config
-from massist.logger import get_logger
+from config import config
+from mai.logger import get_logger
 
 logger = get_logger(__name__)
 

@@ -5,10 +5,10 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from massist.config import config
-from massist.logger import init_logging
-from massist.redis import AsyncRedisPoolContext, init_redis
-from massist.router import router
+from config import config
+from mai.logger import init_logging
+from mai.redis import AsyncRedisPoolContext, init_redis
+from mai.router import router
 
 ALLOW_ORIGINS = config.ALLOW_ORIGINS
 

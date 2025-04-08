@@ -3,7 +3,7 @@ from agno.memory.manager import MemoryManager
 from agno.memory.team import TeamMemory
 from agno.models.base import Model
 
-from massist.memory import get_memory_db
+from mai.memory import get_memory_db
 
 
 def get_team_memory(

@@ -5,8 +5,8 @@ from agno.document.chunking.semantic import SemanticChunking
 from agno.document.chunking.strategy import ChunkingStrategy
 from agno.models.base import Model
 
-from massist.config import config
-from massist.models import get_openai_embedder
+from config import config
+from mai.models import get_openai_embedder
 
 
 def get_chunking_strategy(
