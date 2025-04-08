@@ -60,6 +60,7 @@ class Config(BaseSettings):
     REDIS_URL: str = ""
 
     VECTOR_DB: str = ""
+    VECTOR_SEARCH: str = "vector"
     STORAGE_DB: str = ""
     MEMORY_DB: str = ""
 
@@ -91,7 +92,8 @@ class Config(BaseSettings):
         """Validate that at least one API key is provided"""
 
         if not self.GOOGLE_API_KEY:
-            raise ValueError("MAI_GOOGLE_API_KEY must be set in environment variables")
+            raise ValueError(
+                "MAI_GOOGLE_API_KEY must be set in environment variables")
 
         return self
 
