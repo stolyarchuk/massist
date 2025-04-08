@@ -11,35 +11,39 @@ async def main():
     chunking_model = get_mistral_model()
     # chunking_model = get_deepseek_model(temperature=0.5)
 
-    await asyncio.gather(
-        get_kb(
-            topic="index", chunking_model=chunking_model, max_links=20, max_depth=1
-        ).async_load(recreate=False, upsert=True),
-        get_kb(
-            topic="install",
-            chunking_model=chunking_model,
-        ).async_load(recreate=True, upsert=True),
-        # get_kb(topic="integrate", chunking_model=chunking_model).aload(
-        #     recreate=True, upsert=True
-        # ),
-        # get_kb(topic="versions", chunking_model=chunking_model).aload(
-        #     recreate=True, upsert=True
-        # ),
-        # get_kb(topic="maintenance", chunking_model=get_deepseek_model(temperature=0.7)).aload(
-        #     recreate=True, upsert=True
-        # ),
-        # get_kb(topic="kb", chunking_model=chunking_model).aload(
-        #     recreate=True, upsert=True
-        # ),
-        # get_kb(topic="psg", chunking_model=chunking_model).aload(
-        #     recreate=True, upsert=True
-        # ),
-        # get_kb(topic="contact", chunking_model=chunking_model).aload(
-        #     recreate=True, upsert=True
-        # ),
-        # get_kb(topic="price", chunking_model=chunking_model).aload(
-        #     recreate=True, upsert=True
-        # ),
+    # await asyncio.gather(
+    #     get_kb(
+    #         topic="index", chunking_model=chunking_model, max_links=20, max_depth=1
+    #     ).aload(recreate=True, upsert=True),
+    # get_kb(
+    #     topic="install",
+    #     chunking_model=chunking_model,
+    # ).async_load(recreate=True, upsert=True),
+    # get_kb(topic="integrate", chunking_model=chunking_model).aload(
+    #     recreate=True, upsert=True
+    # ),
+    # get_kb(topic="versions", chunking_model=chunking_model).aload(
+    #     recreate=True, upsert=True
+    # ),
+    # get_kb(topic="maintenance", chunking_model=get_deepseek_model(temperature=0.7)).aload(
+    #     recreate=True, upsert=True
+    # ),
+    # get_kb(topic="kb", chunking_model=chunking_model).aload(
+    #     recreate=True, upsert=True
+    # ),
+    # get_kb(topic="psg", chunking_model=chunking_model).aload(
+    #     recreate=True, upsert=True
+    # ),
+    # get_kb(topic="contact", chunking_model=chunking_model).aload(
+    #     recreate=True, upsert=True
+    # ),
+    # get_kb(topic="price", chunking_model=chunking_model).aload(
+    #     recreate=True, upsert=True
+    # ),
+    # )
+
+    get_kb(topic="index", chunking_model=chunking_model, max_links=20, max_depth=1).load(
+        recreate=True, upsert=True
     )
 
     # get_kb(topic="integrate", chunking_model=chunking_model).load(
