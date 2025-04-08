@@ -1,14 +1,12 @@
 from contextlib import AbstractAsyncContextManager
-from typing import (Any, AsyncGenerator, AsyncIterator, ClassVar, Optional,
-                    Sequence, Type)
+from typing import Optional, Sequence, Type
 
-import redis.asyncio as redisio
 import ujson
 from agno.agent.agent import Agent
 from agno.team.team import Team
-from pydantic import BaseModel, Field, model_validator
+from pydantic import BaseModel
 from redis.asyncio.client import Redis
-from redis.asyncio.connection import ConnectionPool as RedisConnectionPool
+from redis.asyncio.connection import ConnectionPool
 from redis.commands.search.field import TextField
 from redis.commands.search.indexDefinition import IndexDefinition, IndexType
 from redis.exceptions import RedisError
@@ -16,24 +14,21 @@ from redis.exceptions import RedisError
 from config import config
 from massist.logger import get_logger
 
-CHAT_IDX_NAME = 'idx:session'
-CHAT_IDX_PREFIX = 'session:'
-
 logger = get_logger(__name__)
 
 
 class AsyncRedisPoolContext(AbstractAsyncContextManager):
-    pool: RedisConnectionPool
-    connection: Redis | None = None
+    pool: ConnectionPool | None = None
+    connection: Redis
 
     def __init__(self, max_connection: int = 100):
-        self.pool = RedisConnectionPool.from_url(
-            url=config.REDIS_URL,
-            encoding="utf-8",
-            decode_responses=False
+        self.pool = ConnectionPool.from_url(
+            url=config.REDIS_URL, encoding="utf-8", decode_responses=False
         )
 
-    async def get_connection(self) -> Redis:
+        self.connection = self.get_connection()
+
+    def get_connection(self) -> Redis:
         """Get a Redis connection from the pool.
 
         Returns:
@@ -48,7 +43,7 @@ class AsyncRedisPoolContext(AbstractAsyncContextManager):
         Returns:
             Redis: An active Redis connection that can be used within the context.
         """
-        self.connection = await self.get_connection()
+        self.connection = self.get_connection()
         return self.connection
 
     async def __aexit__(self, exc_type, exc_val, exc_tb):
@@ -63,10 +58,8 @@ class AsyncRedisPoolContext(AbstractAsyncContextManager):
             await self.connection.aclose()
             self.connection = None
 
-    # async def close(self):
-    #     """Close the connection pool and release all connections."""
-    #     if self.pool:
-    #         await self.pool.disconnect()
+        if self.pool:
+            await self.pool.disconnect()
 
 
 async def get_rdb():
@@ -81,39 +74,38 @@ async def get_rdb():
 
 
 def get_redis_pool() -> Redis:
-    return redisio.from_url(
-        config.REDIS_URL,
-        encoding="utf-8",
-        decode_responses=False
-    )
+    return Redis.from_url(config.REDIS_URL, encoding="utf-8", decode_responses=False)
 
 
 async def create_chat_index(rdb: Redis):
-    logger.debug(f"Creating Redis index '{CHAT_IDX_NAME}'")
+    logger.debug(f"Creating Redis index '{config.CHAT_IDX_NAME}'")
 
     try:
         schema: Sequence[TextField] = [
-            TextField('$.session_id', as_name='session_id', sortable=True,)
+            TextField(
+                "$.session_id",
+                as_name="session_id",
+                sortable=True,
+            )
         ]
 
-        await rdb.ft(CHAT_IDX_NAME).create_index(
+        await rdb.ft(config.CHAT_IDX_NAME).create_index(
             fields=schema,
             definition=IndexDefinition(
-                prefix=[CHAT_IDX_PREFIX],
-                index_type=IndexType.JSON
-            )
+                prefix=[config.CHAT_IDX_PREFIX], index_type=IndexType.JSON
+            ),
         )
-        logger.info(f"Redis index '{CHAT_IDX_NAME}' created successfully")
+        logger.info(f"Redis index '{config.CHAT_IDX_NAME}' created successfully")
     except Exception as e:
-        logger.warning(f"Error creating chat index '{CHAT_IDX_NAME}': {e}")
+        logger.warning(f"Error creating chat index '{config.CHAT_IDX_NAME}': {e}")
 
 
 async def setup_redis_pool(rdb: Redis):
-    logger.debug('Setting up Redis DB')
+    logger.debug("Setting up Redis DB")
     try:
-        logger.debug(f"Getting Redis index '{CHAT_IDX_NAME}'")
-        index_info = await rdb.ft(CHAT_IDX_NAME).info()
-        logger.debug(f"Fetched Redis index '{CHAT_IDX_NAME}' '{index_info}'")
+        logger.debug(f"Getting Redis index '{config.CHAT_IDX_NAME}'")
+        index_exists = await rdb.ft(config.CHAT_IDX_NAME).info()
+        logger.debug(f"Redis index '{config.CHAT_IDX_NAME}' exists: '{index_exists}'")
     except Exception:
         await create_chat_index(rdb)
 
@@ -127,10 +119,7 @@ class RedisCache:
         return f"{self.prefix}:{key}"
 
     async def set_model(
-        self,
-        key: str,
-        model: BaseModel | str,
-        ex: Optional[int] = None
+        self, key: str, model: BaseModel | str, ex: Optional[int] = None
     ) -> bool:
         """Cache a Pydantic model with expiration"""
 
@@ -155,9 +144,7 @@ class RedisCache:
                 serialized = ujson.dumps(model.model_dump())
 
             result = await self.redis.set(
-                name=self._key(key),
-                value=serialized,
-                ex=ex or config.CACHE_TTL
+                name=self._key(key), value=serialized, ex=ex or config.CACHE_TTL
             )
 
             logger.debug(f"Cached '{model}. Result: {result}.")
@@ -168,9 +155,7 @@ class RedisCache:
         return True
 
     async def get_model(
-        self,
-        key: str,
-        model_type: Type[BaseModel]
+        self, key: str, model_type: Type[BaseModel]
     ) -> Optional[BaseModel]:
         """Retrieve and deserialize a cached model"""
 
@@ -201,4 +186,4 @@ async def init_redis():
     async with AsyncRedisPoolContext() as rdb:
         await setup_redis_pool(rdb)
 
-    logger.debug('KV initialized %s', config.REDIS_URL)
+    logger.debug("KV initialized %s", config.REDIS_URL)

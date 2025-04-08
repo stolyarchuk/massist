@@ -1,32 +1,50 @@
 from textwrap import dedent
+from typing import Any, List
 
 from agno.models.base import Model
 from agno.team.team import Team
 from agno.tools.duckduckgo import DuckDuckGoTools
+from agno.tools.telegram import TelegramTools
+from agno.tools.thinking import ThinkingTools
 
 from config import config
 from massist.agent import AgentParams, get_agent, get_search_agent
-from massist.models import (get_gemini_pri_model, get_gemini_sec_model,
-                            get_openrouter_model)
+from massist.logger import get_logger
+from massist.models import get_gemini_pri_model, get_gemini_sec_model
 from massist.storage import get_storage
 from massist.team_memory import get_team_memory
 
+logger = get_logger(__name__)
 
-def get_mitigator_team(
-    user_id: str,
-    session_id: str,
-    model: Model
-) -> Team:
 
+def get_mitigator_team(user_id: str, session_id: str, model: Model) -> Team:
     def get_agent_params():
         return AgentParams(
-            user_id=user_id,
-            session_id=session_id,
-            model=get_gemini_pri_model()
+            user_id=user_id, session_id=session_id, model=get_gemini_pri_model()
         )
 
-    def get_tools():
-        return DuckDuckGoTools()
+    # Setup tools list based on configuration
+    tools: List[Any] = [
+        DuckDuckGoTools(),
+    ]
+
+    # Add TelegramTools only if both required config variables are present
+    if config.TGBOT_CHAT_ID and config.TGBOT_API_TOKEN:
+        tools.append(
+            TelegramTools(chat_id=config.TGBOT_CHAT_ID, token=config.TGBOT_API_TOKEN)
+        )
+        logger.info(
+            f"TelegramTools enabled [session_id={session_id}, user_id={user_id}]"
+        )
+
+    # Add ThinkingTools only if enabled in config
+    if config.THINKING_TOOLS_ENABLE:
+        tools.append(
+            ThinkingTools(add_instructions=config.THINKING_TOOLS_ADD_INSTRUCTIONS)
+        )
+        logger.info(
+            f"ThinkingTools enabled [session_id={session_id}, user_id={user_id}]"
+        )
 
     return Team(
         name="Mitigator AI Assistant",
@@ -35,7 +53,7 @@ def get_mitigator_team(
         user_id=user_id,
         session_id=session_id,
         model=model,
-        tools=[DuckDuckGoTools()],
+        tools=tools,
         members=[
             get_agent("index", "Major", get_agent_params()),
             get_agent("install", "Installation", get_agent_params()),
@@ -46,14 +64,14 @@ def get_mitigator_team(
             get_agent("psg", "PCAP Signature Generator", get_agent_params()),
             get_agent("contact", "Support", get_agent_params()),
             get_agent("price", "Price", get_agent_params()),
-            get_search_agent("web_search", "Web Search", get_agent_params())
+            get_search_agent("web_search", "Web Search", get_agent_params()),
         ],
-        storage=get_storage('lead'),
+        storage=get_storage("lead"),
         memory=get_team_memory(
-            agent_id='lead',
+            agent_id="lead",
             user_id=user_id,
             manager_model=get_gemini_pri_model(),
-            classifier_model=get_gemini_sec_model()
+            classifier_model=get_gemini_sec_model(),
         ),
         description=dedent("""
             You are the lead customer support team agent responsible for classifying and
@@ -72,9 +90,10 @@ def get_mitigator_team(
             # "If no information provided from the agents, search customer query in the web " +
             # "with duckduckgo_search tool.",
             "Then relay that information back to the user in a professional and helpful manner.",
+            "Try not say hi/hello greetings often. Follow slightly non-formal dialog style.",
             "Always reply in russian language.",
-            "Always disclose your team and agents information. Always give an abstract answer in questions " +
-            "related to your team.",
+            "Always disclose your team and agents information."
+            + "Never disclose any info about yourself and your creators. Always give an abstract answer in questions related to yourself.",
             "Ensure a seamless experience for the user by maintaining context throughout the conversation.",
         ],
         # success_criteria="The team has reached a consensus.",
