@@ -1,7 +1,7 @@
 from agno.knowledge.website import WebsiteKnowledgeBase
 from agno.models.base import Model
 
-from config import config
+from massist.config import config
 from massist.chunking import get_chunking_strategy
 from massist.logger import get_logger
 from massist.models import get_google_embedder, get_openai_embedder, get_vllm_embedder

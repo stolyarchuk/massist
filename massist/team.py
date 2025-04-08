@@ -7,7 +7,7 @@ from agno.tools.duckduckgo import DuckDuckGoTools
 from agno.tools.telegram import TelegramTools
 from agno.tools.thinking import ThinkingTools
 
-from config import config
+from massist.config import config
 from massist.agent import AgentParams, get_agent, get_search_agent
 from massist.logger import get_logger
 from massist.models import get_gemini_pri_model, get_gemini_sec_model

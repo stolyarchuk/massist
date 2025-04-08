@@ -5,7 +5,7 @@ from agno.models.base import Model
 from agno.tools.duckduckgo import DuckDuckGoTools
 from pydantic import BaseModel, ConfigDict
 
-from config import config
+from massist.config import config
 from massist.agent_memory import get_agent_memory
 from massist.knowledge import get_kb
 from massist.meta import Meta

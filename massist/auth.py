@@ -1,7 +1,7 @@
 from fastapi import Depends, HTTPException, status
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 
-from config import config
+from massist.config import config
 from massist.logger import Logger
 
 # Initialize the security scheme

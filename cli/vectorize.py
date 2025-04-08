@@ -4,7 +4,7 @@ from functools import partial
 
 from dotenv import load_dotenv
 
-from config import config
+from massist.config import config
 from massist.knowledge import get_kb
 from massist.logger import init_logging
 from massist.models import get_mistral_model
@@ -101,32 +101,28 @@ async def main():
     loop = asyncio.get_running_loop()
 
     with ThreadPoolExecutor() as pool:
-        # await loop.run_in_executor(
-        #     pool, partial(load_kb, topic="install")
-        # )
-
-        # await loop.run_in_executor(
-        #     pool, partial(load_kb, topic="integrate")
-        # )
-
-        # await loop.run_in_executor(
-        #     pool, partial(load_kb, topic="versions")
-        # )
-
-        # await loop.run_in_executor(
-        #     pool, partial(load_kb, topic="maintenance")
-        # )
-
-        # await loop.run_in_executor(
-        #     pool, partial(load_kb, topic="psg")
-        # )
-
         await loop.run_in_executor(
             pool, partial(load_kb, topic="index", max_links=20, max_depth=1)
         )
 
         await loop.run_in_executor(pool, partial(load_kb, topic="kb"))
 
+        await loop.run_in_executor(pool, partial(load_kb, topic="install"))
+
+        await loop.run_in_executor(pool, partial(load_kb, topic="integrate"))
+
+        await loop.run_in_executor(pool, partial(load_kb, topic="versions"))
+
+        await loop.run_in_executor(pool, partial(load_kb, topic="maintenance"))
+
+        await loop.run_in_executor(pool, partial(load_kb, topic="psg"))
+        await loop.run_in_executor(pool, partial(load_kb, topic="contact"))
+        await loop.run_in_executor(pool, partial(load_kb, topic="price"))
+        # await loop.run_in_executor(
+        #     pool, partial(load_kb, topic="kb")
+        # )
+
+    # await loop.run_in_executor(
     # load_kb(topic="index", max_links=20, max_depth=1)
     # load_kb(topic="kb")
 

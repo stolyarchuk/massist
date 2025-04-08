@@ -1,7 +1,7 @@
 import logging
 from typing import Any
 
-from config import config
+from massist.config import config
 
 
 class LoggerFormatter(logging.Formatter):
