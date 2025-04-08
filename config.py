@@ -33,7 +33,12 @@ class Config(BaseSettings):
 
     HUGGINGFACE_API_KEY: str = ""
 
+    LLMX_API_KEY: str = ""
+
     WEBSITE_URL: str = ""
+
+    TGBOT_API_TOKEN: str = ""
+    TGBOT_CHAT_ID: str = ""
 
     # Optional configuration
     AGENT_STREAM: bool = True
@@ -44,12 +49,17 @@ class Config(BaseSettings):
 
     TEAM_DEBUG: bool = True
 
+    # ThinkingTools configuration
+    THINKING_TOOLS_ENABLE: bool = False
+    THINKING_TOOLS_ADD_INSTRUCTIONS: bool = False
+
     POSTGRES_URL: str = ""
     MONGO_URL: str = ""
     SQLITE_URL: str = ""
     DBLANCE_URL: str = ""
     REDIS_URL: str = ""
 
+    VECTOR_SEARCH: str = "vector"
     VECTOR_DB: str = ""
     STORAGE_DB: str = ""
     MEMORY_DB: str = ""
@@ -65,6 +75,9 @@ class Config(BaseSettings):
     CHUNKING_STRATEGY: str = "agentic"
     CACHE_TTL: int = 86400
 
+    CHAT_IDX_NAME: str = ""
+    CHAT_IDX_PREFIX: str = ""
+
     @field_validator("ALLOW_ORIGINS", mode="before")
     @classmethod
     def parse_env_lists(cls, value: Any) -> List[str]:
@@ -77,13 +90,10 @@ class Config(BaseSettings):
     @model_validator(mode="after")
     def check_api_keys(self) -> "Config":
         """Validate that at least one API key is provided"""
-        has_gemini = bool(self.GOOGLE_API_KEY)
-        has_deepseek = bool(self.DEEPSEEK_API_KEY)
 
-        if not (has_gemini or has_deepseek):
+        if not self.GOOGLE_API_KEY:
             raise ValueError(
-                "Either GEMINI_API_KEY or DEEPSEEK_API_KEY must be set in environment variables"
-            )
+                "MAI_GOOGLE_API_KEY must be set in environment variables")
 
         return self
 
@@ -91,9 +101,9 @@ class Config(BaseSettings):
         env_file=".env",
         env_file_encoding="utf-8",
         case_sensitive=False,
-        env_prefix="MA_",
-        env_nested_delimiter="__",
-        extra="ignore"
+        env_prefix="MAI_",
+        # env_nested_delimiter="__",
+        extra="ignore",
     )
 
 

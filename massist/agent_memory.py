@@ -9,10 +9,10 @@ from massist.memory import get_memory_db
 
 def get_agent_memory(
     agent_id: str,
-        user_id: str,
-        manager_model: Model,
-        classifier_model: Model,
-        summarizer_model: Model
+    user_id: str,
+    manager_model: Model,
+    classifier_model: Model,
+    summarizer_model: Model,
 ) -> AgentMemory:
     return AgentMemory(
         user_id=user_id,

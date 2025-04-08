@@ -9,7 +9,9 @@ from config import config
 from massist.models import get_openai_embedder
 
 
-def get_chunking_strategy(model: Model, max_chunk_size: int = config.MAX_CHUNK_SIZE) -> ChunkingStrategy:
+def get_chunking_strategy(
+    model: Model, max_chunk_size: int = config.MAX_CHUNK_SIZE
+) -> ChunkingStrategy:
     if config.CHUNKING_STRATEGY == "agentic":
         return AgenticChunking(model=model, max_chunk_size=max_chunk_size)
 
@@ -21,8 +23,7 @@ def get_chunking_strategy(model: Model, max_chunk_size: int = config.MAX_CHUNK_S
 
     if config.CHUNKING_STRATEGY == "semantic":
         return SemanticChunking(
-            embedder=get_openai_embedder(),
-            chunk_size=max_chunk_size
+            embedder=get_openai_embedder(), chunk_size=max_chunk_size
         )
 
     raise ValueError("bad chunking strategy")

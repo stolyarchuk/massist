@@ -4,59 +4,24 @@ from typing import Any
 from config import config
 
 
-class Colors:
-    """ANSI color codes"""
-
-    BLACK = "\033[0;30m"
-    RED = "\033[0;31m"
-    GREEN = "\033[0;32m"
-    BROWN = "\033[0;33m"
-    BLUE = "\033[0;34m"
-    PURPLE = "\033[0;35m"
-    CYAN = "\033[0;36m"
-    LIGHT_GRAY = "\033[0;37m"
-    DARK_GRAY = "\033[1;30m"
-    LIGHT_RED = "\033[1;31m"
-    LIGHT_GREEN = "\033[1;32m"
-    YELLOW = "\033[1;33m"
-    LIGHT_BLUE = "\033[1;34m"
-    LIGHT_PURPLE = "\033[1;35m"
-    LIGHT_CYAN = "\033[1;36m"
-    LIGHT_WHITE = "\033[1;37m"
-    BOLD = "\033[1m"
-    FAINT = "\033[2m"
-    ITALIC = "\033[3m"
-    UNDERLINE = "\033[4m"
-    BLINK = "\033[5m"
-    NEGATIVE = "\033[7m"
-    CROSSED = "\033[9m"
-    END = "\033[0m"
-
-    # cancel SGR codes if we don't write to a terminal
-    if not __import__("sys").stdout.isatty():
-        for _ in dir():
-            if _[0] != "_":
-                locals()[_] = ""
-    else:
-        # set Windows console in VT mode
-        if __import__("platform").system() == "Windows":
-            kernel32 = __import__("ctypes").windll.kernel32
-            kernel32.SetConsoleMode(kernel32.GetStdHandle(-11), 7)
-            del kernel32
-
-
 class LoggerFormatter(logging.Formatter):
-    FORMATS = {
-        logging.DEBUG: Colors.DARK_GRAY + "%(asctime)s.%(msecs)03d [%(levelname)s] [%(name)s] %(message)s" + Colors.END,
-        logging.INFO: Colors.GREEN + "%(asctime)s.%(msecs)03d [%(levelname)s] [%(name)s] %(message)s" + Colors.END,
-        logging.WARNING: Colors.YELLOW + "%(asctime)s.%(msecs)03d [%(levelname)s] [%(name)s] %(message)s" + Colors.END,
-        logging.ERROR: Colors.RED + "%(asctime)s.%(msecs)03d [%(levelname)s] [%(name)s] %(message)s" + Colors.END,
-        logging.CRITICAL: Colors.LIGHT_RED + "%(asctime)s.%(msecs)03d [%(levelname)s] [%(name)s] %(message)s" + Colors.END,
+    FORMAT = "[%(levelname)s] [%(name)s] %(message)s"
+
+    # ANSI color codes
+    COLORS = {
+        "debug": "\033[90m",  # Gray
+        "info ": "\033[32m",  # Green
+        "warn ": "\033[33m",  # Yellow
+        "error": "\033[31m",  # Red
+        "reset": "\033[0m",  # Reset
     }
 
     def format(self, record: logging.LogRecord):
-        log_fmt = self.FORMATS.get(record.levelno)
-        formatter = logging.Formatter(log_fmt, "%Y-%m-%d %H:%M:%S")
+        levelname = record.levelname.lower()
+        color = self.COLORS.get(levelname, self.COLORS["reset"])
+        formatter = logging.Formatter(
+            f"{color}{self.FORMAT}{self.COLORS['reset']}", "%Y-%m-%d %H:%M:%S"
+        )
         return formatter.format(record)
 
 
@@ -66,8 +31,12 @@ logging.addLevelName(logging.INFO, "info ")
 logging.addLevelName(logging.WARNING, "warn ")
 logging.addLevelName(logging.ERROR, "error")
 
-log_levels = {"debug": logging.DEBUG, "info": logging.INFO,
-              "warn": logging.WARNING, "error": logging.ERROR}
+log_levels = {
+    "debug": logging.DEBUG,
+    "info": logging.INFO,
+    "warn": logging.WARNING,
+    "error": logging.ERROR,
+}
 
 log_level = log_levels.get(config.LOG_LEVEL, logging.DEBUG)
 
@@ -76,6 +45,7 @@ class Logger:
     """
     Singleton Logger class that encapsulates all logging functionality.
     """
+
     _instance = None
     _logger: logging.Logger
 
@@ -121,14 +91,13 @@ class Logger:
 
         if len(args) == 0:
             loggers = ["root"] + [
-                lg for lg in logging.Logger.manager.loggerDict.keys()
-                if "." not in lg
-                or lg in args
+                lg
+                for lg in logging.Logger.manager.loggerDict.keys()
+                if "." not in lg or lg in args
             ]
+            loggers = list(set(loggers))
         else:
-            loggers = args
-
-        # loggers = set(loggers)
+            loggers = list(set(args))
 
         self._logger.debug("Initializing loggers: %s", str(loggers))
         await self._init_module_loggers(*loggers)
@@ -137,13 +106,13 @@ class Logger:
         self._logger.info(msg, *args)
 
     def error(self, msg: Any, *args: Any | None):
-        self._logger.info(msg, *args)
+        self._logger.error(msg, *args)
 
     def warning(self, msg: Any, *args: Any | None):
-        self._logger.info(msg, *args)
+        self._logger.warning(msg, *args)
 
     def debug(self, msg: Any, *args: Any | None):
-        self._logger.info(msg, *args)
+        self._logger.debug(msg, *args)
 
     def _get_handler(self) -> logging.Handler:
         """
@@ -170,7 +139,4 @@ get_logger = Logger().get_logger
 init_logging = Logger().init_logging
 
 # For IDE and module level exports
-__all__ = [
-    "get_logger",
-    "init_logging"
-]
+__all__ = ["get_logger", "init_logging"]

@@ -9,8 +9,7 @@ from config import config
 def get_storage(agent_id: str) -> Storage:
     if config.STORAGE_DB == "pg":
         return PostgresStorage(
-            table_name=f"sessions_{agent_id}",
-            db_url=config.POSTGRES_URL
+            table_name=f"sessions_{agent_id}", db_url=config.POSTGRES_URL
         )
 
     if config.STORAGE_DB == "sqlite":
