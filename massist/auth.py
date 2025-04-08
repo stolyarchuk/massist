@@ -17,13 +17,13 @@ if not MAI_LLMX_API_KEY:
     )
 
 
-async def verify_token(credentials: HTTPAuthorizationCredentials = Depends(security)):
+async def verify_token(credentials: HTTPAuthorizationCredentials = Depends(security)) -> str:
     """
     Verify the bearer token against the configured API key
     """
     # If no API key is configured, skip authentication
     if not MAI_LLMX_API_KEY:
-        return True
+        return ""
 
     # If credentials weren't provided but API key is set, block access
     if not credentials:
@@ -47,4 +47,4 @@ async def verify_token(credentials: HTTPAuthorizationCredentials = Depends(secur
             headers={"WWW-Authenticate": "Bearer"},
         )
 
-    return True
+    return credentials.credentials

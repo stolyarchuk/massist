@@ -33,7 +33,8 @@ class TeamLead(BaseModel):
         logger.debug("Model post init: %s", context)
 
         if self.team:
-            logger.warning("Replacing team. TeamLead session_id: %s", self.session_id)
+            logger.warning(
+                "Replacing team. TeamLead session_id: %s", self.session_id)
 
         # The context is passed automatically by Pydantic
         # We use self.user_id and self.session_id since they would have been set by Pydantic
@@ -44,7 +45,8 @@ class TeamLead(BaseModel):
         )
 
     async def arun_stream(self, message: str) -> AsyncIterator[str]:
-        error_data = {"error": "Invalid input: message must be a non-empty string"}
+        error_data = {
+            "error": "Invalid input: message must be a non-empty string"}
 
         if not message or not isinstance(message, str):
             yield ujson.dumps({"event": "error", "data": error_data})
@@ -151,3 +153,11 @@ async def cache_teamlead(
         return await cache.set_model(
             f"teamlead:{teamlead.session_id}", ujson.dumps(essential_data), ex=7200
         )
+
+
+async def create_teamlead(user_id: str, session_id: str, rdb: Redis) -> TeamLead:
+    logger.debug("Creating teamlead: %s", session_id)
+
+    teamlead = TeamLead(user_id=user_id, session_id=session_id)
+
+    return teamlead

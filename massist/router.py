@@ -6,9 +6,11 @@ from pydantic import BaseModel
 from redis.asyncio.client import Redis
 from sse_starlette.sse import EventSourceResponse
 
+from massist.auth import verify_token
 from massist.logger import get_logger
 from massist.redis import get_rdb
-from massist.team_lead import TeamLead, cache_teamlead, get_cached_teamlead
+from massist.team_lead import (cache_teamlead, create_teamlead,
+                               get_cached_teamlead)
 
 logger = get_logger(__name__)
 
@@ -25,32 +27,26 @@ class MessageResponse(BaseModel):
     # created_at: str
 
 
-async def create_chat(user_id: str, session_id: str, rdb: Redis) -> TeamLead:
-    logger.debug("Creating chat session_id: %s", session_id)
-
-    teamlead = TeamLead(user_id=user_id, session_id=session_id)
-    # Use dict conversion instead of model_validate to avoid type errors
-    # When creating an instance directly, model_validate is unnecessary
-
-    return teamlead
-
-
 router = APIRouter()
 
 
-@router.head("/health")
-@router.get("/health")
-def health_check():
+@router.get("/health", tags=["Public"])
+async def health_check():
     return UJSONResponse({"status": "healthy"})
 
 
-@router.post("/chat/new")
+@router.get("/status", tags=["Protected"], dependencies=[Depends(verify_token)])
+async def status_check():
+    return UJSONResponse({"status": "healthy"})
+
+
+@router.post("/chat/new", tags=["Protected"], dependencies=[Depends(verify_token)])
 async def single_chat(rdb: Redis = Depends(get_rdb)):
     chat_id = str(uuid4())
     # created = int(time())
     # await create_chat(rdb, chat_id, created)
     # cache = RedisCache(rdb, prefix="items")
-    teamlead = await create_chat(user_id="massist_buddy", session_id=chat_id, rdb=rdb)
+    teamlead = await create_teamlead(user_id="massist_buddy", session_id=chat_id, rdb=rdb)
     teamlead_cached = await cache_teamlead(teamlead, rdb=rdb)
 
     logger.info(
@@ -61,14 +57,14 @@ async def single_chat(rdb: Redis = Depends(get_rdb)):
     return UJSONResponse({"chat_id": chat_id})
 
 
-@router.post("/chat/{chat_id}")
+@router.post("/chat/{chat_id}", tags=["Protected"], dependencies=[Depends(verify_token)])
 async def chat(chat_id: str, chat_in: ChatIn, rdb: Redis = Depends(get_rdb)):
     logger.debug("chat_id: %s, message: %s", chat_id, chat_in.message)
 
     teamlead = await get_cached_teamlead(session_id=chat_id, rdb=rdb)
 
     if teamlead is None:
-        teamlead = await create_chat(
+        teamlead = await create_teamlead(
             user_id="massist_buddy", session_id=chat_id, rdb=rdb
         )
 
