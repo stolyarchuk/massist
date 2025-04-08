@@ -45,7 +45,7 @@
       "type": "process",
       "command": "${command:python.interpreterPath}",
       "args": [
-        "${workspaceFolder}/vectorize.py"
+        "${workspaceFolder}/cli/vectorize.py"
       ],
       "presentation": {
         "echo": true,
