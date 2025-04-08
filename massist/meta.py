@@ -16,13 +16,15 @@ class Meta(BaseModel):
 
     topic: str = ""
 
-    role: str = f"Helps in Mitigator {topic}"
+    role: str = Field(
+        default_factory=lambda m: f"Helps in Mitigator {m['topic']}"
+    )
 
-    description: str = dedent(f"""
-        You are a helpful Agent called 'Mitigator AI Assistant'. Your specialization is Mitigator {topic}.
+    description: str = Field(default_factory=lambda m: dedent(f"""
+        You are a helpful Agent called 'Mitigator AI Assistant'. Your specialization is Mitigator {m['topic']}.
         Your goal is to assist the user the best way possible.
 
-        Also you can give a brief answer on questions not related to Mitigator {topic}.""")
+        Also you can give a brief answer on questions not related to Mitigator {m['topic']}."""))
 
     instructions: List[str] = Field(
         default_factory=lambda: [
