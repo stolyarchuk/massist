@@ -28,7 +28,7 @@ httptools==0.6.4
 httpx==0.28.1
 huggingface-hub==0.29.2
 idna==3.10
-Jinja2==3.1.5
+Jinja2==3.1.6
 jiter==0.8.2
 lancedb==0.20.0
 lxml==5.3.1
