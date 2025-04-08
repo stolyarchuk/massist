@@ -1,8 +1,12 @@
 import asyncio
 
+from dotenv import load_dotenv
+
 from massist.knowledge import get_kb
 from massist.logger import init_logging
 from massist.models import get_mistral_model
+
+load_dotenv()
 
 
 async def main():
@@ -45,6 +49,10 @@ async def main():
     get_kb(
         topic="index", chunking_model=chunking_model, max_links=20, max_depth=1
     ).load(recreate=True, upsert=True)
+
+    get_kb(topic="install", chunking_model=chunking_model).load(
+        recreate=True, upsert=True
+    )
 
     # get_kb(topic="integrate", chunking_model=chunking_model).load(
     #     recreate=True, upsert=True

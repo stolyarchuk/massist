@@ -615,7 +615,7 @@ dependencies = [
 requires-dist = [
     { name = "agno", git = "https://github.com/stolyarchuk/agno.git?subdirectory=libs%2Fagno&rev=main" },
     { name = "bs4", specifier = ">=0.0.2" },
-    { name = "chonkie", specifier = ">=0.5.1" },
+    { name = "chonkie", specifier = ">=1.0.2" },
     { name = "duckduckgo-search", specifier = ">=7.5.5" },
     { name = "fastapi", specifier = ">=0.115.12" },
     { name = "google-genai", specifier = ">=1.8.0" },

@@ -4,7 +4,8 @@ from agno.models.base import Model
 from config import config
 from massist.chunking import get_chunking_strategy
 from massist.logger import get_logger
-from massist.models import get_google_embedder, get_vllm_embedder
+from massist.models import (get_google_embedder, get_openai_embedder,
+                            get_vllm_embedder)
 from massist.vector_db import get_vector_db
 
 logger = get_logger(__name__)
@@ -22,14 +23,20 @@ def get_kb(
         else f"{config.WEBSITE_URL}{topic}/"
     )
 
-    embedder = get_vllm_embedder(
-    ) if config.VECTOR_EMBEDDER == "vllm" else get_google_embedder()
+    if config.VECTOR_EMBEDDER == "vllm":
+        embedder = get_vllm_embedder()
+    elif config.VECTOR_EMBEDDER == "google":
+        embedder = get_google_embedder()
+    elif config.VECTOR_EMBEDDER == "openai":
+        embedder = get_openai_embedder()
+    else:
+        raise ValueError(f"Unknown vector embedder: {config.VECTOR_EMBEDDER}")
 
     kb = WebsiteKnowledgeBase(
         urls=[url],
         max_links=max_links,
         max_depth=max_depth,
-        bad_fragment="image",
+        bad_fragment="",
         bad_path="mitigator.ova",
         vector_db=get_vector_db(topic, embedder),
         num_documents=3,
