@@ -12,6 +12,7 @@ dependencies = [
     "fastapi>=0.115.12",
     "google-genai>=1.8.0",
     "huggingface-hub>=0.29.3",
+    "jinja2>=3.1.6",
     "lancedb>=0.21.2",
     "lxml>=5.3.1",
     "mypy>=1.15.0",
