@@ -95,8 +95,7 @@ class Config(BaseSettings):
         """Validate that at least one API key is provided"""
 
         if not self.GOOGLE_API_KEY:
-            raise ValueError(
-                "MAI_GOOGLE_API_KEY must be set in environment variables")
+            raise ValueError("MAI_GOOGLE_API_KEY must be set in environment variables")
 
         return self
 

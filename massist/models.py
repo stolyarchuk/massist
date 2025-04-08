@@ -4,6 +4,7 @@ from agno.embedder.openai import OpenAIEmbedder
 from agno.models.base import Model
 from agno.models.deepseek.deepseek import DeepSeek
 from agno.models.google.gemini import Gemini
+
 # from agno.models.huggingface.huggingface import HuggingFace
 from agno.models.openai.like import OpenAILike
 
@@ -102,18 +103,16 @@ def get_vllm_embedder(
 
 
 def get_openai_embedder(
-    model_id: str = config.OPENAI_MODEL_EMBED,
-    dims: int = config.DIMS
+    model_id: str = config.OPENAI_MODEL_EMBED, dims: int = config.DIMS
 ) -> Embedder:
-    return OpenAIEmbedder(
-        id=model_id, dimensions=dims, api_key=config.OPENAI_API_KEY
-    )
+    return OpenAIEmbedder(id=model_id, dimensions=dims, api_key=config.OPENAI_API_KEY)
 
 
 def get_google_embedder(
-    model_id: str = config.GOOGLE_MODEL_EMBED,
-    dims: int = config.DIMS
+    model_id: str = config.GOOGLE_MODEL_EMBED, dims: int = config.DIMS
 ) -> Embedder:
     return GeminiEmbedder(
-        id=model_id, dimensions=dims, api_key=config.GOOGLE_API_KEY,
+        id=model_id,
+        dimensions=dims,
+        api_key=config.GOOGLE_API_KEY,
     )

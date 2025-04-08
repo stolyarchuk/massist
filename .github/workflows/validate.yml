@@ -36,8 +36,8 @@ jobs:
       - name: Install the project
         run: uv sync
 
-      - name: Format with ruff
-        run: uv run ruff format .
+      # - name: Format with ruff
+      #   run: uv run ruff format .
 
       - name: Lint with ruff
         run: uv run ruff check .

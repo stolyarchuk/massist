@@ -17,7 +17,9 @@ if not MAI_LLMX_API_KEY:
     )
 
 
-async def verify_token(credentials: HTTPAuthorizationCredentials = Depends(security)) -> str:
+async def verify_token(
+    credentials: HTTPAuthorizationCredentials = Depends(security),
+) -> str:
     """
     Verify the bearer token against the configured API key
     """

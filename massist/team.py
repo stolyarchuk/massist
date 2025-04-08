@@ -31,8 +31,7 @@ def get_mitigator_team(user_id: str, session_id: str, model: Model) -> Team:
     # Add TelegramTools only if both required config variables are present
     if config.TGBOT_CHAT_ID and config.TGBOT_API_TOKEN:
         tools.append(
-            TelegramTools(chat_id=config.TGBOT_CHAT_ID,
-                          token=config.TGBOT_API_TOKEN)
+            TelegramTools(chat_id=config.TGBOT_CHAT_ID, token=config.TGBOT_API_TOKEN)
         )
         logger.info(
             f"TelegramTools enabled [session_id={session_id}, user_id={user_id}]"
@@ -41,8 +40,7 @@ def get_mitigator_team(user_id: str, session_id: str, model: Model) -> Team:
     # Add ThinkingTools only if enabled in config
     if config.THINKING_TOOLS_ENABLE:
         tools.append(
-            ThinkingTools(
-                add_instructions=config.THINKING_TOOLS_ADD_INSTRUCTIONS)
+            ThinkingTools(add_instructions=config.THINKING_TOOLS_ADD_INSTRUCTIONS)
         )
         logger.info(
             f"ThinkingTools enabled [session_id={session_id}, user_id={user_id}]"
