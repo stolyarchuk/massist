@@ -5,7 +5,7 @@ requires-python = ">=3.12"
 [[package]]
 name = "agno"
 version = "1.2.14"
-source = { registry = "https://pypi.org/simple" }
+source = { git = "https://github.com/stolyarchuk/agno.git?subdirectory=libs%2Fagno&rev=main#6e9d001827e6762a291529c4df145a5dc81d0604" }
 dependencies = [
     { name = "docstring-parser" },
     { name = "gitpython" },
@@ -19,10 +19,6 @@ dependencies = [
     { name = "tomli" },
     { name = "typer" },
     { name = "typing-extensions" },
-]
-sdist = { url = "https://files.pythonhosted.org/packages/69/85/ee34f4e9c4d0061cd023dce433c3fad620e4c5e046232e0472eb413143e9/agno-1.2.14.tar.gz", hash = "sha256:044c4a6d97aeebe1481cc6e22c11c03aad95c5b5ebb340b12f4dc3678cffae72", size = 467338 }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/c5/de/f21dde697ff854bb0cb9ccf55e91de58946c21d30b503f58921008183eec/agno-1.2.14-py3-none-any.whl", hash = "sha256:33f9aa7dcedba2c53a584f75e016a895f1b6b654a51b69b5c9c901664ef80c50", size = 616670 },
 ]
 
 [[package]]
@@ -617,7 +613,7 @@ dependencies = [
 
 [package.metadata]
 requires-dist = [
-    { name = "agno", specifier = ">=1.2.14" },
+    { name = "agno", git = "https://github.com/stolyarchuk/agno.git?subdirectory=libs%2Fagno&rev=main" },
     { name = "bs4", specifier = ">=0.0.2" },
     { name = "chonkie", specifier = ">=0.5.1" },
     { name = "duckduckgo-search", specifier = ">=7.5.5" },

@@ -78,6 +78,9 @@ class Config(BaseSettings):
     CHAT_IDX_NAME: str = ""
     CHAT_IDX_PREFIX: str = ""
 
+    # Vector embedder configuration
+    VECTOR_EMBEDDER: str = "vllm"  # Options: "vllm" or "google"
+
     @field_validator("ALLOW_ORIGINS", mode="before")
     @classmethod
     def parse_env_lists(cls, value: Any) -> List[str]:
@@ -92,7 +95,8 @@ class Config(BaseSettings):
         """Validate that at least one API key is provided"""
 
         if not self.GOOGLE_API_KEY:
-            raise ValueError("MAI_GOOGLE_API_KEY must be set in environment variables")
+            raise ValueError(
+                "MAI_GOOGLE_API_KEY must be set in environment variables")
 
         return self
 

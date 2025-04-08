@@ -4,7 +4,7 @@ from agno.models.base import Model
 from config import config
 from massist.chunking import get_chunking_strategy
 from massist.logger import get_logger
-from massist.models import get_vllm_embedder
+from massist.models import get_google_embedder, get_vllm_embedder
 from massist.vector_db import get_vector_db
 
 logger = get_logger(__name__)
@@ -21,13 +21,17 @@ def get_kb(
         if topic == "index"
         else f"{config.WEBSITE_URL}{topic}/"
     )
+
+    embedder = get_vllm_embedder(
+    ) if config.VECTOR_EMBEDDER == "vllm" else get_google_embedder()
+
     kb = WebsiteKnowledgeBase(
         urls=[url],
         max_links=max_links,
         max_depth=max_depth,
         bad_fragment="image",
         bad_path="mitigator.ova",
-        vector_db=get_vector_db(topic, get_vllm_embedder()),
+        vector_db=get_vector_db(topic, embedder),
         num_documents=3,
         chunking_strategy=get_chunking_strategy(chunking_model),
     )

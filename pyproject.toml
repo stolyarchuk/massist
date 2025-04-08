@@ -5,7 +5,7 @@ description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
-    "agno>=1.2.14",
+    "agno",
     "bs4>=0.0.2",
     "chonkie>=0.5.1",
     "duckduckgo-search>=7.5.5",
@@ -33,3 +33,6 @@ dependencies = [
     "uvicorn[standard]>=0.34.0",
     "uvloop>=0.21.0",
 ]
+
+[tool.uv.sources]
+agno = { git = "https://github.com/stolyarchuk/agno.git", subdirectory = "libs/agno", rev = "main" }
