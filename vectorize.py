@@ -42,9 +42,9 @@ async def main():
     # ),
     # )
 
-    get_kb(topic="index", chunking_model=chunking_model, max_links=20, max_depth=1).load(
-        recreate=True, upsert=True
-    )
+    get_kb(
+        topic="index", chunking_model=chunking_model, max_links=20, max_depth=1
+    ).load(recreate=True, upsert=True)
 
     # get_kb(topic="integrate", chunking_model=chunking_model).load(
     #     recreate=True, upsert=True
