@@ -255,7 +255,7 @@ uvloop==0.21.0
     # via
     #   massist
     #   uvicorn
-watchfiles==1.0.4
+watchfiles==1.0.5
     # via uvicorn
 websockets==15.0.1
     # via
