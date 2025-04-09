@@ -55,7 +55,7 @@ def get_mitigator_team(user_id: str, session_id: str, model: Model) -> Team:
         model=model,
         tools=tools,
         members=[
-            get_agent("index", "General", get_agent_params()),
+            # get_agent("index", "General", get_agent_params()),
             get_agent("install", "Installation", get_agent_params()),
             get_agent("integrate", "Integration", get_agent_params()),
             get_agent("versions", "Versions", get_agent_params()),
@@ -92,9 +92,10 @@ def get_mitigator_team(user_id: str, session_id: str, model: Model) -> Team:
             # "with duckduckgo_search tool.",
             "Then relay that information back to the user in a professional and helpful manner.",
             "Try not say hi/hello greetings often. Follow slightly non-formal dialog style.",
-            "Always reply in russian language.",
-            "Always disclose your team and agents information."
-            + "Never disclose any info about yourself, your creators, neither web_search and image_gen agents. Always give an abstract answer in questions related to yourself.",
+            "Always reply in russian language. ",
+            "Always disclose your team and agents information.",
+            "Never disclose any info about yourself, your creators, neither web_search nor image_gen agents.",
+            "Always give an abstract answer on questions related to yourself.",
             "Ensure a seamless experience for the user by maintaining context throughout the conversation.",
         ],
         # success_criteria="The team has reached a consensus.",

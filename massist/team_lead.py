@@ -72,10 +72,10 @@ class TeamLead(BaseModel):
             yield ujson.dumps({"event": "cancelled", "data": {"content": str(e)}})
             return
 
-        except Exception as e:
-            logger.error("team_lead_b: %s", e)
-            error_details = {"error": str(e), "type": type(e).__name__}
-            yield ujson.dumps({"event": "error", "data": error_details})
+        # except Exception as e:
+        #     logger.error("team_lead_b: %s", e)
+        #     error_details = {"error": str(e), "type": type(e).__name__}
+        #     yield ujson.dumps({"event": "error", "data": error_details})
 
         finally:
             yield ujson.dumps({"event": "end", "data": ""})
