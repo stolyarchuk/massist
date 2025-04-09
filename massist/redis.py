@@ -12,7 +12,7 @@ from redis.commands.search.indexDefinition import IndexDefinition, IndexType
 from redis.exceptions import RedisError
 
 from config import config
-from mai.logger import get_logger
+from massist.logger import get_logger
 
 logger = get_logger(__name__)
 

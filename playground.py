@@ -1,7 +1,7 @@
 import asyncio
 
 # from config import config
-from mai.logger import init_logging
+from massist.logger import init_logging
 
 # from agno.playground.playground import Playground
 # from agno.playground.serve import serve_playground_app  # type: ignore

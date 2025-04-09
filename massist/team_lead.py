@@ -13,10 +13,10 @@ from agno.storage.base import Storage
 from agno.team.team import Team
 from pydantic import BaseModel, ConfigDict
 
-from mai.logger import get_logger
-from mai.models import get_gemini_pri_model
-from mai.redis import Redis, RedisCache
-from mai.team import get_mitigator_team
+from massist.logger import get_logger
+from massist.models import get_gemini_pri_model
+from massist.redis import Redis, RedisCache
+from massist.team import get_mitigator_team
 
 logger = get_logger(__name__)
 

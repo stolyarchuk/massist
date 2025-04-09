@@ -2,7 +2,7 @@ from fastapi import Depends, HTTPException, status
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 
 from config import config
-from mai.logger import Logger
+from massist.logger import Logger
 
 # Initialize the security scheme
 security = HTTPBearer(auto_error=False)

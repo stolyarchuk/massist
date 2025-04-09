@@ -1,3 +1,4 @@
+from typing import List
 from uuid import uuid4
 
 from fastapi import APIRouter, Depends
@@ -6,10 +7,12 @@ from pydantic import BaseModel
 from redis.asyncio.client import Redis
 from sse_starlette.sse import EventSourceResponse
 
-from mai.auth import verify_token
-from mai.logger import get_logger
-from mai.redis import get_rdb
-from mai.team_lead import cache_teamlead, create_teamlead, get_cached_teamlead
+from massist.auth import verify_token
+from massist.logger import get_logger
+from massist.redis import get_rdb
+from massist.storage import get_storage
+from massist.team_lead import (cache_teamlead, create_teamlead,
+                               get_cached_teamlead)
 
 logger = get_logger(__name__)
 
@@ -82,7 +85,12 @@ async def chat(chat_id: str, chat_in: ChatIn, rdb: Redis = Depends(get_rdb)):
     return EventSourceResponse(content=teamlead.arun_stream(message=chat_in.message))
 
 
-# @router.get('/messages/{chat_id}', response_model=List[MessageResponse])
+# @router.get(
+#     '/messages/{chat_id}',
+#     response_model=List[MessageResponse],
+#     # tags=["Protected"],
+#     # dependencies=[Depends(verify_token)]
+# )
 # async def get_messages(chat_id: str):
 #     logger.warning("Retrieving messages for chat_id: %s", chat_id)
 
@@ -91,6 +99,7 @@ async def chat(chat_id: str, chat_in: ChatIn, rdb: Redis = Depends(get_rdb)):
 #     # current_session = None
 
 #     for session in sessions:
+#         logger.error("Session: %s", session)
 #         if (
 #             session.session_id == chat_id
 #             and session.memory is not None
@@ -98,6 +107,9 @@ async def chat(chat_id: str, chat_in: ChatIn, rdb: Redis = Depends(get_rdb)):
 #         ):
 #             messages = session.memory['messages']
 
-#     logger.warning(messages)
+#     # logger.warning("messages %s", messages.)
+
+#     for message in messages:
+#         logger.info("message %s", message)
 
 #     return UJSONResponse([MessageResponse(**message).model_dump_json() for message in messages])

@@ -4,17 +4,14 @@ from agno.agent.agent import Agent
 from agno.models.base import Model
 from agno.tools.dalle import DalleTools
 from agno.tools.duckduckgo import DuckDuckGoTools
-from dotenv import load_dotenv
 from pydantic import BaseModel, ConfigDict
 
 from config import config
-from mai.agent_memory import get_agent_memory
-from mai.knowledge import get_kb
-from mai.meta import Meta
-from mai.models import (get_gemini_pri_model, get_gemini_sec_model,
+from massist.agent_memory import get_agent_memory
+from massist.knowledge import get_kb
+from massist.meta import Meta
+from massist.models import (get_gemini_pri_model, get_gemini_sec_model,
                         get_openrouter_model)
-
-load_dotenv()
 
 
 class AgentParams(BaseModel):
@@ -125,7 +122,7 @@ def get_image_agent(
 
     if tools is None:
         tools = [
-            DalleTools(),
+            DalleTools(api_key=config.OPENAI_API_KEY),
         ]
 
     return Agent(

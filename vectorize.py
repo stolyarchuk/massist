@@ -5,9 +5,9 @@ from functools import partial
 from dotenv import load_dotenv
 
 from config import config
-from mai.knowledge import get_kb
-from mai.logger import init_logging
-from mai.models import get_mistral_model
+from massist.knowledge import get_kb
+from massist.logger import init_logging
+from massist.models import get_mistral_model
 
 load_dotenv()
 

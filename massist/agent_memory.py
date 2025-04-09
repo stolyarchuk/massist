@@ -4,7 +4,7 @@ from agno.memory.manager import MemoryManager
 from agno.memory.summarizer import MemorySummarizer
 from agno.models.base import Model
 
-from mai.memory import get_memory_db
+from massist.memory import get_memory_db
 
 
 def get_agent_memory(
