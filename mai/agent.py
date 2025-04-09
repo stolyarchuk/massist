@@ -129,7 +129,7 @@ def get_image_agent(
         ]
 
     return Agent(
-        name="Mitigator {topic} Agent",
+        name=f"Mitigator {topic} Agent",
         agent_id=f"mitigator_agent_{agent_id}",
         role="Mitigator Image Generator",
         user_id=params.user_id,
