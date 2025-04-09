@@ -5,12 +5,12 @@ on:
     branches: [main, master]
     # Optionally add tags trigger
     tags: ["v*.*.*"]
-  # Enable manual run from Actions tab
   workflow_dispatch:
 
 env:
   REGISTRY: ghcr.io
   IMAGE_NAME: ${{ github.repository }}
+  UV_SYSTEM_PYTHON: 1
 
 jobs:
   build-and-push:
