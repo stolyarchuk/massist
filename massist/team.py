@@ -8,7 +8,7 @@ from agno.tools.telegram import TelegramTools
 from agno.tools.thinking import ThinkingTools
 
 from config import config
-from massist.agent import AgentParams, get_agent, get_image_agent, get_search_agent
+from massist.agent import AgentParams, get_agent, get_search_agent
 from massist.logger import get_logger
 from massist.models import get_gemini_pri_model, get_gemini_sec_model
 from massist.storage import get_storage
@@ -55,7 +55,7 @@ def get_mitigator_team(user_id: str, session_id: str, model: Model) -> Team:
         model=model,
         tools=tools,
         members=[
-            # get_agent("index", "General", get_agent_params()),
+            get_agent("index", "General", get_agent_params()),
             get_agent("install", "Installation", get_agent_params()),
             get_agent("integrate", "Integration", get_agent_params()),
             get_agent("versions", "Versions", get_agent_params()),
@@ -65,7 +65,7 @@ def get_mitigator_team(user_id: str, session_id: str, model: Model) -> Team:
             get_agent("contact", "Support", get_agent_params()),
             get_agent("price", "Price", get_agent_params()),
             get_search_agent("web_search", "Web Search", get_agent_params()),
-            get_image_agent("image_gen", "Images", get_agent_params()),
+            # get_image_agent("image_gen", "Images", get_agent_params()),
         ],
         storage=get_storage("lead"),
         memory=get_team_memory(
