@@ -8,11 +8,9 @@ from agno.tools.telegram import TelegramTools
 from agno.tools.thinking import ThinkingTools
 
 from config import config
-from massist.agent import (AgentParams, get_agent, get_image_agent,
-                           get_search_agent)
+from massist.agent import AgentParams, get_agent, get_image_agent, get_search_agent
 from massist.logger import get_logger
-from massist.models import (get_gemini_pri_model, get_gemini_sec_model,
-                            get_openrouter_model)
+from massist.models import get_gemini_pri_model, get_gemini_sec_model
 from massist.storage import get_storage
 from massist.team_memory import get_team_memory
 
@@ -33,8 +31,7 @@ def get_mitigator_team(user_id: str, session_id: str, model: Model) -> Team:
     # Add TelegramTools only if both required config variables are present
     if config.TGBOT_CHAT_ID and config.TGBOT_API_TOKEN:
         tools.append(
-            TelegramTools(chat_id=config.TGBOT_CHAT_ID,
-                          token=config.TGBOT_API_TOKEN)
+            TelegramTools(chat_id=config.TGBOT_CHAT_ID, token=config.TGBOT_API_TOKEN)
         )
         logger.info(
             f"TelegramTools enabled [session_id={session_id}, user_id={user_id}]"
@@ -43,8 +40,7 @@ def get_mitigator_team(user_id: str, session_id: str, model: Model) -> Team:
     # Add ThinkingTools only if enabled in config
     if config.THINKING_TOOLS_ENABLE:
         tools.append(
-            ThinkingTools(
-                add_instructions=config.THINKING_TOOLS_ADD_INSTRUCTIONS)
+            ThinkingTools(add_instructions=config.THINKING_TOOLS_ADD_INSTRUCTIONS)
         )
         logger.info(
             f"ThinkingTools enabled [session_id={session_id}, user_id={user_id}]"
@@ -59,7 +55,7 @@ def get_mitigator_team(user_id: str, session_id: str, model: Model) -> Team:
         model=model,
         tools=tools,
         members=[
-            get_agent("index", "Common Questions", get_agent_params()),
+            get_agent("index", "General", get_agent_params()),
             get_agent("install", "Installation", get_agent_params()),
             get_agent("integrate", "Integration", get_agent_params()),
             get_agent("versions", "Versions", get_agent_params()),
@@ -98,7 +94,7 @@ def get_mitigator_team(user_id: str, session_id: str, model: Model) -> Team:
             "Try not say hi/hello greetings often. Follow slightly non-formal dialog style.",
             "Always reply in russian language.",
             "Always disclose your team and agents information."
-            + "Never disclose any info about yourself and your creators. Always give an abstract answer in questions related to yourself.",
+            + "Never disclose any info about yourself, your creators, neither web_search and image_gen agents. Always give an abstract answer in questions related to yourself.",
             "Ensure a seamless experience for the user by maintaining context throughout the conversation.",
         ],
         # success_criteria="The team has reached a consensus.",

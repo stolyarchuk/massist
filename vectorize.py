@@ -43,10 +43,11 @@ async def main():
 
     with ThreadPoolExecutor() as pool:
         await asyncio.gather(
-            # loop.run_in_executor(pool, partial(
-            #     load_kb, topic="index", max_links=20, max_depth=1)),
-            # loop.run_in_executor(pool, partial(load_kb, topic="install")),
-            loop.run_in_executor(pool, partial(load_kb, topic="integrate")),
+            loop.run_in_executor(
+                pool, partial(load_kb, topic="index", max_links=20, max_depth=1)
+            ),
+            loop.run_in_executor(pool, partial(load_kb, topic="install")),
+            # loop.run_in_executor(pool, partial(load_kb, topic="integrate")),
             # loop.run_in_executor(pool, partial(load_kb, topic="kb")),
             # loop.run_in_executor(pool, partial(load_kb, topic="versions")),
             # loop.run_in_executor(pool, partial(load_kb, topic="maintenance")),
@@ -54,6 +55,7 @@ async def main():
             # loop.run_in_executor(pool, partial(load_kb, topic="contact")),
             # loop.run_in_executor(pool, partial(load_kb, topic="price"))
         )
+
 
 if __name__ == "__main__":
     asyncio.run(main())

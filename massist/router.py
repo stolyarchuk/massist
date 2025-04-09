@@ -1,4 +1,3 @@
-from typing import List
 from uuid import uuid4
 
 from fastapi import APIRouter, Depends
@@ -10,9 +9,7 @@ from sse_starlette.sse import EventSourceResponse
 from massist.auth import verify_token
 from massist.logger import get_logger
 from massist.redis import get_rdb
-from massist.storage import get_storage
-from massist.team_lead import (cache_teamlead, create_teamlead,
-                               get_cached_teamlead)
+from massist.team_lead import cache_teamlead, create_teamlead, get_cached_teamlead
 
 logger = get_logger(__name__)
 

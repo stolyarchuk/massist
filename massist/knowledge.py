@@ -37,6 +37,7 @@ def get_kb(
         max_depth=max_depth,
         bad_fragment="",
         bad_path="mitigator.ova",
+        base_url=url,
         vector_db=get_vector_db(topic, embedder),
         num_documents=3,
         chunking_strategy=get_chunking_strategy(chunking_model),
