@@ -11,7 +11,7 @@ from massist.agent_memory import get_agent_memory
 from massist.knowledge import get_kb
 from massist.meta import Meta
 from massist.models import (get_gemini_pri_model, get_gemini_sec_model,
-                        get_openrouter_model)
+                            get_openrouter_model)
 
 
 class AgentParams(BaseModel):
@@ -111,6 +111,7 @@ def get_search_agent(
         stream=config.AGENT_STREAM,
         debug_mode=config.AGENT_DEBUG,
         monitoring=config.AGENT_MONITORING,
+        respond_directly=False
     )
 
 

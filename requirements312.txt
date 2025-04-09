@@ -12,8 +12,6 @@ anyio==4.9.0
     #   sse-starlette
     #   starlette
     #   watchfiles
-async-timeout==5.0.1
-    # via massist
 beautifulsoup4==4.13.3
     # via bs4
 bs4==0.0.2
