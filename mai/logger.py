@@ -1,5 +1,4 @@
 import logging
-import sys
 from typing import Any
 
 from config import config
@@ -123,7 +122,7 @@ class Logger:
             logging.Handler: A configured stream handler with proper formatting and level
         """
         formatter = LoggerFormatter()
-        handler = logging.StreamHandler(stream=sys.stdout)
+        handler = logging.StreamHandler()
         handler.setLevel(log_level)
         handler.setFormatter(formatter)
         return handler
