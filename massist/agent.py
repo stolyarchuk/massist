@@ -29,8 +29,6 @@ def get_agent(
     agent_id: str, topic: str, params: AgentParams, tools: List[Any] | None = None
 ):
     meta = Meta(agent_id=agent_id, topic=topic)
-    # FIXME: remove default stolyarchuk
-
     if tools is None:
         tools = [
             DuckDuckGoTools(),
