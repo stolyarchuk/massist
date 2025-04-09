@@ -7,14 +7,14 @@ ENV DEBIAN_FRONTEND=noninteractive \
     PYTHONUNBUFFERED=1 \
     PIP_ROOT_USER_ACTION=ignore
 
-COPY requirements311.txt .
+COPY requirements.txt .
 COPY pyproject.toml uv.lock* ./
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
     build-essential git curl && pip install -U pip uv
 
 # Install dependencies into a specific directory for easier copying
-RUN --mount=type=bind,source=requirements311.txt,target=requirements311.txt \
+RUN --mount=type=bind,source=requirements.txt,target=requirements.txt \
     uv pip install --system --target=/install -r requirements.txt
 
 # Final stage using distroless image
