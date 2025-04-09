@@ -8,7 +8,7 @@ from agno.tools.telegram import TelegramTools
 from agno.tools.thinking import ThinkingTools
 
 from config import config
-from mai.agent import AgentParams, get_agent, get_search_agent
+from mai.agent import AgentParams, get_agent, get_image_agent, get_search_agent
 from mai.logger import get_logger
 from mai.models import get_gemini_pri_model, get_gemini_sec_model
 from mai.storage import get_storage
@@ -31,7 +31,8 @@ def get_mitigator_team(user_id: str, session_id: str, model: Model) -> Team:
     # Add TelegramTools only if both required config variables are present
     if config.TGBOT_CHAT_ID and config.TGBOT_API_TOKEN:
         tools.append(
-            TelegramTools(chat_id=config.TGBOT_CHAT_ID, token=config.TGBOT_API_TOKEN)
+            TelegramTools(chat_id=config.TGBOT_CHAT_ID,
+                          token=config.TGBOT_API_TOKEN)
         )
         logger.info(
             f"TelegramTools enabled [session_id={session_id}, user_id={user_id}]"
@@ -40,7 +41,8 @@ def get_mitigator_team(user_id: str, session_id: str, model: Model) -> Team:
     # Add ThinkingTools only if enabled in config
     if config.THINKING_TOOLS_ENABLE:
         tools.append(
-            ThinkingTools(add_instructions=config.THINKING_TOOLS_ADD_INSTRUCTIONS)
+            ThinkingTools(
+                add_instructions=config.THINKING_TOOLS_ADD_INSTRUCTIONS)
         )
         logger.info(
             f"ThinkingTools enabled [session_id={session_id}, user_id={user_id}]"
@@ -65,6 +67,7 @@ def get_mitigator_team(user_id: str, session_id: str, model: Model) -> Team:
             get_agent("contact", "Support", get_agent_params()),
             get_agent("price", "Price", get_agent_params()),
             get_search_agent("web_search", "Web Search", get_agent_params()),
+            # get_image_agent("image_gen", "Images", get_agent_params()),
         ],
         storage=get_storage("lead"),
         memory=get_team_memory(

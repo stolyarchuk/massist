@@ -39,89 +39,21 @@ async def aload_kb(
 async def main():
     await init_logging()
 
-    chunking_model = get_mistral_model()
-    # chunking_model = get_deepseek_model(temperature=0.5)
-
-    # await asyncio.gather(
-    #     get_kb(
-    #         topic="index", chunking_model=chunking_model, max_links=20, max_depth=1
-    #     ).aload(recreate=True, upsert=True),
-    # get_kb(
-    #     topic="install",
-    #     chunking_model=chunking_model,
-    # ).async_load(recreate=True, upsert=True),
-    # get_kb(topic="integrate", chunking_model=chunking_model).aload(
-    #     recreate=True, upsert=True
-    # ),
-    # get_kb(topic="versions", chunking_model=chunking_model).aload(
-    #     recreate=True, upsert=True
-    # ),
-    # get_kb(topic="maintenance", chunking_model=get_deepseek_model(temperature=0.7)).aload(
-    #     recreate=True, upsert=True
-    # ),
-    # get_kb(topic="kb", chunking_model=chunking_model).aload(
-    #     recreate=True, upsert=True
-    # ),
-    # get_kb(topic="psg", chunking_model=chunking_model).aload(
-    #     recreate=True, upsert=True
-    # ),
-    # get_kb(topic="contact", chunking_model=chunking_model).aload(
-    #     recreate=True, upsert=True
-    # ),
-    # get_kb(topic="price", chunking_model=chunking_model).aload(
-    #     recreate=True, upsert=True
-    # ),
-    # )
-
-    get_kb(
-        topic="index", chunking_model=chunking_model, max_links=20, max_depth=1
-    ).load(recreate=True, upsert=True)
-
-    # get_kb(topic="install", chunking_model=chunking_model).load(
-    #     recreate=True, upsert=True
-    # )
-
-    # get_kb(topic="integrate", chunking_model=chunking_model).load(
-    #     recreate=True, upsert=True
-    # )
-
-    # get_kb(topic="versions", chunking_model=chunking_model).load(
-    #     recreate=True, upsert=True
-    # )
-    # get_kb(topic="maintenance", chunking_model=chunking_model).load(
-    #     recreate=True, upsert=True)
-    get_kb(topic="kb", chunking_model=chunking_model).load(
-        recreate=True, upsert=True)
-    # get_kb(topic="psg", chunking_model=chunking_model).load(
-    #     recreate=True, upsert=True)
-    # get_kb(topic="contact", chunking_model=chunking_model).load(
-    #     recreate=True, upsert=True)
-    # get_kb(topic="price", chunking_model=chunking_model).load(
-    #     recreate=True, upsert=True
-    # )
     loop = asyncio.get_running_loop()
 
     with ThreadPoolExecutor() as pool:
-        await loop.run_in_executor(
-            pool, partial(load_kb, topic="index", max_links=20, max_depth=1)
+        await asyncio.gather(
+            # loop.run_in_executor(pool, partial(
+            #     load_kb, topic="index", max_links=20, max_depth=1)),
+            loop.run_in_executor(pool, partial(load_kb, topic="install")),
+            # loop.run_in_executor(pool, partial(load_kb, topic="integrate")),
+            # loop.run_in_executor(pool, partial(load_kb, topic="kb")),
+            # loop.run_in_executor(pool, partial(load_kb, topic="versions")),
+            # loop.run_in_executor(pool, partial(load_kb, topic="maintenance")),
+            # loop.run_in_executor(pool, partial(load_kb, topic="psg")),
+            # loop.run_in_executor(pool, partial(load_kb, topic="contact")),
+            # loop.run_in_executor(pool, partial(load_kb, topic="price"))
         )
-
-        await loop.run_in_executor(pool, partial(load_kb, topic="kb"))
-        # await loop.run_in_executor(pool, partial(load_kb, topic="install"))
-        # await loop.run_in_executor(pool, partial(load_kb, topic="integrate"))
-        # await loop.run_in_executor(pool, partial(load_kb, topic="versions"))
-        # await loop.run_in_executor(pool, partial(load_kb, topic="maintenance"))
-        # await loop.run_in_executor(pool, partial(load_kb, topic="psg"))
-        # await loop.run_in_executor(pool, partial(load_kb, topic="contact"))
-        # await loop.run_in_executor(pool, partial(load_kb, topic="price"))
-
-    # await loop.run_in_executor(
-    # load_kb(topic="index", max_links=20, max_depth=1)
-    # load_kb(topic="kb")
-
-    # get_kb(topic="collector").load(recreate=True, upsert=True)
-    # pass
-
 
 if __name__ == "__main__":
     asyncio.run(main())

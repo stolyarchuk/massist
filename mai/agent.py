@@ -2,18 +2,19 @@ from typing import Any, List
 
 from agno.agent.agent import Agent
 from agno.models.base import Model
+from agno.tools.dalle import DalleTools
 from agno.tools.duckduckgo import DuckDuckGoTools
+from dotenv import load_dotenv
 from pydantic import BaseModel, ConfigDict
 
 from config import config
 from mai.agent_memory import get_agent_memory
 from mai.knowledge import get_kb
 from mai.meta import Meta
-from mai.models import (
-    get_gemini_pri_model,
-    get_gemini_sec_model,
-    get_openrouter_model,
-)
+from mai.models import (get_gemini_pri_model, get_gemini_sec_model,
+                        get_openrouter_model)
+
+load_dotenv()
 
 
 class AgentParams(BaseModel):
@@ -42,7 +43,8 @@ def get_agent(
         user_id=params.user_id,
         session_id=params.session_id,
         model=params.model,
-        knowledge=get_kb(topic=agent_id, chunking_model=get_openrouter_model()),
+        knowledge=get_kb(
+            topic=agent_id, chunking_model=get_openrouter_model()),
         search_knowledge=True,
         # storage=get_storage(agent_id),
         memory=get_agent_memory(
@@ -100,6 +102,56 @@ def get_search_agent(
         # ),
         description="You are a Web Researcher",
         instructions=meta.instructions,
+        read_chat_history=True,
+        add_name_to_instructions=True,
+        tools=tools,
+        add_history_to_messages=True,
+        add_datetime_to_instructions=True,
+        read_tool_call_history=True,
+        num_history_responses=3,
+        markdown=config.AGENT_MARKDOWN,
+        show_tool_calls=config.AGENT_SHOW_TOOL_CALLS,
+        stream=config.AGENT_STREAM,
+        debug_mode=config.AGENT_DEBUG,
+        monitoring=config.AGENT_MONITORING,
+    )
+
+
+def get_image_agent(
+    agent_id: str, topic: str, params: AgentParams, tools: List[Any] | None = None
+):
+    # meta = Meta(agent_id=agent_id, topic="Image")
+    # FIXME: remove default stolyarchuk
+
+    if tools is None:
+        tools = [
+            DalleTools(),
+        ]
+
+    return Agent(
+        name="Mitigator {topic} Agent",
+        agent_id=f"mitigator_agent_{agent_id}",
+        role="Mitigator Image Generator",
+        user_id=params.user_id,
+        session_id=params.session_id,
+        model=params.model,
+        # knowledge=get_kb(
+        #     topic=agent_id, chunking_model=get_openrouter_model()),
+        # search_knowledge=True,
+        # storage=get_storage(agent_id),
+        memory=get_agent_memory(
+            agent_id=agent_id,
+            user_id=params.user_id,
+            manager_model=get_gemini_pri_model(),
+            classifier_model=get_gemini_sec_model(),
+            summarizer_model=get_gemini_sec_model(),
+        ),
+        description="You are an AI agent that can generate images using DALL-E.",
+        instructions=[
+            "When you are asked to create an image, use the `create_image` tool to create the image.",
+            "The DALL-E tool will return an image URL.",
+            "Return the image URL in your response in the following format: `![image description](image URL)`",
+        ],
         read_chat_history=True,
         add_name_to_instructions=True,
         tools=tools,
