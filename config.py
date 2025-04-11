@@ -65,6 +65,7 @@ class Config(BaseSettings):
     MEMORY_DB: str = ""
 
     MAX_CHUNK_SIZE: int = 5000
+    OVERLAP_SIZE: int = 0
     MAX_TOKENS: int = 40000
     MAX_LINKS: int = 10
     MAX_DEPTH: int = 4
