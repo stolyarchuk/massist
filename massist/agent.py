@@ -36,8 +36,8 @@ def get_agent(
         ]
 
     return Agent(
-        name=f"Mitigator {topic} Agent",
-        agent_id=f"mitigator_agent_{agent_id}",
+        name=f"Mitigator AI {topic} Agent",
+        agent_id=f"{agent_id}_agent",
         role=meta.role,
         user_id=params.user_id,
         session_id=params.session_id,
@@ -81,8 +81,8 @@ def get_search_agent(
         ]
 
     return Agent(
-        name=f"Mitigator {topic} Agent",
-        agent_id=f"mitigator_agent_{agent_id}",
+        name=f"Mitigator AI {topic} Agent",
+        agent_id=f"{agent_id}_agent",
         role=meta.role,
         user_id=params.user_id,
         session_id=params.session_id,
@@ -127,8 +127,8 @@ def get_image_agent(
         ]
 
     return Agent(
-        name=f"Mitigator {topic} Agent",
-        agent_id=f"mitigator_agent_{agent_id}",
+        name=f"Mitigator AI {topic} Agent",
+        agent_id=f"{agent_id}_agent",
         role="Mitigator Image Generator",
         user_id=params.user_id,
         session_id=params.session_id,
