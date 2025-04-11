@@ -229,7 +229,7 @@ typer==0.15.2
     # via agno
 types-ujson==5.10.0.20250326
     # via massist
-typing-extensions==4.13.1
+typing-extensions==4.13.2
     # via
     #   agno
     #   anyio
