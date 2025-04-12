@@ -113,6 +113,9 @@ def get_mitigator_team(user_id: str, session_id: str, model: Model) -> Team:
         enable_team_history=True,
         enable_agentic_context=True,
         telemetry=False,
+        enable_user_memories=config.TEAM_ENABLE_USER_MEMORIES,
+        enable_agentic_memory=config.TEAM_ENABLE_AGENTIC_MEMORY,
+        enable_session_summaries=config.TEAM_ENABLE_SESSION_SUMMARIES,
     )
 
 

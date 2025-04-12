@@ -50,6 +50,9 @@ class Config(BaseSettings):
     AGENT_ENABLE_SESSION_SUMMARIES: bool = True
 
     TEAM_DEBUG: bool = True
+    TEAM_ENABLE_USER_MEMORIES: bool = False
+    TEAM_ENABLE_AGENTIC_MEMORY: bool = False
+    TEAM_ENABLE_SESSION_SUMMARIES: bool = False
 
     # ThinkingTools configuration
     THINKING_TOOLS_ENABLE: bool = False
