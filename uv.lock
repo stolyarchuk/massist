@@ -9,7 +9,7 @@ resolution-markers = [
 [[package]]
 name = "agno"
 version = "1.2.16"
-source = { git = "https://github.com/stolyarchuk/agno.git?subdirectory=libs%2Fagno&rev=main#3f9020e73abb3f6d1711b2cace5adb27e7eceb71" }
+source = { git = "https://github.com/stolyarchuk/agno.git?subdirectory=libs%2Fagno&rev=main#61625c232191835558cd32fc2430c190703dfa8e" }
 dependencies = [
     { name = "docstring-parser" },
     { name = "gitpython" },
