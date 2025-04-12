@@ -2,6 +2,7 @@ from typing import Any, List
 
 from agno.agent.agent import Agent
 from agno.models.base import Model
+from agno.storage.base import Storage
 from agno.tools.dalle import DalleTools
 from agno.tools.duckduckgo import DuckDuckGoTools
 from pydantic import BaseModel, ConfigDict
@@ -15,13 +16,13 @@ from massist.models import (
     get_gemini_sec_model,
     get_openrouter_model,
 )
-from massist.storage import get_storage
 
 
 class AgentParams(BaseModel):
     session_id: str
     user_id: str
     model: Model
+    storage: Storage | None = None
 
     model_config = ConfigDict(arbitrary_types_allowed=True)
 
@@ -44,7 +45,7 @@ def get_agent(
         model=params.model,
         knowledge=get_kb(topic=agent_id, chunking_model=get_openrouter_model()),
         search_knowledge=True,
-        storage=get_storage(agent_id),
+        storage=params.storage,
         memory=get_agent_memory(
             agent_id=agent_id,
             user_id=params.user_id,
@@ -90,7 +91,7 @@ def get_search_agent(
         # knowledge=get_kb(agent_id),
         # search_knowledge=True,
         add_references=True,
-        storage=get_storage(agent_id),
+        storage=params.storage,
         memory=get_agent_memory(
             agent_id=agent_id,
             user_id=params.user_id,
@@ -136,7 +137,7 @@ def get_image_agent(
         # knowledge=get_kb(
         #     topic=agent_id, chunking_model=get_openrouter_model()),
         # search_knowledge=True,
-        storage=get_storage(agent_id),
+        storage=params.storage,
         memory=get_agent_memory(
             agent_id=agent_id,
             user_id=params.user_id,

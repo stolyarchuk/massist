@@ -40,7 +40,7 @@ async def status_check():
 
 
 @router.post("/chat/new", tags=["Protected"], dependencies=[Depends(verify_token)])
-async def single_chat(rdb: Redis = Depends(get_rdb)):
+async def create_chat(rdb: Redis = Depends(get_rdb)):
     chat_id = str(uuid4())
     # created = int(time())
     # await create_chat(rdb, chat_id, created)

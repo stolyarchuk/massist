@@ -20,7 +20,10 @@ logger = get_logger(__name__)
 def get_mitigator_team(user_id: str, session_id: str, model: Model) -> Team:
     def get_agent_params():
         return AgentParams(
-            user_id=user_id, session_id=session_id, model=get_gemini_pri_model()
+            user_id=user_id,
+            session_id=session_id,
+            model=get_gemini_pri_model(),
+            storage=None,
         )
 
     # Setup tools list based on configuration
