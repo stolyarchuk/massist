@@ -36,7 +36,7 @@ def get_agent(
         ]
 
     return Agent(
-        name=f"Mitigator AI {topic} Agent",
+        name=f"AI {topic} Agent",
         agent_id=f"{agent_id}_agent",
         role=meta.role,
         user_id=params.user_id,
