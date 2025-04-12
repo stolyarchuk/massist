@@ -6,10 +6,12 @@ from typing import Any, AsyncIterator, Optional
 # import agno.memory.db
 # import agno.memory.db.postgres
 import ujson
-from agno.document.chunking.recursive import RecursiveChunking
-from agno.memory.db.postgres import PgMemoryDb
+
+# from agno.document.chunking.recursive import RecursiveChunking
+# from agno.memory.db.postgres import PgMemoryDb
 from agno.run.team import TeamRunResponse
-from agno.storage.base import Storage
+
+# from agno.storage.base import Storage
 from agno.team.team import Team
 from pydantic import BaseModel, ConfigDict
 
@@ -83,12 +85,12 @@ class TeamLead(BaseModel):
     model_config = ConfigDict(
         arbitrary_types_allowed=True,
         json_encoders={
-            Team: lambda v: None,
-            Storage: lambda v: None,
-            RecursiveChunking: lambda v: None,
+            # Team: lambda v: None,
+            # Storage: lambda v: None,
+            # RecursiveChunking: lambda v: None,
             # MemoryDb: lambda v: None,
             # PgMemoryDb: lambda v: None,
-            PgMemoryDb: lambda v: None,
+            # PgMemoryDb: lambda v: None,
             # TeamMemory: lambda v: None,
             # AgentMemory: lambda v: None
         },
@@ -133,10 +135,10 @@ async def cache_teamlead(
     cache = RedisCache(redis_pool=rdb)
 
     try:
-        serialized = teamlead.model_dump_json()
-        logger.debug("serialized: %s", serialized)
+        # serialized = teamlead.model_dump_json()
+        logger.debug("serializing: %s", teamlead)
         return await cache.set_model(
-            f"{prefix}:{teamlead.session_id}", serialized, ex=7200
+            f"{prefix}:{teamlead.session_id}", teamlead, ex=7200
         )
     except Exception as e:
         logger.error(f"Caching failed: {e}")
@@ -149,7 +151,7 @@ async def cache_teamlead(
             "memory_id": teamlead.memory_id,
         }
         return await cache.set_model(
-            f"teamlead:{teamlead.session_id}", ujson.dumps(essential_data), ex=7200
+            f"teamlead:{teamlead.session_id}", essential_data, ex=7200
         )
 
 

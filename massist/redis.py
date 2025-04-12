@@ -1,5 +1,6 @@
 from contextlib import AbstractAsyncContextManager
-from typing import Optional, Sequence, Type
+from dataclasses import asdict
+from typing import Any, Optional, Sequence, Type
 
 import ujson
 from agno.agent.agent import Agent
@@ -7,6 +8,7 @@ from agno.team.team import Team
 from pydantic import BaseModel
 from redis.asyncio.client import Redis
 from redis.asyncio.connection import ConnectionPool
+from redis.commands.json.path import Path
 from redis.commands.search.field import TextField
 from redis.commands.search.indexDefinition import IndexDefinition, IndexType
 from redis.exceptions import RedisError
@@ -119,7 +121,7 @@ class RedisCache:
         return f"{self.prefix}:{key}"
 
     async def set_model(
-        self, key: str, model: BaseModel | str, ex: Optional[int] = None
+        self, key: str, model: BaseModel | Any | str, ex: Optional[int] = None
     ) -> bool:
         """Cache a Pydantic model with expiration"""
 
@@ -129,22 +131,22 @@ class RedisCache:
             # # Handle different types of models
             if isinstance(model, (Agent, Team)):
                 # Use custom serialization for Agent and Team objects
-                serialized = ujson.dumps(model)
+                serialized = asdict(model)
             elif isinstance(model, BaseModel):
                 # Standard Pydantic model
-                serialized = model.model_dump_json()
-            # elif isinstance(model, dict):
-            #     # Dictionary
-            #     serialized = ujson.dumps(model)
+                serialized = model.model_dump()
             elif isinstance(model, str):
                 # Already serialized string
-                serialized = model
+                serialized = ujson.loads(model)
             else:
                 # Fallback
-                serialized = ujson.dumps(model.model_dump())
+                serialized = asdict(model)
 
-            result = await self.redis.set(
-                name=self._key(key), value=serialized, ex=ex or config.CACHE_TTL
+            result = self.redis.json().set(
+                name=self._key(key),
+                path=Path.root_path(),
+                obj=serialized,
+                decode_keys=True,
             )
 
             logger.debug(f"Cached '{model}. Result: {result}.")
