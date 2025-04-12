@@ -81,7 +81,7 @@ def get_search_agent(
         ]
 
     return Agent(
-        name=f"Mitigator AI {topic} Agent",
+        name=f"AI {topic} Agent",
         agent_id=f"{agent_id}_agent",
         role=meta.role,
         user_id=params.user_id,
@@ -90,14 +90,14 @@ def get_search_agent(
         # knowledge=get_kb(agent_id),
         # search_knowledge=True,
         add_references=True,
-        # storage=get_storage(agent_id),
-        # memory=get_agent_memory(
-        #     agent_id=agent_id,
-        #     user_id=params.user_id,
-        #     manager_model=get_gemini_pri_model(),
-        #     classifier_model=get_gemini_sec_model(),
-        #     summarizer_model=get_gemini_sec_model(),
-        # ),
+        storage=get_storage(agent_id),
+        memory=get_agent_memory(
+            agent_id=agent_id,
+            user_id=params.user_id,
+            manager_model=get_gemini_pri_model(),
+            classifier_model=get_gemini_sec_model(),
+            summarizer_model=get_gemini_sec_model(),
+        ),
         description="You are a Web Researcher",
         instructions=meta.instructions,
         read_chat_history=True,
@@ -127,16 +127,16 @@ def get_image_agent(
         ]
 
     return Agent(
-        name=f"Mitigator AI {topic} Agent",
+        name=f"AI {topic} Agent",
         agent_id=f"{agent_id}_agent",
-        role="Mitigator Image Generator",
+        role="Image Generator",
         user_id=params.user_id,
         session_id=params.session_id,
         model=params.model,
         # knowledge=get_kb(
         #     topic=agent_id, chunking_model=get_openrouter_model()),
         # search_knowledge=True,
-        # storage=get_storage(agent_id),
+        storage=get_storage(agent_id),
         memory=get_agent_memory(
             agent_id=agent_id,
             user_id=params.user_id,
