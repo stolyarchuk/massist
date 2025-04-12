@@ -42,8 +42,6 @@ async def start_bot_nonblock():
 
     return dp
 
-    # await dp.start_polling(bot)
-
 
 if __name__ == "__main__":
     logger.info(config.TGBOT_API_TOKEN)
