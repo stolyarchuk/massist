@@ -46,10 +46,10 @@ class Config(BaseSettings):
     AGENT_SHOW_TOOL_CALLS: bool = True
     AGENT_MONITORING: bool = False
     AGENT_DEBUG: bool = False
-    AGENT_ENABLE_USER_MEMORIES: bool = True
-    AGENT_ENABLE_SESSION_SUMMARIES: bool = True
+    AGENT_ENABLE_USER_MEMORIES: bool = False
+    AGENT_ENABLE_SESSION_SUMMARIES: bool = False
 
-    TEAM_DEBUG: bool = True
+    TEAM_DEBUG: bool = False
     TEAM_ENABLE_USER_MEMORIES: bool = False
     TEAM_ENABLE_AGENTIC_MEMORY: bool = False
     TEAM_ENABLE_SESSION_SUMMARIES: bool = False
