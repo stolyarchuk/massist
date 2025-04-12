@@ -5,6 +5,7 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
+from bot import start_bot, start_bot_nonblock
 from config import config
 from massist.logger import init_logging
 from massist.redis import AsyncRedisPoolContext, init_redis
@@ -17,22 +18,27 @@ ALLOW_ORIGINS = config.ALLOW_ORIGINS
 async def lifespan(app: FastAPI):
     # Initialize Redis on startup
 
-    # await init_logging()
-    await init_logging(
-        "uvicorn.access",
-        "uvicorn.error",
-        "httpx",
-        "asyncio",
-        "uvicorn",
-        "agno",
-        "agno-team",
-    )
-    await init_redis()
+    await init_logging()
+    # await init_logging(
+    #     "uvicorn.access",
+    #     "aiogram.dispatcher",
+    #     "uvicorn.error",
+    #     "httpx",
+    #     "asyncio",
+    #     "uvicorn",
+    #     "agno",
+    #     "agno-team",
+    # )
+
+    app.state.redis = await init_redis()
+    app.state.bot = await start_bot_nonblock()
 
     yield
 
+    await app.state.bot.stop_polling()
+
     # Close Redis connections on shutdown
-    async with AsyncRedisPoolContext() as rdb:
+    async with app.state.redis as rdb:
         await rdb.aclose()  # noqa
 
     # TODO: close db connections as well

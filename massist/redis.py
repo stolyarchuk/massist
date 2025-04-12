@@ -8,7 +8,8 @@ from agno.team.team import Team
 from pydantic import BaseModel
 from redis.asyncio.client import Redis
 from redis.asyncio.connection import ConnectionPool
-from redis.commands.json.path import Path
+
+# from redis.commands.json.path import Path
 from redis.commands.search.field import TextField
 from redis.commands.search.indexDefinition import IndexDefinition, IndexType
 from redis.exceptions import RedisError
@@ -21,14 +22,12 @@ logger = get_logger(__name__)
 
 class AsyncRedisPoolContext(AbstractAsyncContextManager):
     pool: ConnectionPool | None = None
-    connection: Redis
+    connection: Redis | None = None
 
     def __init__(self, max_connection: int = 100):
         self.pool = ConnectionPool.from_url(
             url=config.REDIS_URL, encoding="utf-8", decode_responses=False
         )
-
-        self.connection = self.get_connection()
 
     def get_connection(self) -> Redis:
         """Get a Redis connection from the pool.
@@ -179,7 +178,11 @@ class RedisCache:
 async def init_redis():
     logger.debug("Initializing KV: %s", config.REDIS_URL)
 
-    async with AsyncRedisPoolContext() as rdb:
+    rdbp = AsyncRedisPoolContext()
+
+    async with rdbp as rdb:
         await setup_redis_pool(rdb)
 
     logger.debug("KV initialized %s", config.REDIS_URL)
+
+    return rdbp
