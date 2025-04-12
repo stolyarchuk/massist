@@ -134,7 +134,7 @@ async def cache_teamlead(
 
     try:
         # serialized = teamlead.model_dump_json()
-        logger.debug("serializing: %s", teamlead)
+        logger.debug("serializing teamlead: %s", teamlead.session_id)
         return await cache.set_model(
             f"{prefix}:{teamlead.session_id}", teamlead, ex=7200
         )

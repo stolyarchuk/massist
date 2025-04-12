@@ -128,25 +128,19 @@ class RedisCache:
         try:
             logger.debug(f"Caching '{model}'. Key: {key}.")
 
-            # # Handle different types of models
             if isinstance(model, (Agent, Team)):
-                # Use custom serialization for Agent and Team objects
-                serialized = asdict(model)
+                serialized = ujson.dumps(asdict(model))
             elif isinstance(model, BaseModel):
-                # Standard Pydantic model
-                serialized = model.model_dump()
+                serialized = model.model_dump_json()
+            elif isinstance(model, dict):
+                serialized = ujson.dumps(model)
             elif isinstance(model, str):
-                # Already serialized string
-                serialized = ujson.loads(model)
+                serialized = model
             else:
-                # Fallback
-                serialized = asdict(model)
+                serialized = ujson.dumps(asdict(model))
 
-            result = self.redis.json().set(
-                name=self._key(key),
-                path=Path.root_path(),
-                obj=serialized,
-                decode_keys=True,
+            result = await self.redis.set(
+                name=self._key(key), value=serialized, ex=ex or config.CACHE_TTL
             )
 
             logger.debug(f"Cached '{model}. Result: {result}.")
