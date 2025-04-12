@@ -8,10 +8,9 @@ from typing import Any, AsyncIterator, Optional
 import ujson
 
 # from agno.document.chunking.recursive import RecursiveChunking
-# from agno.memory.db.postgres import PgMemoryDb
+from agno.memory.db.postgres import PgMemoryDb
 from agno.run.team import TeamRunResponse
-
-# from agno.storage.base import Storage
+from agno.storage.base import Storage
 from agno.team.team import Team
 from pydantic import BaseModel, ConfigDict
 
@@ -86,11 +85,10 @@ class TeamLead(BaseModel):
         arbitrary_types_allowed=True,
         json_encoders={
             # Team: lambda v: None,
-            # Storage: lambda v: None,
+            Storage: lambda v: None,
             # RecursiveChunking: lambda v: None,
             # MemoryDb: lambda v: None,
-            # PgMemoryDb: lambda v: None,
-            # PgMemoryDb: lambda v: None,
+            PgMemoryDb: lambda v: None,
             # TeamMemory: lambda v: None,
             # AgentMemory: lambda v: None
         },
