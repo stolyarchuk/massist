@@ -90,7 +90,7 @@ def get_mitigator_team(user_id: str, session_id: str, model: Model) -> Team:
             "- Tech support questions decompose first and then route to appropriate agents.",
             "- Setup and configure related questions route to kb_agent, install_agent and integrate_agent.",
             "- Route other queries to all other agents accordingly.",
-            "After receiving responses from agents, synthesize them into a single, compehensive response.",
+            "After receiving responses from agents, combine responses into a single, compehensive response.",
             # "Route customer query to web_search agent if needed for comparison or if you didn't receive any " +
             # "answers from agents.",
             # "If no information provided from the agents, search customer query in the web " +
