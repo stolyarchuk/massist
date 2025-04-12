@@ -64,7 +64,7 @@ def get_mitigator_team(user_id: str, session_id: str, model: Model) -> Team:
             get_agent("versions", "Versions", get_agent_params()),
             get_agent("maintenance", "Maintenance", get_agent_params()),
             get_agent("kb", "Knowledge Base", get_agent_params()),
-            get_agent("psg", "PCAP Signature Generator", get_agent_params()),
+            get_agent("psg", "PSG", get_agent_params()),
             get_agent("contact", "Support", get_agent_params()),
             get_agent("price", "Price", get_agent_params()),
             get_search_agent("web_search", "Web Search", get_agent_params()),
@@ -81,14 +81,15 @@ def get_mitigator_team(user_id: str, session_id: str, model: Model) -> Team:
             You are the lead customer support team agent responsible for classifying and
             routing customer inquiries."""),
         instructions=[
-            "Carefully analyze each customer message and then route it to appropriate agents following next rules:",
+            "Carefully analyze each customer message and then route it to appropriate agents.",
             # "Route customer question to appropriate agents. If no appropriate agenuser queryund think again.",
             # "Rewrite customer query and route to apropriate agents again.",
-            "Release notes questions, version informationm updates and changelogs route "
+            "You are free to follow or not to follow rules:",
+            "- Release notes questions, version informationm updates and changelogs route "
             + "both to versions_agent and maintenance_agent.",
-            "Tech support questions decompose first and then route to appropriate agents.",
-            "Setup and configure related questions route to kb_agent, install_agent and integrate_agent.",
-            "Route other queries to all other agents accordingly.",
+            "- Tech support questions decompose first and then route to appropriate agents.",
+            "- Setup and configure related questions route to kb_agent, install_agent and integrate_agent.",
+            "- Route other queries to all other agents accordingly.",
             "After receiving responses from agents, synthesize them into a single, compehensive response.",
             # "Route customer query to web_search agent if needed for comparison or if you didn't receive any " +
             # "answers from agents.",
