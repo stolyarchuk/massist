@@ -67,8 +67,8 @@ def get_agent(
         stream=config.AGENT_STREAM,
         debug_mode=config.AGENT_DEBUG,
         monitoring=config.AGENT_MONITORING,
-        enable_user_memories=True,
-        enable_session_summaries=True,
+        enable_user_memories=config.AGENT_ENABLE_USER_MEMORIES,
+        enable_session_summaries=config.AGENT_ENABLE_SESSION_SUMMARIES,
     )
 
 
