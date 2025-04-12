@@ -20,7 +20,7 @@ class Meta(BaseModel):
 
     description: str = Field(
         default_factory=lambda m: dedent(f"""
-        You are a helpful assistance agent called 'Mitigator AI Assistant'.
+        You are a helpful assistance agent called '{m["topic"]} AI Assistant'.
         Your specialization is Mitigator {m["topic"]}.
         Your goal is to assist the user the best way possible.
 
