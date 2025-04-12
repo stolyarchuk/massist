@@ -1,3 +1,5 @@
+import asyncio
+
 from aiogram import F, Router, html
 from aiogram.enums import MessageEntityType
 from aiogram.filters import CommandStart
@@ -16,10 +18,20 @@ router = Router()  # [1]
 router.message.middleware(LongOperation())
 
 
+@router.message(F.entities[:].type == MessageEntityType.EMAIL)
+async def all_emails(message: Message):
+    await message.answer("All entities are emails")
+
+
+@router.message(F.entities[...].type == MessageEntityType.EMAIL)
+async def any_emails(message: Message):
+    await message.answer("At least one email!")
+
+
 @router.message(
     ChatType(chat_type=["group", "supergroup"]),
     CommandStart(),
-    flags={"long_operation": "upload_video_note"},
+    flags={"long_operation": "typing"},
 )
 async def command_start_handler(message: Message) -> None:
     """
@@ -38,10 +50,12 @@ async def command_start_handler(message: Message) -> None:
             f" {message.from_user.last_name}" if message.from_user.last_name else ""
         )
 
+    await asyncio.sleep(2)
+
     await message.answer(f"Hello, {html.bold(full_name)}!")
 
 
-@router.message(F.text)
+@router.message(F.text, flags={"long_operation": "typing"})
 async def greet_alice(message: Message) -> None:
     if message.from_user is None:
         return
@@ -62,6 +76,8 @@ async def greet_alice(message: Message) -> None:
 
     # reply = await punk.arun(message.text)
 
+    await asyncio.sleep(4)
+
     await message.answer(
         "reply.content", parse_mode="HTML", disable_web_page_preview=True
     )
@@ -72,13 +88,3 @@ async def forwarded_from_channel(message: Message, channel: Chat):
     logger.debug(message.chat)
 
     await message.answer(f"This channel's ID is {channel.id}")
-
-
-@router.message(F.entities[:].type == MessageEntityType.EMAIL)
-async def all_emails(message: Message):
-    await message.answer("All entities are emails")
-
-
-@router.message(F.entities[...].type == MessageEntityType.EMAIL)
-async def any_emails(message: Message):
-    await message.answer("At least one email!")
