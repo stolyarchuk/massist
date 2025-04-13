@@ -78,11 +78,11 @@
       ]
     },
     {
-      "label": "Run Playground",
+      "label": "Run Bot",
       "type": "process",
       "command": "${command:python.interpreterPath}",
       "args": [
-        "${workspaceFolder}/mai/playground.py"
+        "${workspaceFolder}/bot.py"
       ],
       "presentation": {
         "echo": true,

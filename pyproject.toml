@@ -6,6 +6,7 @@ readme = "README.md"
 requires-python = ">=3.11"
 dependencies = [
     "agno",
+    "aiogram>=3.19.0",
     "async-timeout>=5.0.1",
     "bs4>=0.0.2",
     "chonkie>=1.0.2",
@@ -33,6 +34,7 @@ dependencies = [
     "ujson>=5.10.0",
     "uvicorn[standard]>=0.34.0",
     "uvloop>=0.21.0",
+    "valkey>=6.1.0",
 ]
 
 [tool.uv.sources]
