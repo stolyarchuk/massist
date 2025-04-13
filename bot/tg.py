@@ -4,8 +4,8 @@ from aiogram import Bot, Dispatcher
 from aiogram.client.default import DefaultBotProperties
 from aiogram.enums import ParseMode
 
+from bot.handlers import root, usernames
 from config import config
-from handlers import root, usernames
 from massist.logger import get_logger
 
 logger = get_logger(__name__)
@@ -22,6 +22,9 @@ async def start_bot():
     dp.include_routers(root.router, usernames.router)
 
     await bot.delete_webhook(drop_pending_updates=True)
+
+    yield dp
+
     await dp.start_polling(bot, handle_signals=False)
 
 

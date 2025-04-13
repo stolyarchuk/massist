@@ -5,11 +5,11 @@ from aiogram.enums import MessageEntityType
 from aiogram.filters import CommandStart
 from aiogram.types import Chat, Message
 
-from filters.chat_type import ChatType
+from bot.filters.chat_type import ChatType
+from bot.middlewares.long_operation import LongOperation
 
 # from massist.agent import get_agent
 from massist.logger import get_logger
-from middlewares.long_operation import LongOperation
 
 logger = get_logger(__name__)
 
