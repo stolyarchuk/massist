@@ -5,11 +5,11 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
+from api.router import router
 from bot.tg import start_bot_nonblock
 from config import config
-from massist.logger import init_logging
 from db.redis import init_redis
-from api.router import router
+from massist.logger import init_logging
 
 ALLOW_ORIGINS = config.ALLOW_ORIGINS
 
@@ -18,17 +18,18 @@ ALLOW_ORIGINS = config.ALLOW_ORIGINS
 async def lifespan(app: FastAPI):
     # Initialize Redis on startup
 
-    await init_logging()
-    # await init_logging(
-    #     "uvicorn.access",
-    #     "aiogram.dispatcher",
-    #     "uvicorn.error",
-    #     "httpx",
-    #     "asyncio",
-    #     "uvicorn",
-    #     "agno",
-    #     "agno-team",
-    # )
+    # await init_logging()
+
+    await init_logging(
+        "uvicorn.access",
+        "aiogram.dispatcher",
+        "uvicorn.error",
+        "httpx",
+        "asyncio",
+        "uvicorn",
+        "agno",
+        "agno-team",
+    )
 
     app.state.rdb = await init_redis()
     app.state.bot = await start_bot_nonblock()
