@@ -255,7 +255,7 @@ ujson==5.10.0
     # via massist
 urllib3==2.3.0
     # via requests
-uvicorn==0.34.0
+uvicorn==0.34.1
     # via massist
 uvloop==0.21.0
     # via
