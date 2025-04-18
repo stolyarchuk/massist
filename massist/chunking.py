@@ -16,10 +16,10 @@ def get_chunking_strategy(
         return AgenticChunking(model=model, max_chunk_size=max_chunk_size)
 
     if config.CHUNKING_STRATEGY == "recursive":
-        return RecursiveChunking(chunk_size=max_chunk_size)
+        return RecursiveChunking(chunk_size=max_chunk_size, overlap=config.OVERLAP_SIZE)
 
     if config.CHUNKING_STRATEGY == "document":
-        return DocumentChunking(chunk_size=max_chunk_size)
+        return DocumentChunking(chunk_size=max_chunk_size, overlap=config.OVERLAP_SIZE)
 
     if config.CHUNKING_STRATEGY == "semantic":
         return SemanticChunking(

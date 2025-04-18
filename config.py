@@ -46,8 +46,13 @@ class Config(BaseSettings):
     AGENT_SHOW_TOOL_CALLS: bool = True
     AGENT_MONITORING: bool = False
     AGENT_DEBUG: bool = False
+    AGENT_ENABLE_USER_MEMORIES: bool = False
+    AGENT_ENABLE_SESSION_SUMMARIES: bool = False
 
-    TEAM_DEBUG: bool = True
+    TEAM_DEBUG: bool = False
+    TEAM_ENABLE_USER_MEMORIES: bool = False
+    TEAM_ENABLE_AGENTIC_MEMORY: bool = False
+    TEAM_ENABLE_SESSION_SUMMARIES: bool = False
 
     # ThinkingTools configuration
     THINKING_TOOLS_ENABLE: bool = False
@@ -65,6 +70,7 @@ class Config(BaseSettings):
     MEMORY_DB: str = ""
 
     MAX_CHUNK_SIZE: int = 5000
+    OVERLAP_SIZE: int = 0
     MAX_TOKENS: int = 40000
     MAX_LINKS: int = 10
     MAX_DEPTH: int = 4

@@ -2,6 +2,7 @@ from typing import Any, List
 
 from agno.agent.agent import Agent
 from agno.models.base import Model
+from agno.storage.base import Storage
 from agno.tools.dalle import DalleTools
 from agno.tools.duckduckgo import DuckDuckGoTools
 from pydantic import BaseModel, ConfigDict
@@ -21,6 +22,7 @@ class AgentParams(BaseModel):
     session_id: str
     user_id: str
     model: Model
+    storage: Storage | None = None
 
     model_config = ConfigDict(arbitrary_types_allowed=True)
 
@@ -35,15 +37,15 @@ def get_agent(
         ]
 
     return Agent(
-        name=f"Mitigator {topic} Agent",
-        agent_id=f"mitigator_agent_{agent_id}",
+        name=f"AI {topic} Agent",
+        agent_id=f"{agent_id}_agent",
         role=meta.role,
         user_id=params.user_id,
         session_id=params.session_id,
         model=params.model,
         knowledge=get_kb(topic=agent_id, chunking_model=get_openrouter_model()),
         search_knowledge=True,
-        # storage=get_storage(agent_id),
+        storage=params.storage,
         memory=get_agent_memory(
             agent_id=agent_id,
             user_id=params.user_id,
@@ -65,6 +67,9 @@ def get_agent(
         stream=config.AGENT_STREAM,
         debug_mode=config.AGENT_DEBUG,
         monitoring=config.AGENT_MONITORING,
+        enable_user_memories=config.AGENT_ENABLE_USER_MEMORIES,
+        enable_session_summaries=config.AGENT_ENABLE_SESSION_SUMMARIES,
+        telemetry=False,
     )
 
 
@@ -80,8 +85,8 @@ def get_search_agent(
         ]
 
     return Agent(
-        name=f"Mitigator {topic} Agent",
-        agent_id=f"mitigator_agent_{agent_id}",
+        name=f"AI {topic} Agent",
+        agent_id=f"{agent_id}_agent",
         role=meta.role,
         user_id=params.user_id,
         session_id=params.session_id,
@@ -89,14 +94,14 @@ def get_search_agent(
         # knowledge=get_kb(agent_id),
         # search_knowledge=True,
         add_references=True,
-        # storage=get_storage(agent_id),
-        # memory=get_agent_memory(
-        #     agent_id=agent_id,
-        #     user_id=params.user_id,
-        #     manager_model=get_gemini_pri_model(),
-        #     classifier_model=get_gemini_sec_model(),
-        #     summarizer_model=get_gemini_sec_model()
-        # ),
+        storage=params.storage,
+        memory=get_agent_memory(
+            agent_id=agent_id,
+            user_id=params.user_id,
+            manager_model=get_gemini_pri_model(),
+            classifier_model=get_gemini_sec_model(),
+            summarizer_model=get_gemini_sec_model(),
+        ),
         description="You are a Web Researcher",
         instructions=meta.instructions,
         read_chat_history=True,
@@ -119,7 +124,6 @@ def get_image_agent(
     agent_id: str, topic: str, params: AgentParams, tools: List[Any] | None = None
 ):
     # meta = Meta(agent_id=agent_id, topic="Image")
-    # FIXME: remove default stolyarchuk
 
     if tools is None:
         tools = [
@@ -127,16 +131,16 @@ def get_image_agent(
         ]
 
     return Agent(
-        name=f"Mitigator {topic} Agent",
-        agent_id=f"mitigator_agent_{agent_id}",
-        role="Mitigator Image Generator",
+        name=f"AI {topic} Agent",
+        agent_id=f"{agent_id}_agent",
+        role="Image Generator",
         user_id=params.user_id,
         session_id=params.session_id,
         model=params.model,
         # knowledge=get_kb(
         #     topic=agent_id, chunking_model=get_openrouter_model()),
         # search_knowledge=True,
-        # storage=get_storage(agent_id),
+        storage=params.storage,
         memory=get_agent_memory(
             agent_id=agent_id,
             user_id=params.user_id,
