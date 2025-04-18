@@ -189,7 +189,7 @@ rich==14.0.0
     #   typer
 rsa==4.9
     # via google-auth
-ruff==0.11.4
+ruff==0.11.6
     # via massist
 shellingham==1.5.4
     # via typer
