@@ -787,9 +787,9 @@ pydantic-core==2.33.1 \
     --hash=sha256:ef99779001d7ac2e2461d8ab55d3373fe7315caefdbecd8ced75304ae5a6fc6b \
     --hash=sha256:fc6bf8869e193855e8d91d91f6bf59699a5cdfaa47a404e278e776dd7f168b39
     # via pydantic
-pydantic-settings==2.9.0 \
-    --hash=sha256:24fd3fe19bc2c0eddeff91860dc5e303572b39fb70b1391c64955dd4d1875098 \
-    --hash=sha256:4937fe39355b1f1f1e429e6695d68ce42501340d642c000447e48b1d9d418dfd
+pydantic-settings==2.11.0 \
+    --hash=sha256:d0e87a1c7d33593beb7194adb8470fc426e95ba02af83a0f23474a04c9a08180 \
+    --hash=sha256:fe2cea3413b9530d10f3a5875adffb17ada5c1e1bab0b2885546d7310415207c
     # via agno
 pygments==2.19.1 \
     --hash=sha256:61c16d2a8576dc0649d9f39e089b5f02bcd27fba10d8fb4dcc28173f7a45151f \
